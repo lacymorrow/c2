@@ -5,9 +5,8 @@ import {
 import * as Store from 'electron-store';
 
 export default function createWindow(windowName, options) {
-  const key = 'window-state';
-  const name = `window-state-${windowName}`;
-  const store = new Store({ name });
+  const key = `window-state-${windowName}`;
+  const store = new Store({ name: key });
   const defaultSize = {
     width: options.width,
     height: options.height,

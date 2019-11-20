@@ -12,7 +12,14 @@
   },
   "dependencies": {
     "electron-serve": "^0.4.0",
-    "electron-store": "^5.1.0"
+    "electron-store": "^5.1.0",
+    "isomorphic-fetch": "^2.2.1",
+    "movie-info": "^2.0.4",
+    "movie-trailer": "^2.0.5",
+    "omdb-client": "^2.0.0",
+    "open": "^7.0.0",
+    "parse-torrent-name": "^0.5.4",
+    "queue": "^6.0.1"
   },
   "devDependencies": {
     "electron": "^7.1.1",

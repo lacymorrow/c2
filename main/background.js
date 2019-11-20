@@ -1,6 +1,7 @@
 import { app, ipcMain } from 'electron';
 import serve from 'electron-serve';
-import { createWindow } from './helpers';
+import Store from 'electron-store';
+import { createWindow, startController } from './helpers';
 
 // We want await, so we wrap in an async
 (async () => {
@@ -15,7 +16,7 @@ import { createWindow } from './helpers';
   await app.whenReady();
 
 	const workerWindow = createWindow('worker', {
-		show: false,  // <--- Comment me out to debug the worker window
+		// show: false,  // <--- Comment me out to debug the worker window
 		webPreferences: { nodeIntegration: true }
 	});
 
@@ -26,7 +27,19 @@ import { createWindow } from './helpers';
 
 	// Main thread can receive directly from windows
 	ipcMain.on('to-main', (event, arg) => {
-	 console.log(arg)
+		const {command, data} = arg;
+		if (command) {
+			switch (command) {
+				case 'online':
+					console.log(`Online: ${data}`)
+					break;
+				default:
+					console.log(`Command ${command}: ${data}`)
+			}
+		} else {
+			// Argument is not a command
+			console.log(arg)
+		}
 	});
 
 	// Windows can talk to each other via main
@@ -39,7 +52,7 @@ import { createWindow } from './helpers';
 	});
 
 	ipcMain.on('ready', (event, arg) => {
-
+		// startController()
 	})
 
 	mainWindow.on('closed', () => {
@@ -61,3 +74,16 @@ import { createWindow } from './helpers';
     mainWindow.webContents.openDevTools();
   }
 })();
+
+
+// Load
+// Check cache
+// -> Load movies from cache
+
+// If no dir, get OS media dir
+// Scan dir for existence
+// search dir
+// create movies
+// check network
+// get data
+// cache

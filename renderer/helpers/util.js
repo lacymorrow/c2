@@ -1,11 +1,32 @@
+import  config from './config'
 import ipc from './safe-ipc'
 
-export const broadcast = str => log
 
-// Current time
+export const broadcast = str => {
+	console.log(str)
+	log(str)
+}
+
+// Current time in ms
 export const epoch = () => {
 	const d = new Date()
-	return d.getTime() / 1000
+	return d.getTime()
+}
+
+// Insecure string hashing function for UUIDs
+// credit: https://github.com/darkskyapp/string-hash
+export const hash = (str) => {
+  var hash = 5381,
+      i    = str.length;
+
+  while(i) {
+    hash = (hash * 33) ^ str.charCodeAt(--i);
+  }
+
+  /* JavaScript does bitwise operations (like XOR, above) on 32-bit signed
+   * integers. Since we want the results to be always positive, convert the
+   * signed int to an unsigned by doing an unsigned bitshift. */
+  return hash >>> 0;
 }
 
 // String matches ignore list

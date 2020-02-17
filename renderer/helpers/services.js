@@ -1,16 +1,20 @@
 'use strict'
 
-import fetch from 'isomorphic-fetch'
-import queue from 'queue'
+import debounce from 'lodash/debounce'
+import ky from 'ky-universal'
+// import movieInfo from './mi'
 import movieInfo from 'movie-info'
-import movieTrailer from 'movie-trailer'
+// import movieTrailer from 'movie-trailer'
 import omdbApi from 'omdb-client'
+import queue from 'queue'
 
 import config from './config'
+import ipc from './safe-ipc'
 import {broadcast, epoch} from './util'
 import {
 	indexGenre,
 	indexMovieGenre,
+	getMovies,
 	getState,
 	setState,
 	getMovieById,
@@ -18,6 +22,15 @@ import {
 	resetGenres,
 	refreshMovieCache
 } from './database'
+
+
+// Debounced reflow trigger
+const _refreshData = () => {
+	const movies = getMovies()
+	ipc.send('for-renderer', {command: 'refresh', data: movies})
+}
+
+const refreshData = debounce(_refreshData, config.REFLOW_DELAY, { 'maxWait': config.REFLOW_DELAY, 'trailing': true })
 
 // Create and start queue
 const q = queue({
@@ -32,6 +45,7 @@ q.on('success', () => {
 	// Change loading bar when queue updates
 	const {queueTotal} = getState()
 	setState({loading: Math.round(q.length / queueTotal * 100)})
+	refreshData()
 })
 
 q.on('end', () => {
@@ -48,17 +62,18 @@ export const resetQueue = () => {
 
 export const initGenreCache = async () => {
 	resetGenres()
-	try {
-		const response = await fetch(`${config.GENRE_ENDPOINT}?api_key=${config.TMDB_KEY}`)
+	// try {
+		const response = await ky(`${config.GENRE_ENDPOINT}?api_key=${config.TMDB_KEY}`)
 		const res = await response.json()
+
 		for (const genre of res.genres) {
 			indexGenre(genre.id, genre.name)
 		}
 
 		setState({genreCacheTimestamp: epoch()})
-	} catch (error) {
-		broadcast(`Cinematic/initGenreCache: ${error}`)
-	}
+	// } catch (error) {
+	// 	throw new Error(`Cinematic/initGenreCache: ${error}`)
+	// }
 }
 
 export const fetchMeta = (mid, name, year) => {
@@ -91,18 +106,20 @@ export const fetchMeta = (mid, name, year) => {
 			// })
 	})
 
-	q.push(() => {
-		return fetchTrailer(name, year)
-			.then(res => {
-				const movie = getMovieById(mid)
-				movie.trailer = res
-				updateMovie(mid, movie)
-				return res
-			})
-			// .catch(error => {
-			// 	return broadcast(`Error fetching trailer meta: ${error}`)
-			// })
-	})
+	// q.push(() => {
+	// 	return fetchTrailer(name, year)
+	// 		.then(res => {
+	// 			const movie = getMovieById(mid)
+	// 			if (movie) {
+	// 				movie.trailer = res
+	// 			}
+	// 			updateMovie(mid, movie)
+	// 			return res
+	// 		})
+	// 		// .catch(error => {
+	// 		// 	return broadcast(`Error fetching trailer meta: ${error}`)
+	// 		// })
+	// })
 }
 
 const fetchOMDB = name => {
@@ -216,19 +233,25 @@ const countToArray = num => {
 }
 
 const reconcileMovieMeta = (mid, meta) => {
+	console.log('asking for '+mid)
 	const movie = getMovieById(mid)
+	console.log('got ' + movie)
+	if(movie) {
+		// Merge objects and preserve: plot, poster, releaseDate, year
+		Object.assign(
+			movie,
+			meta,
+			{ratings: [...movie.ratings, ...meta.ratings]},
+			{plot: movie.plot || meta.plot},
+			{poster: movie.poster || meta.poster},
+			{releaseDate: movie.releaseDate || meta.releaseDate},
+			{year: movie.year || meta.year},
+		)
+		updateMovie(mid, movie)
 
-	// Merge objects and preserve: plot, poster, releaseDate, year
-	Object.assign(
-		movie,
-		meta,
-		{ratings: [...movie.ratings, ...meta.ratings]},
-		{plot: movie.plot || meta.plot},
-		{poster: movie.poster || meta.poster},
-		{releaseDate: movie.releaseDate || meta.releaseDate},
-		{year: movie.year || meta.year},
-	)
-	updateMovie(mid, movie)
+		return movie
+	} else {
+		return meta
+	}
 
-	return movie
 }

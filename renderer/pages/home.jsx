@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 
 const Home = () => {
+
   const [message, setMessage] = useState('no ipc message');
 
   const onClickWithIpc = () => {
@@ -13,13 +14,32 @@ const Home = () => {
     }
   };
 
+  const repaint = (data) => {
+  	console.log('repaint', data)
+  }
+
   useEffect(() => {
     // componentDidMount()
     if (ipcRenderer) {
       // register ipc events
       ipcRenderer.on('to-renderer', (event, arg) => {
-				console.log(arg)
-				setMessage(arg)
+				if (typeof arg === 'object') {
+					const {command, data} = arg;
+
+					switch (command) {
+						case 'message':
+							setMessage(data)
+							break;
+						case 'refresh':
+							repaint(data);
+							break;
+						default:
+							console.log('Invalid ipc message received')
+							break;
+					}
+				} else {
+					setMessage(arg)
+				}
 			});
 
     }
@@ -44,6 +64,7 @@ const Home = () => {
           <Link href="/next">
             <a>Go to next page</a>
           </Link>
+          {/*{movie}*/}
         </p>
         <img src="/static/logo.png" />
         <hr />

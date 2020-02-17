@@ -9,32 +9,36 @@ import parseTorrentName from 'parse-torrent-name'
 import config from './config'
 import {defaultMovieMeta, movieTitlePattern} from './constants'
 import {getOSMediaPath, isDirectory} from './fs'
-import {broadcast, epoch, ignorePattern, isDigit, prettyName} from './util'
+import {broadcast, epoch, hash, ignorePattern, isDigit, prettyName} from './util'
 
 import {fetchMeta, initGenreCache, resetQueue} from './services'
-// import {
-// 	initState,
-// 	getState,
-// 	setState,
-//
-// 	addMovie,
-// 	addRecent,
-// 	addWatched,
-//
-// 	getCachedMovie,
-//  getMoviesCache,
-// 	indexMovieGenre,
-//
-// 	randomizeMovies,
-// 	resetMovies,
-// 	resetDB
-// } from '../imports/startup/server/database'
+import {
+	initState,
+	getState,
+	setState,
+
+	addMovie,
+	addRecent,
+	addWatched,
+
+	getCachedMovie,
+	getMoviesCache,
+	indexMovieGenre,
+
+	randomizeMovies,
+	resetMovies,
+	resetDB
+} from './database'
 
 export const start = () => {
 	const state = getState()
+	initState()
 
 	let dirpath;
-	if (state) {
+
+	if (state.dirpath) {
+		// Cinematic has been run before
+
 		// Reload movies DB
 		getMoviesCache()
 
@@ -51,6 +55,8 @@ export const start = () => {
 			initGenreCache()
 		}
 	} else {
+		// First run
+		broadcast('Starting Cinematic...')
 		initState()
 		initGenreCache()
 
@@ -142,6 +148,7 @@ const scanFile = filepath => {
 				name,
 				filepath,
 				year,
+				_id: hash(filepath),
 				releaseDate: year,
 				title: name
 			})

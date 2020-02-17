@@ -5,7 +5,8 @@ import {
 	log,
 	updateOnlineStatus
 } from '../helpers/util.js'
-import Work from '../containers/Work'
+
+
 
 const Worker = () => {
 
@@ -16,6 +17,12 @@ const Worker = () => {
 
 			// let the main thread know this thread is ready to process something
 			ipcRenderer.send('ready')
+
+			const init = require('../helpers/init')
+
+			// if (window && process.browser) {
+				init.start()
+			// }
 	}
 
 	useEffect(() => {
@@ -27,13 +34,10 @@ const Worker = () => {
 		// if message is received, pass it back to the renderer via the main thread
 		ipc.on('to-worker', (event, arg) => {
 			log('received ' + arg)
-			ipc.send('for-renderer', process.pid + ' replying to: ' + arg)
+			ipc.send('for-renderer', {type: 'message', data: process.pid + ' replying to: ' + arg})
 		});
 
 		startup();
-		// 			const renderer = require('../helpers/renderer')
-		// renderer.start()
-
 
 		// componentWillUnmount()
 		return () => {
@@ -46,9 +50,7 @@ const Worker = () => {
 	}, []); // Passing an empty array prevents effect on componentDidUpdate()
 
 	return (
-		<React.Fragment>
-			<Work />
-		</React.Fragment>
+		<React.Fragment></React.Fragment>
 	);
 };
 

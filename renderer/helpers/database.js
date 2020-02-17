@@ -3,9 +3,6 @@
 import Store from 'electron-store'
 import {epoch} from './util'
 
-// if (!process.browser) {
-// const Store = require('electron-store')
-// }
 const store = new Store({
 	defaults: {
 		state: {},
@@ -16,13 +13,6 @@ const store = new Store({
 		watched: []
 	}
 })
-
-// export const Genres = new Mongo.Collection('genres')
-// export const Movies = new Mongo.Collection('movies')
-// export const MovieCache = new Mongo.Collection('movieCache')
-// export const State = new Mongo.Collection('state')
-// export const Recent = new Mongo.Collection('recent')
-// export const Watched = new Mongo.Collection('watched')
 
 /* State */
 export const initState = options => {
@@ -88,6 +78,7 @@ export const indexMovieGenre = (id, mid) => {
 }
 
 const addGenre = (id, options) => {
+	console.log(id, options)
 	const genre = Object.assign({...options}, {_id: id.toString(), id})
 	const genres = store.get('genres')
 	genres.push(genre)
@@ -96,15 +87,14 @@ const addGenre = (id, options) => {
 
 const getGenre = id => {
 	const genres = store.get('genres')
-	genres.forEach(genre => {
+	for (const genre of genres) {
 		if (genre._id === id.toString()) {
 			return genre
 		}
-	})
+	}
 
-	return undefined
+	return false
 }
-
 
 const updateGenre = (id, options) => {
 	const genres = store.get('genres')
@@ -115,7 +105,6 @@ const updateGenre = (id, options) => {
 			store.set('genres', genres)
 		}
 	})
-
 }
 
 export const resetGenres = () => {
@@ -127,6 +116,8 @@ export const addMovie = movie => {
 	const movies = store.get('movies')
 	movies.push(movie)
 	store.set('movies', movies)
+
+	return movie._id
 }
 
 export const getMovies = () => {
@@ -135,24 +126,26 @@ export const getMovies = () => {
 
 export const getMovieById = mid => {
 	const movies = store.get('movies')
-	movies.forEach(movie => {
+	console.log(movies)
+	for (const movie of movies) {
 		if (movie._id === mid) {
 			return movie
 		}
-	})
 
-	return undefined
+	}
+
+	return false
 }
 
 export const getMovieByFile = file => {
 	const movies = store.get('movies')
-	movies.forEach(movie => {
+	for (const movie of movies) {
 		if (movie.file === file) {
 			return movie
 		}
-	})
+	}
 
-	return undefined
+	return false
 }
 
 export const updateMovie = (mid, options) => {
@@ -178,10 +171,10 @@ export const updateMovieTrailer = (mid, trailer) => {
 }
 
 export const randomizeMovies = () => {
-	// const seeds = Movies.find({}, {fields: {seed: 1}})
-	// seeds.forEach(seed => {
-	// 	updateMovie(seed._id, {$set: {seed: Math.random()}})
-	// })
+	const movies = store.get('movies')
+	for (const movie of movies) {
+		updateMovie(movie._id, {seed: Math.random()})
+	}
 }
 
 export const resetMovies = () => {
@@ -203,13 +196,13 @@ const updateCachedMovie = (key, movie) => {
 
 export const getCachedMovie = key => {
 	const cache = store.get('cache')
-	cache.forEach(c => {
+	for (const c of cache) {
 		if (c._id === key) {
 			return c
 		}
-	})
+	}
 
-	return undefined
+	return false
 }
 
 export const cacheMovie = file => {
@@ -219,6 +212,11 @@ export const cacheMovie = file => {
 	if (movie && movie.intel.Title && movie.info.title) {
 		addCachedMovie(movie)
 	}
+}
+
+export const getMoviesCache = () => {
+	const cache = store.get('cache')
+	return cache
 }
 
 export const refreshMovieCache = () => {

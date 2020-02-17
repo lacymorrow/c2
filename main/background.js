@@ -1,7 +1,7 @@
 import { app, ipcMain } from 'electron';
 import serve from 'electron-serve';
 import Store from 'electron-store';
-import { createWindow, startController } from './helpers';
+import { createWindow } from './helpers';
 
 // We want await, so we wrap in an async
 (async () => {

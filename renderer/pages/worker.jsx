@@ -13,16 +13,14 @@ const Worker = () => {
 	// Kick off everything
 	const startup = () => {
 			log('Worker ready')
-		  updateOnlineStatus()
+		  	updateOnlineStatus()
 
 			// let the main thread know this thread is ready to process something
 			ipcRenderer.send('ready')
 
 			const init = require('../helpers/init')
 
-			// if (window && process.browser) {
-				init.start()
-			// }
+			init.start()
 	}
 
 	useEffect(() => {
@@ -34,7 +32,7 @@ const Worker = () => {
 		// if message is received, pass it back to the renderer via the main thread
 		ipc.on('to-worker', (event, arg) => {
 			log('received ' + arg)
-			ipc.send('for-renderer', {type: 'message', data: process.pid + ' replying to: ' + arg})
+			ipc.send('for-renderer', {command: 'message', data: process.pid + ' replying to: ' + arg})
 		});
 
 		startup();

@@ -30,13 +30,21 @@ const config = {
 
 	/* app-specific */
 	// -- affects how app is run and may affect performance
+	DEFAULT_MEDIA_PATH: '~/', // Path only used if OS path fails
 	MAX_CONNECTIONS: 3, // Max number of simultaneous, more is faster but more api hits at once; 5 is okay...
 	PARSE_METHOD: 'parse', // Filename parsing options: "regex", "parse"; regex is best for well-organized files lile This[2004].avi
 	RATING_DELAY: 6000, // Milli-seconds of rating rotate interval; 5000 = 5 seconds
 	RETRY_DELAY: 4000, // Milli-seconds delay of retrying failed api requests to alieviate thousands of simultaneous requests;
 	REFLOW_DELAY: 400, // Milli-seconds of time between updates to the renderer to limit repaints
 	SCAN_DEPTH: 1, // How many directory levels to recursively search. 0 is a flat directory search. Higher is further down the rabbit hole === more processing time
-	IGNORE_PATTERN: ['sample', 'etrg'] // A lowercase list of movie titles to ignore; ex: sample.avi
+	IGNORE_PATTERN: ['sample', 'etrg'], // A lowercase list of movie titles to ignore; ex: sample.avi
+	DEFAULT_STATE: {
+		cwd: process.env.PWD, // electron.remote.app.getPath()
+		dirpath: '~/',
+		loading: 100,
+		queueTotal: 0,
+		activeMovie: -1
+	}
 }
 
 export default config

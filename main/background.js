@@ -33,12 +33,15 @@ import { createWindow } from './helpers';
 				case 'online':
 					console.log(`Online: ${data}`)
 					break;
+				case 'log':
+					console.log(`Log - ${data}`)
+					break;
 				default:
 					console.log(`Command ${command}: ${data}`)
 			}
 		} else {
 			// Argument is not a command
-			console.log(arg)
+			console.log(`Invalid message: ${arg}`)
 		}
 	});
 
@@ -52,11 +55,11 @@ import { createWindow } from './helpers';
 	});
 
 	ipcMain.on('ready', (event, arg) => {
-		// startController()
+		// start()
 	})
 
 	mainWindow.on('closed', () => {
-			// call quit to exit, otherwise the background windows will keep the app running
+		// call quit to exit, otherwise the background windows will keep the app running
 		app.quit()
 	})
 
@@ -72,6 +75,7 @@ import { createWindow } from './helpers';
     await mainWindow.loadURL(`http://localhost:${port}/home`);
     await workerWindow.loadURL(`http://localhost:${port}/worker`);
     mainWindow.webContents.openDevTools();
+    workerWindow.webContents.openDevTools();
   }
 })();
 
@@ -80,6 +84,7 @@ import { createWindow } from './helpers';
 // Check cache
 // -> Load movies from cache
 
+// get previous state
 // If no dir, get OS media dir
 // Scan dir for existence
 // search dir

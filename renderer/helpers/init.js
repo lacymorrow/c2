@@ -10,7 +10,6 @@ import config from './config'
 import {defaultMovieMeta, movieTitlePattern} from './constants'
 import {getOSMediaPath, isDirectory} from './fs'
 import {broadcast, epoch, hash, ignorePattern, isDigit, prettyName} from './util'
-
 import {fetchMeta, initGenreCache, resetQueue} from './services'
 import {
 	initState,
@@ -32,7 +31,7 @@ import {
 
 export const start = () => {
 	const state = getState()
-	initState()
+	initState() // TODO -- resets on boot
 
 	let dirpath;
 
@@ -72,6 +71,7 @@ export const start = () => {
 }
 
 const setPath = (dirpath) => {
+
 	// Save dirpath
 	setState({
 		dir: dirpath,
@@ -83,23 +83,23 @@ const setPath = (dirpath) => {
 }
 
 const scanPath = () => {
-	const {dir} = getState()
-	if (isDirectory(dir)) {
+	const {dirpath} = getState()
+	if (isDirectory(dirpath)) {
+		setState({dirpath, queueTotal: 0}) // TODO scanPath called to update dirpath, break out
 		resetMovies()
-		setState({dir})
-		scanDir(dir, 0)
+		scanDir(dirpath, 0)
 	} else {
 		broadcast('Error: Path is not a directory.')
 	}
 }
 
-const scanDir = (dirPath, recurseDepth) => {
+const scanDir = (dirpath, recurseDepth) => {
 	// Read from filesystem
 	try {
-		const files = fs.readdirSync(dirPath)
+		const files = fs.readdirSync(dirpath)
 		files.forEach(file => {
 			const ext = path.extname(file)
-			const filepath = path.join(dirPath, file)
+			const filepath = path.join(dirpath, file)
 
 			if (file.indexOf('.') === 0) {
 				// Skip dotfiles
@@ -118,7 +118,7 @@ const scanDir = (dirPath, recurseDepth) => {
 			}
 		}) // End file scan forEach
 	} catch (error) {
-		broadcast(`Error scanning directory ${dirPath}: ${error}`)
+		broadcast(`Error scanning directory ${dirpath}: ${error}`)
 	}
 }
 

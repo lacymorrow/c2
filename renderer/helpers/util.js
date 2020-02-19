@@ -41,7 +41,10 @@ export const isDigit = (str) => {
 
 // Send logs as messages to the main thread to show on the console
 export const log = (value) => {
-	ipc.send('to-main', `${process.pid}: ${value}`);
+	ipc.send('to-main', {
+		command: 'log',
+		data: `${process.pid}: ${value}`
+	});
 }
 
  // Replace underscores and hypens with spaces replaceUglyChars is a better name

@@ -1,6 +1,8 @@
 'use strict'
 
 import Store from 'electron-store'
+import config from './config'
+import ipc from './safe-ipc'
 import {epoch} from './util'
 
 const store = new Store({
@@ -14,22 +16,28 @@ const store = new Store({
 	}
 })
 
+export const renderUpdate = (command, data) => {
+	// Accepts {command: '', data:'...'} or as args
+	if (typeof command === 'object') {
+		data = command.data
+		command = command.command
+	}
+	console.log(`UPDATE: ${command}`)
+	ipc.send('for-renderer', {command, data})
+}
+
 /* State */
 export const initState = options => {
-	const defaults = {
-		_id: '0', // There can be only one...
-		cwd: process.env.PWD, // electron.remote.app.getPath()
-		dir: '~/',
-		loading: 100,
-		queueTotal: 0
-	}
-
-	store.set('state', defaults)
+	store.set('state', config.DEFAULT_STATE)
 }
 
 export const getState = () => store.get('state')
 
-export const setState = options => store.set('state', options)
+export const setState = options => {
+	const state = getState()
+	store.set('state', {...state, ...options})
+	renderUpdate('state', options)
+}
 
 /* Recent */
 export const addRecent = mid => {
@@ -72,14 +80,11 @@ export const indexMovieGenre = (id, mid) => {
 		const items = genre.items || []
 		items.push(mid)
 		updateGenre(id, {items})
-	} else {
-		addGenre(id, {name, items: [mid]})
 	}
 }
 
 const addGenre = (id, options) => {
-	console.log(id, options)
-	const genre = Object.assign({...options}, {_id: id.toString(), id})
+	const genre = {...options,  ...{id, _id: id.toString(), items:[]} }
 	const genres = store.get('genres')
 	genres.push(genre)
 	store.set('genres', genres)
@@ -99,12 +104,13 @@ const getGenre = id => {
 const updateGenre = (id, options) => {
 	const genres = store.get('genres')
 	genres.forEach((genre, i) => {
-		if (genre._id === id.toString()) {
-			genre = Object.assign(genre, {...options})
-			genres[i].genre = genre
+		if (genre._id === id.toString()) { // id is a number
+			genre = {...genre, ...options}
+			genres[i] = genre
 			store.set('genres', genres)
 		}
 	})
+	renderUpdate('genres', genres)
 }
 
 export const resetGenres = () => {
@@ -152,7 +158,7 @@ export const updateMovie = (mid, options) => {
 	const movies = store.get('movies')
 	movies.forEach((movie, i) => {
 		if (movie._id === mid) {
-			movie = Object.assign(movie, {...options})
+			movie = {...movie, ...options}
 			movies[i] = movie
 			store.set('movies', movies)
 		}

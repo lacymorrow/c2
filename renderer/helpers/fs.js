@@ -2,7 +2,7 @@
 
 import fs from 'fs'
 import os from 'os'
-import {config} from './config'
+import {config} from '../config'
 
 export const getOSMediaPath = () => {
 	// Get default media directory. Fetches ~/movies, ~/videos, ~

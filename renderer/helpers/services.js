@@ -7,7 +7,7 @@ import movieTrailer from 'movie-trailer'
 import omdbApi from 'omdb-client'
 import queue from 'queue'
 
-import config from './config'
+import config from '../config'
 import ipc from './safe-ipc'
 import {broadcast, epoch} from './util'
 import {
@@ -23,14 +23,39 @@ import {
 	renderUpdate
 } from './database'
 
+/* Trigger a UI reflow */
+export const renderUpdate = (command, data) => {
+	// Accepts {command: '', data:'...'} or as args
+	if (typeof command === 'object') {
+		data = command.data
+		command = command.command
+	}
+	console.log(`UPDATE: ${command}`)
+	ipc.send('for-renderer', {command, data})
+}
 
-// Debounced reflow trigger
-const _refreshData = () => {
+// Debounced reflow triggers
+const _refreshGenres = () => {
+	const movies = getMovies()
+	renderUpdate('genres', movies)
+}
+
+export const refreshGenres = debounce(_refreshGenres, config.REFLOW_DELAY, { 'maxWait': config.REFLOW_DELAY, 'leading': true, 'trailing': true })
+
+const _refreshMovies = () => {
 	const movies = getMovies()
 	renderUpdate('movies', movies)
 }
 
-const refreshData = debounce(_refreshData, config.REFLOW_DELAY, { 'maxWait': config.REFLOW_DELAY, 'trailing': true })
+export const refreshMovies = debounce(_refreshMovies, config.REFLOW_DELAY, { 'maxWait': config.REFLOW_DELAY, 'leading': true, 'trailing': true })
+
+const _refreshState = () => {
+	const movies = getMovies()
+	renderUpdate('movies', movies)
+}
+
+export const refreshState = debounce(_refreshState, config.REFLOW_DELAY, { 'maxWait': config.REFLOW_DELAY, 'leading': true, 'trailing': true })
+
 
 // Create and start queue
 const q = queue({
@@ -45,7 +70,7 @@ q.on('success', () => {
 	// Change loading bar when queue updates
 	const {queueTotal} = getState()
 	setState({loading: Math.round(q.length / queueTotal * 100) || 0})
-	refreshData()
+	refreshMovies()
 })
 
 q.on('end', () => {

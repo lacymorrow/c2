@@ -6,7 +6,7 @@ import path from 'path'
 import open from 'open'
 import parseTorrentName from 'parse-torrent-name'
 
-import config from './config'
+import config from '../config'
 import {defaultMovieMeta, movieTitlePattern} from './constants'
 import {getOSMediaPath, isDirectory} from './fs'
 import {broadcast, epoch, hash, ignorePattern, isDigit, prettyName} from './util'

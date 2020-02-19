@@ -1,8 +1,9 @@
 'use strict'
 
 import Store from 'electron-store'
-import config from './config'
+import config from '../config'
 import ipc from './safe-ipc'
+import {renderUpdate} from './services'
 import {epoch} from './util'
 
 const store = new Store({
@@ -15,16 +16,6 @@ const store = new Store({
 		watched: []
 	}
 })
-
-export const renderUpdate = (command, data) => {
-	// Accepts {command: '', data:'...'} or as args
-	if (typeof command === 'object') {
-		data = command.data
-		command = command.command
-	}
-	console.log(`UPDATE: ${command}`)
-	ipc.send('for-renderer', {command, data})
-}
 
 /* State */
 export const initState = options => {
@@ -90,6 +81,8 @@ const addGenre = (id, options) => {
 	store.set('genres', genres)
 }
 
+export const getGenres = () => store.get('genres')
+
 const getGenre = id => {
 	const genres = store.get('genres')
 	for (const genre of genres) {
@@ -110,7 +103,7 @@ const updateGenre = (id, options) => {
 			store.set('genres', genres)
 		}
 	})
-	renderUpdate('genres', genres)
+	refreshGenres()
 }
 
 export const resetGenres = () => {

@@ -5,7 +5,8 @@ import Link from 'next/link';
 
 import styled from 'styled-components'
 
-import config from '../helpers/config'
+import config from '../config'
+import ipc from '../helpers/safe-ipc'
 import Directory from '../components/directory'
 import Messagebox from '../components/directory'
 
@@ -63,6 +64,10 @@ const Home = () => {
   // State properties
   const {dirpath, loading} = state
 
+  const syncState = () => {
+  	ipc.send('for-worker')
+  }
+
   // Merge state
   const assignState = (newState) => {
   	setState(prevState => {
@@ -82,9 +87,8 @@ const Home = () => {
   useEffect(() => {
   	// Depends on [], so never re-run
     // componentDidMount()
-    if (ipcRenderer) {
       // register ipc events
-      ipcRenderer.on('to-renderer', (event, arg) => {
+      ipc.on('to-renderer', (event, arg) => {
 				if (typeof arg === 'object') {
 					const {command, data} = arg;
 					switch (command) {
@@ -108,14 +112,11 @@ const Home = () => {
 					setMessage(arg)
 				}
 			});
-    }
 
     return () => {
       // componentWillUnmount()
-      if (ipcRenderer) {
         // unregister it
-        ipcRenderer.removeAllListeners('to-renderer');
-      }
+        ipc.removeAllListeners('to-renderer');
     };
   }, []);
 

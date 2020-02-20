@@ -1,21 +1,33 @@
-import {ipcRenderer} from 'electron';
+import { ipcRenderer } from 'electron'
 
-export const on = (key, fn) => {
-	if (ipcRenderer) {
-		ipcRenderer.on(key, fn)
+const on = ( key, fn ) => {
+
+	if ( ipcRenderer ) {
+
+		ipcRenderer.on( key, fn )
+
 	}
+
 }
 
-export const removeAllListeners = (key) => {
-	if (ipcRenderer) {
-		ipcRenderer.removeAllListeners(key)
+const removeAllListeners = key => {
+
+	if ( ipcRenderer ) {
+
+		ipcRenderer.removeAllListeners( key )
+
 	}
+
 }
 
-export const send = (key, arg) => {
-	if (ipcRenderer) {
-		ipcRenderer.send(key, arg)
+const send = ( key, arg ) => {
+
+	if ( ipcRenderer ) {
+
+		ipcRenderer.send( key, arg )
+
 	}
+
 }
 
-export default {on, send}
+export default { on, send, removeAllListeners }

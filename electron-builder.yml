@@ -1,12 +1,41 @@
-appId: com.example.nextron
-productName: My Nextron App
-copyright: Copyright © 2018 Yoshihide Shiono
-directories:
-  output: dist
-  buildResources: resources
+appId: com.lacymorrow.cinematic
+productName: Cinematic
+copyright: Copyright © 2020 Lacy Morrow
+publish: github
+
 files:
   - from: .
     filter:
       - package.json
       - app
-publish: null
+
+mac:
+  category: public.app-category.video
+  darkModeSupport: true
+
+dmg:
+  iconSize: 160
+  contents:
+    - x: 180
+      y: 170
+    - x: 480
+      y: 170
+      type: link
+      path: "/Applications"
+
+linux:
+  target:
+    - AppImage
+    - deb
+  category: "AudioVideo;Viewer"
+snap:
+  plugs:
+    - default
+    - camera
+    - removable-media
+win:
+  target:
+    - nsis
+    - portable
+  publish: github
+  verifyUpdateCodeSignature: false

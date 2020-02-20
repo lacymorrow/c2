@@ -1,14 +1,30 @@
-import styled from 'styled-components';
+import React from 'react'
+import PropTypes from 'prop-types'
+import styled from 'styled-components'
 
-const _Wrapper = styled.div`
+import strings from '../helpers/strings'
+
+const WrapperX = styled.div`
 	background: teal;
 `
-export default (props) => {
-	const {data} = props;
+const Messagebox = props => {
+
+	const { data } = props
 
 	return (
-		<_Wrapper>
+		<WrapperX>
 			<p>{data}</p>
-		</_Wrapper>
-	);
-};
+		</WrapperX>
+	)
+
+}
+
+Messagebox.propTypes = {
+	data: PropTypes.string
+}
+
+Messagebox.defaultProps = {
+	data: strings.messagebox.init
+}
+
+export default Messagebox

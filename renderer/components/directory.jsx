@@ -1,15 +1,38 @@
-import styled from 'styled-components';
+import React from 'react'
+import PropTypes from 'prop-types'
+import styled from 'styled-components'
 
-const _Wrapper = styled.div`
+import strings from '../helpers/strings'
+
+const WrapperX = styled.div`
 	background: blue;
 `
-export default (props) => {
-	const {data, handleChange} = props;
+
+const Directory = props => {
+
+	const { data, handleChange } = props
 
 	return (
-		<_Wrapper>
-			<span className="glyphicon glyphicon-search" aria-hidden="true"></span>
-			<input type="text" placeholder="Movies directory" value={data} onChange={handleChange} />
-		</_Wrapper>
-	);
-};
+		<WrapperX>
+			<span className="glyphicon glyphicon-search" aria-hidden="true"/>
+			<input
+				type="text"
+				placeholder="Movies directory"
+				value={data}
+				onChange={handleChange}
+			/>
+		</WrapperX>
+	)
+
+}
+
+Directory.propTypes = {
+	data: PropTypes.string,
+	handleChange: PropTypes.func
+}
+
+Directory.defaultProps = {
+	data: strings.directory.init
+}
+
+export default Directory

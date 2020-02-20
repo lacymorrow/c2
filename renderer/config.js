@@ -37,9 +37,9 @@ const config = {
 	RETRY_DELAY: 4000, // Milli-seconds delay of retrying failed api requests to alieviate thousands of simultaneous requests;
 	REFLOW_DELAY: 600, // Milli-seconds of time between updates to the renderer to limit repaints
 	SCAN_DEPTH: 1, // How many directory levels to recursively search. 0 is a flat directory search. Higher is further down the rabbit hole === more processing time
-	IGNORE_PATTERN: ['sample', 'etrg'], // A lowercase list of movie titles to ignore; ex: sample.avi
+	IGNORE_PATTERN: [ 'sample', 'etrg' ], // A lowercase list of movie titles to ignore; ex: sample.avi
 	DEFAULT_STATE: {
-		cwd: process.env.PWD, // electron.remote.app.getPath()
+		cwd: process.env.PWD, // Electron.remote.app.getPath()
 		dirpath: '~/',
 		loading: 100,
 		queueTotal: 0,

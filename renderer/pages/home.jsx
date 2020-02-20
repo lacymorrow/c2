@@ -1,24 +1,26 @@
-import electron, {ipcRenderer} from 'electron';
-import React, { useState, useEffect } from 'react';
-import Head from 'next/head';
-import Link from 'next/link';
+import React, { useState, useEffect } from 'react'
+import Head from 'next/head'
+import Link from 'next/link'
 
 import styled from 'styled-components'
 
 import config from '../config'
+import strings from '../helpers/strings'
 import ipc from '../helpers/safe-ipc'
 import Directory from '../components/directory'
-import Messagebox from '../components/directory'
+import Messagebox from '../components/messagebox'
+
+// TODO addRecent, addWatched, randomizeMovies, reset, open
 
 // Styles and Elements
-const _Container = styled.div`
+const ContainerX = styled.div`
 	display: flex;
 	flex-direction: column;
 	height: 100%;
 	align-items: stretch;
 `
 
-const _Header = styled.div`
+const HeaderX = styled.div`
 	flex: 1 1 100px;
 	display: flex;
 	flex-direction: row;
@@ -26,27 +28,27 @@ const _Header = styled.div`
 	background: gray;
 `
 
-const _Main = styled.div`
+const MainX = styled.div`
 	flex: 1 1 100%;
 	display: flex;
 	flex-direction: row;
 `
 
-const _Sidebar = styled.div`
+const SidebarX = styled.div`
 	flex: 0 0 20%;
 	background: yellow;
 `
 
-const _Badge = styled.span`
+const BadgeX = styled.span`
 	color: red;
 `
 
-const _Display = styled.div`
+const DisplayX = styled.div`
 	flex: 1 1 100%;
 	background: green;
 `
 
-const _Details = styled.div`
+const DetailsX = styled.div`
 	flex: 1 0 200px;
 	background: orange;
 `
@@ -56,131 +58,170 @@ const Home = () => {
 	// TODO - set initial state from electron store vals
 
 	// State defaults
-  const [message, setMessage] = useState('Loading...');
-  const [movies, setMovies] = useState([]);
-  const [genres, setGenres] = useState([]);
-  const [state, setState] = useState(config.DEFAULT_STATE);
+	const [ message, setMessage ] = useState( strings.messagebox.init )
+	const [ movies, setMovies ] = useState( [] )
+	const [ genres, setGenres ] = useState( [] )
+	const [ state, setState ] = useState( config.DEFAULT_STATE )
 
-  // State properties
-  const {dirpath, loading} = state
+	// State properties
+	const { dirpath, loading } = state
 
-  const syncState = () => {
-  	ipc.send('for-worker')
-  }
+	// Send values back for store (dirpath mainly)
+	const syncState = s => {
 
-  // Merge state
-  const assignState = (newState) => {
-  	setState(prevState => {
-  		console.log({...prevState, ...newState})
-  		return {...prevState, ...newState}
-  	})
-  }
+		s = s || state
+		ipc.send( 'for-worker', { command: 'sync', data: s } )
 
-  const movieList = () => {
-  	// const {movies} = props
-  	return movies.map((movie, i) => {
-  		return (<p>{movie}</p>)
-  	})
-  }
+	}
 
-  // Setup and tear-down communication
-  useEffect(() => {
-  	// Depends on [], so never re-run
-    // componentDidMount()
-      // register ipc events
-      ipc.on('to-renderer', (event, arg) => {
-				if (typeof arg === 'object') {
-					const {command, data} = arg;
-					switch (command) {
-						case 'message':
-							setMessage(data)
-							break;
-						case 'genres':
-							setGenres(data)
-							break;
-						case 'movies':
-							setMovies(data)
-							break;
-						case 'state':
-							assignState(data)
-							break;
-						default:
-							console.log('Invalid ipc message received')
-							break;
-					}
-				} else {
-					setMessage(arg)
+	// Merge state
+	const assignState = newState => {
+
+		setState( prevState => {
+
+			return { ...prevState, ...newState }
+
+		} )
+
+	}
+
+	const movieList = () => {
+
+		// Const {movies} = props
+		return movies.map( movie => {
+
+			return <p key={movie._id}>{movie}</p>
+
+		} )
+
+	}
+
+	// Setup and tear-down communication
+	useEffect( () => {
+
+		// Depends on [], so never re-run
+		// componentDidMount()
+		// register ipc events
+		ipc.on( 'to-renderer', ( event, arg ) => {
+
+			if ( typeof arg === 'object' ) {
+
+				const { command, data } = arg
+				switch ( command ) {
+
+					case 'message':
+						setMessage( data )
+						break
+					case 'genres':
+						setGenres( data )
+						break
+					case 'movies':
+						setMovies( data )
+						break
+					case 'state':
+						assignState( data )
+						break
+					default:
+						console.log( 'Invalid ipc message received' )
+						break
+
 				}
-			});
 
-    return () => {
-      // componentWillUnmount()
-        // unregister it
-        ipc.removeAllListeners('to-renderer');
-    };
-  }, []);
+			} else {
 
-  return (
-    <>
-      <Head>
-        <title>Home - Nextron (ipc-communication)</title>
-      </Head>
+				setMessage( arg )
 
-      <_Container>
+			}
 
-      	<_Header>
+		} )
+
+		return () => {
+
+			// ComponentWillUnmount()
+			// unregister it
+			ipc.removeAllListeners( 'to-renderer' )
+
+		}
+
+	}, [] )
+
+	return (
+		<>
+			<Head>
+				<title>Home - Nextron (ipc-communication)</title>
+			</Head>
+
+			<ContainerX>
+				<HeaderX>
 					<h1>Cinematic</h1>
-					<Directory data={dirpath} handleChange={ e => assignState({dirpath: e.target.value}) } />
+					<Directory
+						data={dirpath}
+						handleChange={e => {
 
-				</_Header>
+							assignState( { dirpath: e.target.value } )
+							syncState( state )
 
-				<_Main>
+						}}
+					/>
 
-					<_Sidebar>
+					<Messagebox data={message}/>
+				</HeaderX>
+
+				<MainX>
+					<SidebarX>
 						<Link href="/next">
-						  <a>Go to next page</a>
+							<a>Go to next page</a>
 						</Link>
-						{genres.map((genre, i) => {
-							if (genre.items.length) {
-								return <p key={genre._id}>{genre.name} <_Badge>{genre.items.length}</_Badge></p>
+						{genres.map( genre => {
+
+							if ( genre.items.length > 0 ) {
+
+								return (
+									<p key={genre._id}>
+										{genre.name} <BadgeX>{genre.items.length}</BadgeX>
+									</p>
+								)
+
 							}
-						})}
-					</_Sidebar>
 
-					<_Display>
-						<img src="/static/logo.png" />
-						Loading: {loading}<br />
+							return false
+
+						} )}
+					</SidebarX>
+
+					<DisplayX>
+						<img src="/static/logo.png"/>
+						Loading: {loading}
+						<br/>
 						{`COUNT: ${movies.length}`}
-						{movies.map((movie, i) => {
-							return <p key={movie._id}>{movie.title}</p>
-						})}
-					</_Display>
+						{movieList}
+					</DisplayX>
 
-					<_Details>
+					<DetailsX/>
+				</MainX>
+				{/* <Refresh /> */}
+			</ContainerX>
 
-					</_Details>
-				</_Main>
-				{/*<Refresh />*/}
-      </_Container>
+			<style jsx global>
+				{`
+					* {
+						box-sizing: border-box;
+					}
 
-      <style jsx global>{`
+					html,
+					body {
+						height: 100%;
+						margin: 0;
+					}
 
-      	* {
-      		box-sizing: border-box;
-      	}
+					#__next {
+						height: 100%;
+					}
+				`}
+			</style>
+		</>
+	)
 
-      	html, body {
-      		height: 100%;
-      		margin: 0;
-      	}
+}
 
-      	#__next {
-      		height: 100%;
-      	}
-
-      `}</style>
-    </>
-  );
-};
-
-export default Home;
+export default Home

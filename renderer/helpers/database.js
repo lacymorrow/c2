@@ -91,6 +91,8 @@ export const indexMovieGenre = ( id, mid ) => {
 
 }
 
+export const getGenres = () => store.get( 'genres' )
+
 const addGenre = ( id, options ) => {
 
 	const genre = { ...options, ...{ id, _id: id.toString(), items: [] } }
@@ -99,8 +101,6 @@ const addGenre = ( id, options ) => {
 	store.set( 'genres', genres )
 
 }
-
-export const getGenres = () => store.get( 'genres' )
 
 const getGenre = id => {
 

@@ -172,7 +172,7 @@ const Home = () => {
 						<Link href="/next">
 							<a>Go to next page</a>
 						</Link>
-						{genres.map( genre => {
+						{genres && genres.map( genre => {
 
 							if ( genre.items.length > 0 ) {
 

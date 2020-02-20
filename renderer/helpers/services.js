@@ -13,6 +13,7 @@ import { log, epoch } from './util'
 import {
 	indexGenre,
 	indexMovieGenre,
+	getGenres,
 	getMovies,
 	getState,
 	setState,
@@ -41,8 +42,8 @@ const renderUpdate = ( command, data ) => {
 // Debounced reflow triggers
 const _refreshGenres = () => {
 
-	const movies = getMovies()
-	renderUpdate( 'genres', movies )
+	const genres = getGenres()
+	renderUpdate( 'genres', genres )
 
 }
 

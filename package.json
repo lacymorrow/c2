@@ -1,7 +1,7 @@
 {
 	"private": true,
 	"name": "cinematic",
-  "description": "Cinematic takes the effort out of organizing your movies and finds information, photos, and trailers for you to make choosing what to watch a breeze.",
+	"description": "Cinematic takes the effort out of organizing your movies and finds information, photos, and trailers for you to make choosing what to watch a breeze.",
 	"version": "3.0.0",
 	"license": "MIT",
 	"author": {
@@ -90,6 +90,7 @@
 		"eslint-plugin-react-hooks": "^2.4.0",
 		"husky": "^4.2.3",
 		"isomorphic-fetch": "^2.2.1",
+		"ky": "^0.17.0",
 		"ky-universal": "^0.5.0",
 		"lodash": "^4.17.15",
 		"movie-info": "^2.0.5",

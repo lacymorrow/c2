@@ -3,6 +3,10 @@ productName: Cinematic
 copyright: Copyright © 2020 Lacy Morrow
 publish: github
 
+directories:
+  output: dist
+  buildResources: build
+
 files:
   - from: .
     filter:

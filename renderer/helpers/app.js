@@ -3,6 +3,7 @@
 import fs from 'fs'
 import path from 'path'
 
+import logger from 'electron-timber'
 import parseTorrentName from 'parse-torrent-name'
 
 import config from '../config'
@@ -14,10 +15,9 @@ import {
 	hash,
 	ignorePattern,
 	isDigit,
-	log,
 	prettyName
 } from './util'
-import { fetchMeta, initGenreCache, resetQueue } from './services'
+import { fetchMeta, initGenreCache, resetQueue, setupIPC } from './services'
 import {
 	initState,
 	getState,
@@ -32,6 +32,8 @@ import {
 
 export const start = () => {
 
+	setupIPC()
+
 	const state = getState()
 	initState() // TODO remove -- resets on every boot
 
@@ -42,7 +44,7 @@ export const start = () => {
 
 		// Cinematic has been run before and cache has not expired
 
-		log( strings.warn.cache_valid )
+		logger.log( strings.warn.cache_valid )
 
 		// Reload movies DB
 		getMoviesCache()
@@ -56,7 +58,7 @@ export const start = () => {
 			!( epoch() < state.genreCacheTimestamp + config.CACHE_TIMEOUT )
 		) {
 
-			log( strings.log.fetchGenreCache )
+			logger.log( strings.log.fetchGenreCache )
 			initGenreCache()
 
 		}
@@ -64,7 +66,7 @@ export const start = () => {
 	} else {
 
 		// First run
-		log( strings.log.firstRun )
+		logger.log( strings.log.firstRun )
 		initState()
 		initGenreCache()
 
@@ -81,7 +83,7 @@ export const start = () => {
 
 }
 
-const setPath = dirpath => {
+export const setPath = dirpath => {
 
 	// Save dirpath
 	setState( {
@@ -105,7 +107,7 @@ const scanPath = () => {
 
 	} else {
 
-		log( 'Error: Path is not a directory.' )
+		logger.log( strings.error.scanPath )
 
 	}
 
@@ -138,7 +140,7 @@ const scanDir = ( dirpath, recurseDepth ) => {
 
 				} else {
 
-					log( `Warning: File ${file} not valid.` )
+					logger.log( `${strings.warn.file}: ${file}` )
 
 				}
 
@@ -152,7 +154,7 @@ const scanDir = ( dirpath, recurseDepth ) => {
 
 	} catch ( error ) {
 
-		log( `Error scanning directory ${dirpath}: ${error}` )
+		logger.log( `${strings.error.scanDir} - ${dirpath}: ${error}` )
 
 	}
 
@@ -174,7 +176,7 @@ const scanFile = filepath => {
 		) {
 
 			// Cached
-			log( `Loading cached movie ${name}` )
+			logger.log( `${strings.warn.filecache}: ${name}` )
 			addMovie( movc.movie )
 			movc.movie.info.genre_ids.forEach( e => {
 
@@ -258,7 +260,7 @@ const parseFilename = filename => {
 export const reset = () => {
 
 	// Reset and init state
-	log( 'Resetting server...' )
+	logger.log( strings.log.reset )
 	resetDB()
 	resetQueue()
 
@@ -269,7 +271,7 @@ export const reset = () => {
 
 // // Server-side methods exposed to the client
 // Meteor.methods({
-// 	handleBrowseDialog(files) {
+// 	handleBrowseDialogger.log(files) {
 // 		// Receives an array of filenames
 // 		files.forEach(e => {
 // 			scanFile(e.name)
@@ -284,7 +286,7 @@ export const reset = () => {
 // 		scanPath()
 // 	},
 // 	handleOpenFile(fileObj) {
-// 		log('Opening ' + fileObj.filepath)
+// 		logger.log('Opening ' + fileObj.filepath)
 // 		addWatched(fileObj.mid)
 // 		openFile(fileObj.filepath)
 // 	},

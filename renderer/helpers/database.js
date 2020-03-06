@@ -33,6 +33,14 @@ export const setState = options => {
 
 }
 
+export const syncState = renderState => {
+
+	const state = getState()
+	store.set( 'state', { ...state, ...renderState } )
+	refreshState()
+
+}
+
 /* Recent */
 export const addRecent = mid => {
 

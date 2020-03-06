@@ -81,6 +81,7 @@
 	},
 	"devDependencies": {
 		"ava": "^3.3.0",
+		"babel-plugin-styled-components": "^1.10.7",
 		"electron": "^7.1.1",
 		"electron-builder": "^22.1.0",
 		"electron-serve": "^0.4.0",
@@ -108,5 +109,9 @@
 		"spectron": "^10.0.1",
 		"styled-components": "^5.0.1",
 		"xo": "^0.26.1"
+	},
+	"dependencies": {
+		"electron-timber": "^0.5.1",
+		"polished": "^3.4.4"
 	}
 }

@@ -4,9 +4,7 @@ import styled from 'styled-components'
 
 import strings from '../helpers/strings'
 
-const WrapperX = styled.div`
-	background: blue;
-`
+const WrapperX = styled.div``
 
 const Directory = props => {
 
@@ -17,7 +15,7 @@ const Directory = props => {
 			<span className="glyphicon glyphicon-search" aria-hidden="true"/>
 			<input
 				type="text"
-				placeholder="Movies directory"
+				placeholder={strings.directory.placeholder}
 				value={data}
 				onChange={handleChange}
 			/>

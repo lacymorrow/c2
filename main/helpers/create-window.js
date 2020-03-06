@@ -49,12 +49,10 @@ export default function createWindow( windowName, options ) {
 
 	const resetToDefaults = () => {
 
-		const bounds = screen.getPrimaryDisplay().bounds
+		const { bounds } = screen.getPrimaryDisplay()
 
-		return Object.assign( {}, defaultSize, {
-			x: ( bounds.width - defaultSize.width ) / 2,
-			y: ( bounds.height - defaultSize.height ) / 2
-		} )
+		return { ...defaultSize, x: ( bounds.width - defaultSize.width ) / 2,
+			y: ( bounds.height - defaultSize.height ) / 2 }
 
 	}
 

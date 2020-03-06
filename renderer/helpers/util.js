@@ -56,14 +56,7 @@ export const isDigit = str => {
 }
 
 // Send logs as messages to the main thread to show on the console
-export const log = value => {
-
-	console.log( value )
-	broadcast( value )
-
-	return value
-
-}
+export const log = console.log.bind( console )
 
 // Opens a file with the user default application
 export const openFile = filepath => {
@@ -86,6 +79,13 @@ export const prettyName = name => {
 const replaceAll = ( str, find, replace ) => {
 
 	return str.replace( new RegExp( find, 'g' ), replace )
+
+}
+
+export const syncState = s => {
+
+	s = s || {}
+	ipc.send( 'for-worker', { command: 'sync', data: s } )
 
 }
 

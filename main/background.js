@@ -1,5 +1,6 @@
 import { app, ipcMain } from 'electron'
 import serve from 'electron-serve'
+import logger from 'electron-timber'
 import { createWindow } from './helpers'
 
 // We want await, so we wrap in an async
@@ -13,6 +14,7 @@ import { createWindow } from './helpers'
 
 	} else {
 
+		logger.log( 'Development mode' )
 		app.setPath( 'userData', `${app.getPath( 'userData' )} (development)` )
 
 	}
@@ -27,6 +29,11 @@ import { createWindow } from './helpers'
 	const mainWindow = createWindow( 'main', {
 		width: 1000,
 		height: 600
+		// EnableLargerThanScreen: true, // Enable the window to be resized larger than screen. Only relevant for macOS.
+		// frame: false,
+		// transparent: true,
+		// titleBarStyle: 'hidden'
+
 	} )
 
 	// Main thread can receive directly from windows
@@ -38,20 +45,20 @@ import { createWindow } from './helpers'
 			switch ( command ) {
 
 				case 'online':
-					console.log( `Online: ${data}` )
+					logger.log( `Online: ${data}` )
 					break
 				case 'log':
-					console.log( `Log - ${data}` )
+					logger.log( `Log - ${data}` )
 					break
 				default:
-					console.log( `Command ${command}: ${data}` )
+					logger.log( `Command ${command}: ${data}` )
 
 			}
 
 		} else {
 
 			// Argument is not a command
-			console.log( `Invalid message: ${arg}` )
+			logger.log( `Invalid message: ${arg}` )
 
 		}
 

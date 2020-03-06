@@ -1,20 +1,23 @@
 import React, { useEffect } from 'react'
-import { ipcRenderer } from 'electron'
 import ipc from '../helpers/safe-ipc'
-import { log, updateOnlineStatus } from '../helpers/util'
 
 const Worker = () => {
+
+	const updateOnlineStatus = () => {
+
+		ipc.send( 'to-main', { command: 'online', data: navigator.onLine } )
+
+	}
 
 	// Kick off everything
 	const startup = () => {
 
-		log( 'Worker ready' )
+		const app = require( '../helpers/app' )
+
 		updateOnlineStatus()
 
 		// Let the main thread know this thread is ready to process something
-		ipcRenderer.send( 'ready' )
-
-		const app = require( '../helpers/app' )
+		ipc.send( 'ready' )
 
 		app.start()
 
@@ -26,17 +29,6 @@ const Worker = () => {
 		// Test for network connection
 		window.addEventListener( 'online', updateOnlineStatus )
 		window.addEventListener( 'offline', updateOnlineStatus )
-
-		// If message is received, pass it back to the renderer via the main thread
-		ipc.on( 'to-worker', ( event, arg ) => {
-
-			log( 'received ' + arg )
-			ipc.send( 'for-renderer', {
-				command: 'message',
-				data: process.pid + ' replying to: ' + arg
-			} )
-
-		} )
 
 		startup()
 
@@ -51,7 +43,7 @@ const Worker = () => {
 
 		}
 
-	}, [] ) // Passing an empty array prevents effect on componentDidUpdate()
+	} ) // Passing an empty array prevents effect on componentDidUpdate()
 
 	return ( <div/> )
 

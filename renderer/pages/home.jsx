@@ -2,56 +2,24 @@ import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 
-import styled from 'styled-components'
+import { ThemeProvider } from 'styled-components'
 
 import config from '../config'
+
+import { GlobalStyle } from '../styled/global'
+import { dark, light } from '../styled/themes'
+import { ContainerX, HeaderX, MainX, SidebarX, BadgeX, DisplayX, DetailsX } from '../styled/home'
+
 import strings from '../helpers/strings'
 import ipc from '../helpers/safe-ipc'
+import { syncState } from '../helpers/util'
+
+import Details from '../components/details'
 import Directory from '../components/directory'
 import Messagebox from '../components/messagebox'
+import MovieList from '../components/movielist'
 
 // TODO addRecent, addWatched, randomizeMovies, reset, open
-
-// Styles and Elements
-const ContainerX = styled.div`
-	display: flex;
-	flex-direction: column;
-	height: 100%;
-	align-items: stretch;
-`
-
-const HeaderX = styled.div`
-	flex: 1 1 100px;
-	display: flex;
-	flex-direction: row;
-	width: 100%;
-	background: gray;
-`
-
-const MainX = styled.div`
-	flex: 1 1 100%;
-	display: flex;
-	flex-direction: row;
-`
-
-const SidebarX = styled.div`
-	flex: 0 0 20%;
-	background: yellow;
-`
-
-const BadgeX = styled.span`
-	color: red;
-`
-
-const DisplayX = styled.div`
-	flex: 1 1 100%;
-	background: green;
-`
-
-const DetailsX = styled.div`
-	flex: 1 0 200px;
-	background: orange;
-`
 
 const Home = () => {
 
@@ -63,16 +31,10 @@ const Home = () => {
 	const [ genres, setGenres ] = useState( [] )
 	const [ state, setState ] = useState( config.DEFAULT_STATE )
 
+	const [ currentMovie, setCurrent ] = useState( {} )
+
 	// State properties
 	const { dirpath, loading } = state
-
-	// Send values back for store (dirpath mainly)
-	const syncState = s => {
-
-		s = s || state
-		ipc.send( 'for-worker', { command: 'sync', data: s } )
-
-	}
 
 	// Merge state
 	const assignState = newState => {
@@ -85,16 +47,8 @@ const Home = () => {
 
 	}
 
-	const movieList = () => {
-
-		// Const {movies} = props
-		return movies.map( movie => {
-
-			return <p key={movie._id}>{movie}</p>
-
-		} )
-
-	}
+	/* Handlers */
+	const onChangeCurrentMovie = index => setCurrent( movies[index] )
 
 	// Setup and tear-down communication
 	useEffect( () => {
@@ -122,7 +76,7 @@ const Home = () => {
 						assignState( data )
 						break
 					default:
-						console.log( 'Invalid ipc message received' )
+						console.log( `Invalid ipc message received: ${arg}` )
 						break
 
 				}
@@ -135,10 +89,13 @@ const Home = () => {
 
 		} )
 
+		// Send values back to worker for store (dirpath mainly)
+		syncState()
+
 		return () => {
 
 			// ComponentWillUnmount()
-			// unregister it
+			// Unregister things
 			ipc.removeAllListeners( 'to-renderer' )
 
 		}
@@ -146,7 +103,8 @@ const Home = () => {
 	}, [] )
 
 	return (
-		<>
+		<ThemeProvider theme={light}>
+			<GlobalStyle/>
 			<Head>
 				<title>Home - Nextron (ipc-communication)</title>
 			</Head>
@@ -194,32 +152,16 @@ const Home = () => {
 						Loading: {loading}
 						<br/>
 						{`COUNT: ${movies.length}`}
-						{movieList}
+						<MovieList data={movies} handleChange={onChangeCurrentMovie}/>
 					</DisplayX>
 
-					<DetailsX/>
+					<DetailsX>
+						<Details data={currentMovie}/>
+					</DetailsX>
 				</MainX>
 				{/* <Refresh /> */}
 			</ContainerX>
-
-			<style jsx global>
-				{`
-					* {
-						box-sizing: border-box;
-					}
-
-					html,
-					body {
-						height: 100%;
-						margin: 0;
-					}
-
-					#__next {
-						height: 100%;
-					}
-				`}
-			</style>
-		</>
+		</ThemeProvider>
 	)
 
 }

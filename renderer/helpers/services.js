@@ -1,5 +1,6 @@
 'use strict'
 
+import logger from 'electron-timber'
 import debounce from 'lodash/debounce'
 import ky from 'ky-universal'
 import movieInfo from 'movie-info'
@@ -9,6 +10,7 @@ import queue from 'queue'
 
 import config from '../config'
 import ipc from './safe-ipc'
+import strings from './strings'
 import { log, epoch } from './util'
 import {
 	indexGenre,
@@ -17,11 +19,39 @@ import {
 	getMovies,
 	getState,
 	setState,
+	syncState,
 	getMovieById,
 	updateMovie,
 	resetGenres,
 	refreshMovieCache
 } from './database'
+
+export const serviceLog = logger.create( { name: 'service' } )
+
+/* IPC Communication */
+export const setupIPC = () => {
+
+	// If message is received, pass it back to the renderer via the main thread
+	ipc.on( 'to-worker', ( event, arg ) => {
+
+		const { command, data } = arg
+		switch ( command ) {
+
+			case 'sync':
+				syncState( data )
+				break
+			case 'message':
+				log( data )
+				break
+			default:
+				log( `${strings.ipc.invalid}: ${arg}` )
+				break
+
+		}
+
+	} )
+
+}
 
 /* Trigger a UI reflow */
 const renderUpdate = ( command, data ) => {
@@ -34,7 +64,7 @@ const renderUpdate = ( command, data ) => {
 
 	}
 
-	console.log( `UPDATE: ${command}` )
+	// Log( `<<<UPDATE>>>: ${command} - ${JSON.stringify( data )}` )
 	ipc.send( 'for-renderer', { command, data } )
 
 }
@@ -66,42 +96,71 @@ export const refreshMovies = debounce( _refreshMovies, config.REFLOW_DELAY, {
 	trailing: true
 } )
 
-const _refreshState = () => {
+export const refreshState = () => {
 
-	const movies = getMovies()
-	renderUpdate( 'movies', movies )
+	const state = getState()
+	renderUpdate( 'state', state )
 
 }
 
-export const refreshState = debounce( _refreshState, config.REFLOW_DELAY, {
-	maxWait: config.REFLOW_DELAY,
-	leading: true,
-	trailing: true
-} )
-
 // TODO Warn user if this will take awhile
+// TODO test bad/no internet
 
-// Create and start queue
+/* QUEUE */
 const q = queue( {
 	autostart: true,
 	concurrency: config.MAX_CONNECTIONS,
-	timeout: 5000,
+	timeout: config.TIMEOUT,
 	results: []
 } )
 
-// On every job finish
-q.on( 'success', () => {
+const qUpdateLoadingBar = () => {
 
 	// Change loading bar when queue updates
 	const { queueTotal } = getState()
 	setState( { loading: Math.round( ( q.length / queueTotal ) * 100 ) || 0 } )
+
+}
+
+q.on( 'start', () => {
+
+	log( strings.q.start )
+	qUpdateLoadingBar()
+
+} )
+
+q.on( 'success', () => {
+
+	qUpdateLoadingBar()
 	refreshMovies()
 
 } )
 
-q.on( 'end', () => {
+q.on( 'error', error => {
 
-	log( 'Services queue completed.' )
+	log( `${strings.q.error}: ${error}` )
+	qUpdateLoadingBar()
+
+} )
+
+q.on( 'timeout', ( next, job ) => {
+
+	log( `${strings.q.timeout}: ${job}` )
+	qUpdateLoadingBar()
+	next()
+
+} )
+
+q.on( 'end', error => {
+
+	if ( error ) {
+
+		log( `${strings.q.error}: ${error}` )
+
+	}
+
+	log( strings.q.finish )
+
 	setState( { loading: 0 } )
 	if ( config.CACHE_TIMEOUT ) {
 
@@ -139,7 +198,7 @@ export const initGenreCache = async () => {
 
 	} catch ( error ) {
 
-		throw new Error( `Cinematic/initGenreCache: ${error}` )
+		throw new Error( `initGenreCache/ ${strings.error.genres}: ${error}` )
 
 	}
 
@@ -151,64 +210,66 @@ export const fetchMeta = ( mid, name, year ) => {
 	setState( { queueTotal: queueTotal + 3 } )
 
 	// Queue API calls
-	q.push( () => {
+	q.push( async () => {
 
-		return fetchOMDB( name )
-			.then( res => {
+		try {
 
-				return reconcileMovieMeta( mid, res )
+			const response = await fetchOMDB( name )
 
-			} )
-			.catch( error => {
+			return reconcileMovieMeta( mid, response )
 
-				return log( `Error fetching OMDB meta: ${error}` )
+		} catch ( error ) {
 
-			} )
+			return log( `${strings.error.omdb}: ${error}` )
 
-	} )
-
-	q.push( () => {
-
-		return fetchTMDB( name, year )
-			.then( res => {
-
-				// Add movie genres
-				for ( const gid of res.genre_ids ) {
-
-					indexMovieGenre( gid, mid )
-
-				}
-
-				return reconcileMovieMeta( mid, res )
-
-			} )
-			.catch( error => {
-
-				return log( `Error fetching TMDB meta: ${error}` )
-
-			} )
+		}
 
 	} )
 
-	q.push( () => {
+	q.push( async () => {
 
-		return fetchTrailer( name, year ).then( res => {
+		try {
 
+			const response = await fetchTMDB( name, year )
+			// Add movie genres
+			for ( const gid of response.genre_ids ) {
+
+				indexMovieGenre( gid, mid )
+
+			}
+
+			return reconcileMovieMeta( mid, response )
+
+		} catch ( error ) {
+
+			return log( `${strings.error.tmdb}: ${error}` )
+
+		}
+
+	} )
+
+	q.push( async () => {
+
+		try {
+
+			const response = await fetchTrailer( name, year )
 			const movie = getMovieById( mid )
+
 			if ( movie ) {
 
-				movie.trailer = res
+				movie.trailer = response
 
 			}
 
 			updateMovie( mid, movie )
 
-			return res
+			return response
 
-		} )
-		// .catch(error => {
-		// 	return log(`Error fetching trailer meta: ${error}`)
-		// })
+		} catch ( error ) {
+
+			return log( `${strings.error.trailer}: ${error}` )
+
+		}
 
 	} )
 
@@ -297,42 +358,40 @@ const fetchOMDB = name => {
 
 }
 
-const fetchTMDB = ( name, year ) => {
+const fetchTMDB = async ( name, year ) => {
 
-	return movieInfo( name, year ).then( res => {
+	const response = await movieInfo( name, year )
 
-		res.ratings = []
+	response.ratings = []
 
-		if ( res.vote_average ) {
+	if ( response.vote_average ) {
 
-			res.ratings.push( {
-				name: 'TMDB',
-				score: parseFloat( res.vote_average ),
-				count: countToArray( res.vote_average )
-			} )
+		response.ratings.push( {
+			name: 'TMDB',
+			score: parseFloat( response.vote_average ),
+			count: countToArray( response.vote_average )
+		} )
 
-		}
+	}
 
-		res.plot = res.overview
-		res.releaseDate = Date.parse( res.release_date )
-		res.year = res.Year
+	response.plot = response.overview
+	response.releaseDate = Date.parse( response.release_date )
+	response.year = response.Year
 
-		res.backdrop =
-			config.IMDB_ENDPOINT + config.BACKDROP_SIZE + res.backdrop_path
-		res.poster = config.IMDB_ENDPOINT + config.POSTER_SIZE + res.poster_path
+	response.backdrop =
+		config.IMDB_ENDPOINT + config.BACKDROP_SIZE + response.backdrop_path
+	response.poster = config.IMDB_ENDPOINT + config.POSTER_SIZE + response.poster_path
 
-		const keys = Object.keys( res )
-		res.info = {}
+	const keys = Object.keys( response )
+	response.info = {}
 
-		for ( const key of keys ) {
+	for ( const key of keys ) {
 
-			res.info[key] = res[key]
+		response.info[key] = response[key]
 
-		}
+	}
 
-		return res
-
-	} )
+	return response
 
 }
 

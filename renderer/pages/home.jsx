@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
-import Link from 'next/link'
 
 import { ThemeProvider } from 'styled-components'
 
@@ -8,7 +7,7 @@ import config from '../config'
 
 import { GlobalStyle } from '../styled/global'
 import { dark, light } from '../styled/themes'
-import { ContainerX, HeaderX, MainX, SidebarX, BadgeX, DisplayX, DetailsX } from '../styled/home'
+import { ContainerX, HeaderX, MainX, DisplayX, DetailsX } from '../styled/home'
 
 import strings from '../helpers/strings'
 import ipc from '../helpers/safe-ipc'
@@ -18,6 +17,8 @@ import Details from '../components/details'
 import Directory from '../components/directory'
 import Messagebox from '../components/messagebox'
 import MovieList from '../components/movielist'
+import ResetBtn from '../components/reset-btn'
+import Sidebar from '../components/sidebar'
 
 // TODO addRecent, addWatched, randomizeMovies, reset, open
 
@@ -31,7 +32,8 @@ const Home = () => {
 	const [ genres, setGenres ] = useState( [] )
 	const [ state, setState ] = useState( config.DEFAULT_STATE )
 
-	const [ currentMovie, setCurrent ] = useState( {} )
+	const [ currentGenre, setCurrentGenre ] = useState( {} ) // Todo
+	const [ currentMovie, setCurrentMovie ] = useState( {} )
 
 	// State properties
 	const { dirpath, loading } = state
@@ -48,7 +50,36 @@ const Home = () => {
 	}
 
 	/* Handlers */
-	const onChangeCurrentMovie = index => setCurrent( movies[index] )
+	const onChangeDirectory = dirpath => {
+
+		// Todo
+		// Set new directory
+		assignState( { dirpath } )
+
+	}
+
+	const onChangeCurrentGenre = index => {
+
+		console.log( 'genre', index )
+		setCurrentGenre( genres[index] )
+
+	}
+
+	const onChangeCurrentMovie = index => setCurrentMovie( movies[index] )
+
+	const onResetButton = () => {
+		console.log('RESET')
+		syncState() // Send state back to worker
+	}
+
+	// State change callback
+	useEffect( () => {
+		if (state.dirpath !== state.currentDir) {
+			console.log('SYNC', state.dirpath, state.currentDir)
+			// syncState( state ) // Send state back to worker
+		}
+
+	}, [ state ] )
 
 	// Setup and tear-down communication
 	useEffect( () => {
@@ -76,7 +107,7 @@ const Home = () => {
 						assignState( data )
 						break
 					default:
-						console.log( `Invalid ipc message received: ${arg}` )
+						console.log( `${strings.error.ipc}: ${arg}` )
 						break
 
 				}
@@ -111,41 +142,16 @@ const Home = () => {
 
 			<ContainerX>
 				<HeaderX>
-					<h1>Cinematic</h1>
 					<Directory
 						data={dirpath}
-						handleChange={e => {
-
-							assignState( { dirpath: e.target.value } )
-							syncState( state )
-
-						}}
+						handleChange={onChangeDirectory}
 					/>
 
 					<Messagebox data={message}/>
 				</HeaderX>
 
 				<MainX>
-					<SidebarX>
-						<Link href="/next">
-							<a>Go to next page</a>
-						</Link>
-						{genres && genres.map( genre => {
-
-							if ( genre.items.length > 0 ) {
-
-								return (
-									<p key={genre._id}>
-										{genre.name} <BadgeX>{genre.items.length}</BadgeX>
-									</p>
-								)
-
-							}
-
-							return false
-
-						} )}
-					</SidebarX>
+					<Sidebar data={genres} handleChange={onChangeCurrentGenre}/>
 
 					<DisplayX>
 						<img src="/static/logo.png"/>
@@ -160,6 +166,7 @@ const Home = () => {
 					</DetailsX>
 				</MainX>
 				{/* <Refresh /> */}
+				<ResetBtn handleChange={onResetButton} />
 			</ContainerX>
 		</ThemeProvider>
 	)

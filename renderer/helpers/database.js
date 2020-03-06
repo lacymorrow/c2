@@ -68,32 +68,32 @@ export const addWatched = mid => {
 }
 
 /* Genre */
-export const indexGenre = ( id, name ) => {
+export const indexGenre = ( gid, name ) => {
 
 	// Create or update genre name
-	const genre = getGenre( id )
+	const genre = getGenre( gid )
 	if ( genre ) {
 
-		updateGenre( id, { name } )
+		updateGenre( gid, { name } )
 
 	} else {
 
-		addGenre( id, { name } )
+		addGenre( gid, { name } )
 
 	}
 
 }
 
-export const indexMovieGenre = ( id, mid ) => {
+export const indexMovieGenre = ( gid, mid ) => {
 
 	// Create or update genre and pin a movie to genre
-	const genre = getGenre( id )
+	const genre = getGenre( gid )
 	if ( genre ) {
 
 		// Genre is not guaranteed to have .items
 		const items = genre.items || []
 		items.push( mid )
-		updateGenre( id, { items } )
+		updateGenre( gid, { items } )
 
 	}
 
@@ -101,21 +101,21 @@ export const indexMovieGenre = ( id, mid ) => {
 
 export const getGenres = () => store.get( 'genres' )
 
-const addGenre = ( id, options ) => {
+const addGenre = ( gid, options ) => {
 
-	const genre = { ...options, ...{ id, _id: id.toString(), items: [] } }
+	const genre = { ...options, ...{ id: gid, _id: gid.toString(), items: [] } }
 	const genres = store.get( 'genres' )
 	genres.push( genre )
 	store.set( 'genres', genres )
 
 }
 
-const getGenre = id => {
+const getGenre = gid => {
 
 	const genres = store.get( 'genres' )
 	for ( const genre of genres ) {
 
-		if ( genre._id === id.toString() ) {
+		if ( genre._id === gid.toString() ) {
 
 			return genre
 
@@ -127,12 +127,12 @@ const getGenre = id => {
 
 }
 
-const updateGenre = ( id, options ) => {
+const updateGenre = ( gid, options ) => {
 
 	const genres = store.get( 'genres' )
 	genres.forEach( ( genre, i ) => {
 
-		if ( genre._id === id.toString() ) {
+		if ( genre._id === gid.toString() ) {
 
 			// Id is a number
 

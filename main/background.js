@@ -77,10 +77,6 @@ import { createWindow } from './helpers'
 
 	} )
 
-	// IpcMain.on( 'ready', ( event, arg ) => {
-	// 	// ... Do something
-	// } )
-
 	mainWindow.on( 'closed', () => {
 
 		// Call quit to exit, otherwise the background windows will keep the app running

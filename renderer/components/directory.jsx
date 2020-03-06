@@ -17,7 +17,7 @@ const Directory = props => {
 				type="text"
 				placeholder={strings.directory.placeholder}
 				value={data}
-				onChange={handleChange}
+				onChange={e => handleChange( e.target.value )}
 			/>
 		</WrapperX>
 	)

@@ -101,7 +101,7 @@ const scanPath = () => {
 	const { dirpath } = getState()
 	if ( isDirectory( dirpath ) ) {
 
-		setState( { dirpath, queueTotal: 0 } ) // TODO scanPath called to update dirpath, break out
+		setState( { dirpath, currentDir: dirpath, queueTotal: 0 } ) // TODO scanPath called to update dirpath, break out
 		resetMovies()
 		scanDir( dirpath, 0 )
 

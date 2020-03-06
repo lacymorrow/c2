@@ -21,16 +21,6 @@ export const MainX = styled.div`
 	flex-direction: row;
 `
 
-export const SidebarX = styled.div`
-	flex: 0 0 20%;
-	color: ${props => props.theme.colorPrimary};
-	background: ${props => props.theme.bgColorPrimary};
-`
-
-export const BadgeX = styled.span`
-	color: red;
-`
-
 export const DisplayX = styled.div`
 	flex: 1 1 100%;
 	background: green;

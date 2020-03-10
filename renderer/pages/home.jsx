@@ -32,7 +32,7 @@ const Home = () => {
 	const [ genres, setGenres ] = useState( [] )
 	const [ state, setState ] = useState( config.DEFAULT_STATE )
 
-	const [ currentGenre, setCurrentGenre ] = useState( {} ) // Todo
+	const [ currentPage, setCurrentPage ] = useState( config.DEFAULT_STATE.currentPage )
 	const [ currentMovie, setCurrentMovie ] = useState( {} )
 
 	// State properties
@@ -58,26 +58,47 @@ const Home = () => {
 
 	}
 
-	const onChangeCurrentGenre = index => {
+	const onChangeNavigation = page => {
 
-		console.log( 'genre', index )
-		setCurrentGenre( genres[index] )
+		switch ( page ) {
+
+			// Main (movies)
+			case config.DEFAULT_STATE.currentPage:
+
+				setCurrentPage( page )
+
+				break
+			default:
+
+				for ( const genre of genres ) {
+
+					if ( genre._id === page.toString() ) {
+
+						setCurrentPage( genre._id )
+
+					}
+
+				}
+
+				break
+
+		}
 
 	}
 
 	const onChangeCurrentMovie = index => setCurrentMovie( movies[index] )
 
-	const onResetButton = () => {
-		console.log('RESET')
+	const onResetButtonClick = () => {
+		console.log(strings.resetBtn.click)
 		syncState() // Send state back to worker
 	}
 
 	// State change callback
 	useEffect( () => {
-		if (state.dirpath !== state.currentDir) {
-			console.log('SYNC', state.dirpath, state.currentDir)
-			// syncState( state ) // Send state back to worker
-		}
+		// if (state.dirpath !== state.currentDir) {
+		// 	console.log('SYNC', state.dirpath, state.currentDir)
+		// 	syncState( state ) // Send state back to worker
+		// }
 
 	}, [ state ] )
 
@@ -151,13 +172,11 @@ const Home = () => {
 				</HeaderX>
 
 				<MainX>
-					<Sidebar data={genres} handleChange={onChangeCurrentGenre}/>
+					<Sidebar data={genres} handleChange={onChangeNavigation} currentPage={currentPage} movieCount={movies.length} />
 
 					<DisplayX>
-						<img src="/static/logo.png"/>
-						Loading: {loading}
+						{`COUNT: ${movies.length}`}						Loading: {loading}
 						<br/>
-						{`COUNT: ${movies.length}`}
 						<MovieList data={movies} handleChange={onChangeCurrentMovie}/>
 					</DisplayX>
 
@@ -166,7 +185,7 @@ const Home = () => {
 					</DetailsX>
 				</MainX>
 				{/* <Refresh /> */}
-				<ResetBtn handleChange={onResetButton} />
+				<ResetBtn handleChange={onResetButtonClick} />
 			</ContainerX>
 		</ThemeProvider>
 	)

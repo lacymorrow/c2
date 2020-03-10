@@ -1,4 +1,5 @@
 import { app, ipcMain } from 'electron'
+import { is } from 'electron-util'
 import serve from 'electron-serve'
 import logger from 'electron-timber'
 import { createWindow } from './helpers'

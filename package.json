@@ -112,6 +112,7 @@
 	},
 	"dependencies": {
 		"electron-timber": "^0.5.1",
+		"electron-util": "^0.14.0",
 		"polished": "^3.4.4"
 	}
 }

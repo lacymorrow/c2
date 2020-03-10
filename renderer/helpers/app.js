@@ -76,7 +76,7 @@ export const start = () => {
 	}
 
 	// Reset fleeting state
-	setState( { queueTotal: 0 } )
+	setState( { queueTotal: 0, currentPage: config.DEFAULT_STATE.currentPage } )
 
 	// Trigger a reload of data
 	setPath( dirpath )

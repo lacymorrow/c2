@@ -2,7 +2,7 @@
 
 import Store from 'electron-store'
 import config from '../config'
-import { refreshGenres, refreshState } from './services'
+import { refreshGenres, refreshMovies, refreshState } from './services'
 import { epoch } from './util'
 
 const store = new Store( {
@@ -38,7 +38,8 @@ export const syncState = renderState => {
 	const state = getState()
 	store.set( 'state', { ...state, ...renderState } )
 	refreshState()
-
+	refreshGenres()
+	refreshMovies()
 }
 
 /* Recent */
@@ -113,6 +114,7 @@ const addGenre = ( gid, options ) => {
 const getGenre = gid => {
 
 	const genres = store.get( 'genres' )
+
 	for ( const genre of genres ) {
 
 		if ( genre._id === gid.toString() ) {

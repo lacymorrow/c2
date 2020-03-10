@@ -22,12 +22,12 @@ export const MainX = styled.div`
 `
 
 export const DisplayX = styled.div`
-	flex: 1 1 100%;
+	flex: 1 0 60%;
 	background: green;
 `
 
 export const DetailsX = styled.div`
-	flex: 1 0 200px;
+	flex: 1 0 0;
 	background: orange;
 	transition: all 3s ease;
 `

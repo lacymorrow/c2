@@ -11,8 +11,10 @@ const ButtonX = styled.button`
     padding: 0;
     width: auto;
     overflow: visible;
+    cursor: pointer;
 
-    background: transparent;
+    color: ${props => props.theme.buttonColor};
+    background: ${props => props.theme.buttonBgColor};
 
     /* inherit font & color from ancestor */
     color: inherit;
@@ -35,13 +37,13 @@ const ButtonX = styled.button`
 	}
 
 	/* A11y styles */
-	&:hover,
-	&:focus {
-	    background: #0053ba;
+	&:hover{
+	    color: ${props => props.theme.buttonHoverColor};
+	    background: ${props => props.theme.buttonHoverBgColor};
 	}
 
 	&:focus {
-	    outline: 1px solid #fff;
+	    outline: 1px solid ${props => props.theme.buttonFocusColor};
 	    outline-offset: -4px;
 	}
 
@@ -55,13 +57,13 @@ const Button = props => {
 	const { children, data, handleChange } = props
 
 	return (
-		<ButtonX {...props} onClick={handleChange}>{data || children}</ButtonX>
+		<ButtonX {...props} onClick={handleChange}>{children || data}</ButtonX>
 	)
 
 }
 
 Button.propTypes = {
-	children: PropTypes.array,
+	children: PropTypes.node,
 	data: PropTypes.string,
 	handleChange: PropTypes.func
 }

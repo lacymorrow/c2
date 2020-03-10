@@ -3,6 +3,10 @@ export default {
 	app: {
 		title: 'Cinematic'
 	},
+	sidebar: {
+		label: 'Browse',
+		main: 'Movies'
+	},
 
 	// Main process
 	background: {
@@ -32,6 +36,7 @@ export default {
 		init: 'Loading...'
 	},
 	resetBtn: {
+		click: 'Resetting state...',
 		tooltip: 'Reset Cinematic'
 	},
 

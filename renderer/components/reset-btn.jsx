@@ -15,7 +15,6 @@ const ResetBtn = props => {
 		<WrapperX>
 			<Button {...handleChange} {...props}>
 				{data}
-				<span className="glyphicon glyphicon-search" aria-hidden="true"/>
 			</Button>
 		</WrapperX>
 	)

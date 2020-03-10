@@ -4,13 +4,13 @@ import styled from 'styled-components'
 
 import strings from '../helpers/strings'
 
-import Button from './button'
+import Button from './sidebar-button'
 import Title from './title'
 
 const WrapperX = styled.div`
 	flex: 0 0 20%;
 	color: ${props => props.theme.colorPrimary};
-	background: ${props => props.theme.bgColorPrimary};
+	background: ${props => props.theme.colorBgPrimary};
 `
 
 const ListX = styled.ul`
@@ -23,25 +23,54 @@ const ItemX = styled.li`
 
 `
 
+const LabelX = styled.p`
+	font-weight: 700;
+	width: 100%;
+	padding: 0 1rem;
+`
+
 const BadgeX = styled.span`
-	color: red;
+	background-color: ${props => props.theme.highlightColor};
+	color: ${props => props.theme.colorBgPrimary};
+
+
+	vertical-align: middle;
+	white-space: nowrap;
+	text-align: center;
+	border-radius: 20px;
+	padding: .2rem .5rem;
 `
 
 const Sidebar = props => {
 
-	const { data, handleChange } = props
+	const { data, handleChange, currentPage, movieCount } = props
 
 	return (
 		<WrapperX>
 			<Title />
 			<ListX>
+				<ItemX>
+					<LabelX>{strings.sidebar.label} {movieCount && (<BadgeX>{movieCount}</BadgeX>)}</LabelX>
+				</ItemX>
+
+				<ItemX>
+					<Button active={currentPage === 'movies'} data-active={currentPage === 'movies'} handleChange={() => handleChange( 'movies' )}>{strings.sidebar.main}</Button>
+				</ItemX>
+
+				<ItemX>
+					<LabelX>Genres</LabelX>
+				</ItemX>
+
 				{data && data.map( genre => {
 
 					if ( genre.items.length > 0 ) {
 
 						return (
 							<ItemX key={genre._id}>
-								<Button data-id={genre._id} handleChange={e => handleChange( e.target.dataset.id )}>{genre.name} <BadgeX>{genre.items.length}</BadgeX></Button>
+								<Button active={currentPage === genre._id} data-id={genre._id} handleChange={e => handleChange( e.currentTarget.dataset.id )}>
+									{genre.name}
+									{/*<BadgeX>{genre.items.length}</BadgeX>*/}
+								</Button>
 							</ItemX>
 						)
 
@@ -58,7 +87,9 @@ const Sidebar = props => {
 
 Sidebar.propTypes = {
 	data: PropTypes.array,
-	handleChange: PropTypes.func
+	handleChange: PropTypes.func,
+	currentPage: PropTypes.string,
+	movieCount: PropTypes.number
 }
 
 Sidebar.defaultProps = {

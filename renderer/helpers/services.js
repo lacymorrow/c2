@@ -191,6 +191,7 @@ export const initGenreCache = async () => {
 		for ( const genre of res.genres ) {
 
 			indexGenre( genre.id, genre.name )
+			// console.log(genre.id, genre.name)
 
 		}
 

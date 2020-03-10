@@ -4,7 +4,9 @@ import styled from 'styled-components'
 
 import strings from '../helpers/strings'
 
-const TitleX = styled.h1``
+const TitleX = styled.h1`
+	color: ${props => props.theme.colorPrimary};
+`
 
 const Title = props => {
 

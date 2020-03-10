@@ -44,7 +44,8 @@ const config = {
 		dirpath: '~/',
 		loading: 100,
 		queueTotal: 0,
-		activeMovie: -1
+		activeMovie: -1,
+		currentPage: 'movies'
 	}
 }
 

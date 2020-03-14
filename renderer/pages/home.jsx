@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Head from 'next/head'
 
 import { ThemeProvider } from 'styled-components'
@@ -31,11 +31,14 @@ const Home = () => {
 	const [ message, setMessage ] = useState( strings.messagebox.init )
 	const [ movies, setMovies ] = useState( [] )
 	const [ genres, setGenres ] = useState( [] )
-	const [ state, setState ] = useState( config.DEFAULT_STATE )
 
 	const [ currentMovie, setCurrentMovie ] = useState( {} )
 	const [ currentPage, setCurrentPage ] = useState( config.DEFAULT_STATE.currentPage )
 	const [ currentTheme, setCurrentTheme ] = useState( light )
+
+	const [ state, setState ] = useState( config.DEFAULT_STATE )
+	const stateRef = useRef( state )
+	stateRef.current = state
 
 	// State properties
 	const { dirpath, loading } = state
@@ -56,7 +59,13 @@ const Home = () => {
 
 		// Todo
 		// Set new directory
+		console.log('SYNC', stateRef.current.dirpath, stateRef.current.currentDir)
+		console.log('SYNC2', state.dirpath, state.currentDir)
 		assignState( { dirpath } )
+
+		// if (stateRef.current.dirpath !== stateRef.current.currentDir) {
+		// 	syncState( stateRef.current ) // Send state back to worker
+		// }
 
 	}
 
@@ -113,10 +122,6 @@ const Home = () => {
 
 	// State change callback
 	useEffect( () => {
-		// If (state.dirpath !== state.currentDir) {
-		// 	console.log('SYNC', state.dirpath, state.currentDir)
-		// 	syncState( state ) // Send state back to worker
-		// }
 
 	}, [ state ] )
 

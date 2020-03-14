@@ -7,7 +7,7 @@ import Button from './button'
 
 const WrapperX = styled.div``
 
-const ResetBtn = props => {
+const ResetButton = props => {
 
 	const { data, handleChange } = props
 
@@ -21,13 +21,13 @@ const ResetBtn = props => {
 
 }
 
-ResetBtn.propTypes = {
+ResetButton.propTypes = {
 	data: PropTypes.string,
 	handleChange: PropTypes.func
 }
 
-ResetBtn.defaultProps = {
+ResetButton.defaultProps = {
 	data: strings.resetBtn.tooltip
 }
 
-export default ResetBtn
+export default ResetButton

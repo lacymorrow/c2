@@ -293,9 +293,6 @@ export const reset = () => {
 // 	handleRandomSort() {
 // 		randomizeMovies()
 // 	},
-// 	handleRefresh() {
-// 		reset()
-// 	},
 // 	handleViewMovie(mid) {
 // 		addRecent(mid)
 // 	}

@@ -1,6 +1,8 @@
 import { darken, lighten, invert } from 'polished'
+import { objectMap } from '../helpers/util'
 
 const colors = {
+	blacker: '#000',
 	black: '#222',
 	white: '#fff',
 
@@ -10,49 +12,37 @@ const colors = {
 
 /* Light mode */
 const lightTheme = {
-	colorPrimary: colors.black,
-	colorBgPrimary: colors.white,
+	sidebarColor: colors.black,
+	sidebarBgColor: colors.white,
 
-	colorSecondary: '#999',
-	colorBgSecondary: '#ccc',
+	displayColor: '#999',
+	displayBgColor: '#ccc',
 
-	highlightColor: 'green',
-	highlightBgColor: 'teal',
+	highlightColor: colors.blue,
+	highlightSecondaryColor: darken( 0.15, colors.blue ),
 
-	buttonColor: 'black',
-	buttonBgColor: 'transparent',
+	buttonColor: colors.black,
+	buttonBgColor: colors.white,
 	buttonActiveColor: colors.white,
 	buttonActiveBgColor: colors.blue,
 
-	buttonHoverColor: 'cerulean',
-	buttonHoverBgColor: 'orange',
+	buttonHoverColor: '#55F',
+	buttonHoverBgColor: '#FF0',
 
-	buttonFocusColor: 'orange',
-	buttonFocusBgColor: 'purple',
-
+	buttonFocusColor: '#F50',
+	buttonFocusBgColor: '#0FF',
 
 	searchColor: 'rgba(246, 247, 249, 0.5)'
 }
 
 /* Dark mode */
 const darkTheme = {
-	colorPrimary: '#fff',
-	colorBgPrimary: '#444',
-
-	colorSecondary: '#ccc',
-	colorBgSecondary: '#777',
-
-	buttonColor: colors.blue,
-
-	buttonFocusColor: '#fff',
-
-	highlightColor: colors.blue,
 	searchColor: colors.yellow
 }
 
 // Merge any non-existant colors
-const dark = { ...lightTheme, ...darkTheme }
+const dark = { ...objectMap( lightTheme, value => invert( value ) ), ...darkTheme }
 
-const light = { ...darkTheme, ...lightTheme }
+const light = { ...objectMap( darkTheme, value => invert( value ) ), ...lightTheme }
 
 export { dark, light, colors }

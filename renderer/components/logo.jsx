@@ -5,10 +5,10 @@ import styled from 'styled-components'
 import strings from '../helpers/strings'
 
 const TitleX = styled.h1`
-	color: ${props => props.theme.colorPrimary};
+	color: ${props => props.theme.titleColor};
 `
 
-const Title = props => {
+const Logo = props => {
 
 	const { data } = props
 
@@ -20,12 +20,12 @@ const Title = props => {
 
 }
 
-Title.propTypes = {
+Logo.propTypes = {
 	data: PropTypes.string
 }
 
-Title.defaultProps = {
+Logo.defaultProps = {
 	data: strings.app.title
 }
 
-export default Title
+export default Logo

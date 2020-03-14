@@ -58,10 +58,40 @@ export const isDigit = str => {
 // Send logs as messages to the main thread to show on the console
 export const log = console.log.bind( console )
 
+// Returns a new object with the values at each key mapped using mapFn(value)
+export const objectMap = ( object, mapFn ) => {
+
+	return Object.keys( object ).reduce( ( result, key ) => {
+
+		result[key] = mapFn( object[key] )
+
+		return result
+
+	}, {} )
+
+}
+
 // Opens a file with the user default application
 export const openFile = filepath => {
 
 	open( path.join( 'file://', filepath ) )
+
+}
+
+export const pageVsGenreId = page => {
+
+	switch ( page ) {
+
+		// Main (movies)
+		case config.DEFAULT_STATE.currentPage:
+
+			return true
+
+		default:
+
+			return false
+
+	}
 
 }
 

@@ -5,12 +5,12 @@ import styled from 'styled-components'
 import strings from '../helpers/strings'
 
 import Button from './sidebar-button'
-import Title from './title'
+import Logo from './logo'
 
 const WrapperX = styled.div`
 	flex: 0 0 20%;
-	color: ${props => props.theme.colorPrimary};
-	background: ${props => props.theme.colorBgPrimary};
+	color: ${props => props.theme.sidebarColor};
+	background: ${props => props.theme.sidebarBgColor};
 `
 
 const ListX = styled.ul`
@@ -31,7 +31,7 @@ const LabelX = styled.p`
 
 const BadgeX = styled.span`
 	background-color: ${props => props.theme.highlightColor};
-	color: ${props => props.theme.colorBgPrimary};
+	color: ${props => props.theme.sidebarBgColor};
 
 
 	vertical-align: middle;
@@ -47,10 +47,10 @@ const Sidebar = props => {
 
 	return (
 		<WrapperX>
-			<Title />
+			<Logo/>
 			<ListX>
 				<ItemX>
-					<LabelX>{strings.sidebar.label} {movieCount && (<BadgeX>{movieCount}</BadgeX>)}</LabelX>
+					<LabelX>{strings.sidebar.label} {movieCount && ( <BadgeX>{movieCount}</BadgeX> )}</LabelX>
 				</ItemX>
 
 				<ItemX>
@@ -69,7 +69,7 @@ const Sidebar = props => {
 							<ItemX key={genre._id}>
 								<Button active={currentPage === genre._id} data-id={genre._id} handleChange={e => handleChange( e.currentTarget.dataset.id )}>
 									{genre.name}
-									{/*<BadgeX>{genre.items.length}</BadgeX>*/}
+									{/* <BadgeX>{genre.items.length}</BadgeX> */}
 								</Button>
 							</ItemX>
 						)

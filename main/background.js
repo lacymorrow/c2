@@ -1,7 +1,10 @@
 import { app, ipcMain } from 'electron'
-import { is } from 'electron-util'
+// Import { is } from 'electron-util'
 import serve from 'electron-serve'
 import logger from 'electron-timber'
+import open from 'open'
+import path from 'path'
+
 import { createWindow } from './helpers'
 
 // We want await, so we wrap in an async
@@ -28,8 +31,8 @@ import { createWindow } from './helpers'
 	} )
 
 	const mainWindow = createWindow( 'main', {
-		width: 1000,
-		height: 600
+		width: 1200,
+		height: 800
 		// EnableLargerThanScreen: true, // Enable the window to be resized larger than screen. Only relevant for macOS.
 		// frame: false,
 		// transparent: true,
@@ -50,6 +53,10 @@ import { createWindow } from './helpers'
 					break
 				case 'log':
 					logger.log( `Log - ${data}` )
+					break
+				case 'open':
+					logger.log( `Open file - ${data}` )
+					open( path.join( 'file://', data ) )
 					break
 				default:
 					logger.log( `Command ${command}: ${data}` )

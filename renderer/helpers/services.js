@@ -191,7 +191,7 @@ export const initGenreCache = async () => {
 		for ( const genre of res.genres ) {
 
 			indexGenre( genre.id, genre.name )
-			// console.log(genre.id, genre.name)
+			// Console.log(genre.id, genre.name)
 
 		}
 
@@ -258,7 +258,7 @@ export const fetchMeta = ( mid, name, year ) => {
 
 			if ( movie ) {
 
-				movie.trailer = response
+				movie.trailers = response
 
 			}
 
@@ -342,6 +342,7 @@ const fetchOMDB = name => {
 
 				}
 
+				// TODO remove info and intel after flattening
 				const keys = Object.keys( res )
 				res.intel = {}
 				for ( const key of keys ) {
@@ -383,6 +384,7 @@ const fetchTMDB = async ( name, year ) => {
 		config.IMDB_ENDPOINT + config.BACKDROP_SIZE + response.backdrop_path
 	response.poster = config.IMDB_ENDPOINT + config.POSTER_SIZE + response.poster_path
 
+	// TODO remove info and intel after flattening
 	const keys = Object.keys( response )
 	response.info = {}
 

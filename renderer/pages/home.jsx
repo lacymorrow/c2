@@ -7,18 +7,19 @@ import config from '../config'
 
 import { GlobalStyle } from '../styled/global'
 import { dark, light } from '../styled/themes'
-import { ContainerX, HeaderX, MainX, DisplayX, DetailsX } from '../styled/home'
+import { ContainerX, HeaderX, MainX, DisplayX } from '../styled/home'
 
-import strings from '../helpers/strings'
 import ipc from '../helpers/safe-ipc'
-import { syncState } from '../helpers/util'
+import strings from '../helpers/strings'
+import { pageVsGenreId, syncState } from '../helpers/util'
 
-import Details from '../components/details'
 import Directory from '../components/directory'
 import Messagebox from '../components/messagebox'
-import MovieList from '../components/movielist'
-import ResetBtn from '../components/reset-btn'
+import MovieInfo from '../components/movie-info'
+import MovieList from '../components/movie-list'
+import ResetButton from '../components/reset-button'
 import Sidebar from '../components/sidebar'
+import ThemeToggle from '../components/theme-toggle'
 
 // TODO addRecent, addWatched, randomizeMovies, reset, open
 
@@ -32,8 +33,9 @@ const Home = () => {
 	const [ genres, setGenres ] = useState( [] )
 	const [ state, setState ] = useState( config.DEFAULT_STATE )
 
-	const [ currentPage, setCurrentPage ] = useState( config.DEFAULT_STATE.currentPage )
 	const [ currentMovie, setCurrentMovie ] = useState( {} )
+	const [ currentPage, setCurrentPage ] = useState( config.DEFAULT_STATE.currentPage )
+	const [ currentTheme, setCurrentTheme ] = useState( light )
 
 	// State properties
 	const { dirpath, loading } = state
@@ -49,7 +51,7 @@ const Home = () => {
 
 	}
 
-	/* Handlers */
+	/* HANDLERS */
 	const onChangeDirectory = dirpath => {
 
 		// Todo
@@ -58,44 +60,60 @@ const Home = () => {
 
 	}
 
-	const onChangeNavigation = page => {
+	const onChangePage = page => {
 
-		switch ( page ) {
+		if ( pageVsGenreId( page ) ) {
 
-			// Main (movies)
-			case config.DEFAULT_STATE.currentPage:
+			setCurrentPage( page )
 
-				setCurrentPage( page )
+		} else {
 
-				break
-			default:
+			for ( const genre of genres ) {
 
-				for ( const genre of genres ) {
+				if ( genre._id === page.toString() ) {
 
-					if ( genre._id === page.toString() ) {
-
-						setCurrentPage( genre._id )
-
-					}
+					setCurrentPage( genre._id )
 
 				}
 
-				break
+			}
 
 		}
 
 	}
 
+	const onChangeTheme = () => setCurrentTheme( theme => {
+
+		// Todo save theme and reload
+		if ( theme === light ) {
+
+			return dark
+
+		}
+
+		return light
+
+	} )
+
 	const onChangeCurrentMovie = index => setCurrentMovie( movies[index] )
 
-	const onResetButtonClick = () => {
-		console.log(strings.resetBtn.click)
+	const onClickResetButton = () => {
+
+		console.log( strings.resetBtn.click )
 		syncState() // Send state back to worker
+
 	}
+
+	/* State Effect Functions */
+
+	// On Page Change
+	useEffect( () => {
+
+	}, [ currentPage ] )
 
 	// State change callback
 	useEffect( () => {
-		// if (state.dirpath !== state.currentDir) {
+		// If (state.dirpath !== state.currentDir) {
 		// 	console.log('SYNC', state.dirpath, state.currentDir)
 		// 	syncState( state ) // Send state back to worker
 		// }
@@ -154,8 +172,10 @@ const Home = () => {
 
 	}, [] )
 
+	/* Template */
+
 	return (
-		<ThemeProvider theme={light}>
+		<ThemeProvider theme={currentTheme}>
 			<GlobalStyle/>
 			<Head>
 				<title>Home - Nextron (ipc-communication)</title>
@@ -169,23 +189,24 @@ const Home = () => {
 					/>
 
 					<Messagebox data={message}/>
+
+					<ThemeToggle isActive={currentTheme === light} handleChange={onChangeTheme}/>
 				</HeaderX>
 
 				<MainX>
-					<Sidebar data={genres} handleChange={onChangeNavigation} currentPage={currentPage} movieCount={movies.length} />
+					<Sidebar data={genres} handleChange={onChangePage} currentPage={currentPage} movieCount={movies.length}/>
 
 					<DisplayX>
 						{`COUNT: ${movies.length}`}						Loading: {loading}
 						<br/>
-						<MovieList data={movies} handleChange={onChangeCurrentMovie}/>
+						<MovieList data={movies} filter={!pageVsGenreId( currentPage ) && currentPage} handleChange={onChangeCurrentMovie}/>
 					</DisplayX>
 
-					<DetailsX>
-						<Details data={currentMovie}/>
-					</DetailsX>
+					<MovieInfo data={currentMovie}/>
+
 				</MainX>
 				{/* <Refresh /> */}
-				<ResetBtn handleChange={onResetButtonClick} />
+				<ResetButton handleChange={onClickResetButton}/>
 			</ContainerX>
 		</ThemeProvider>
 	)

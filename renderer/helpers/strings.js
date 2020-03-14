@@ -7,6 +7,15 @@ export default {
 		label: 'Browse',
 		main: 'Movies'
 	},
+	movie: {
+		actor: 'Cast',
+		award: 'Awards',
+		director: 'Directors',
+		writer: 'Writers',
+
+		imdbLink: 'IMDB',
+		trailer: 'Preview'
+	},
 
 	// Main process
 	background: {
@@ -62,5 +71,5 @@ export default {
 		tmdb: 'Error fetching TMDB data',
 		trailer: 'Error fetching movie trailer data'
 
-	},
+	}
 }

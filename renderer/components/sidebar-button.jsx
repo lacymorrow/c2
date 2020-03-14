@@ -1,12 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import {darken} from 'polished'
 
 import strings from '../helpers/strings'
 import Button from './button'
 
-const ButtonX = styled(Button)`
+const ButtonX = styled( Button )`
 	// COLOR
 	color: ${props => props.theme.buttonColor};
 	background: ${props => props.theme.buttonBgColor};
@@ -18,15 +17,16 @@ const ButtonX = styled(Button)`
 	width: 100%;
 	padding: 1rem 0 1rem 2rem;
 
-
-
 	${props => props.active && `
 		background: ${props.theme.buttonActiveBgColor};
 		color: ${props.theme.buttonActiveColor};
-		border-right: 4px solid ${darken(.15, props.theme.buttonActiveBgColor)};
+		border-right: 4px solid ${props.theme.highlightSecondaryColor};
+		box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
+
 	`}
 
 	&:focus {
+
 	}
 
 	&:active {

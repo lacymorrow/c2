@@ -40,6 +40,7 @@ export const syncState = renderState => {
 	refreshState()
 	refreshGenres()
 	refreshMovies()
+
 }
 
 /* Recent */

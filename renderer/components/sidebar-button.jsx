@@ -7,18 +7,19 @@ import Button from './button'
 
 const ButtonX = styled( Button )`
 	// COLOR
+	transition: color .6s ease-out, background-color .6s ease-out, transform .6s ease-out;
 	color: ${props => props.theme.buttonColor};
-	background: ${props => props.theme.buttonBgColor};
+	background-color: ${props => props.theme.buttonBgColor};
 
 	// FONT
 	text-align: left;
 
 	// SIZE
 	width: 100%;
-	padding: 1rem 0 1rem 2rem;
+	padding: 1rem 0 1rem 3rem;
 
 	${props => props.active && `
-		background: ${props.theme.buttonActiveBgColor};
+		background-color: ${props.theme.buttonActiveBgColor};
 		color: ${props.theme.buttonActiveColor};
 		border-right: 4px solid ${props.theme.highlightSecondaryColor};
 		box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);

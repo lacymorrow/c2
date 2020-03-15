@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import strings from '../helpers/strings'
 
 const WrapperX = styled.div`
-	background: teal;
+	background-color: teal;
 `
 const Messagebox = props => {
 

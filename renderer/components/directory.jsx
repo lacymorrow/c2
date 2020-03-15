@@ -4,12 +4,16 @@ import styled from 'styled-components'
 
 import strings from '../helpers/strings'
 
-const WrapperX = styled.div``
+const WrapperX = styled.div`
+	transition: background-color .6s ease-out;
+	background-color: ${props => props.theme.searchColor}
+`
 
 const Directory = props => {
 
 	const { data, handleChange } = props
 
+	// TODO Glyphicons
 	return (
 		<WrapperX>
 			<span className="glyphicon glyphicon-search" aria-hidden="true"/>

@@ -1,39 +1,148 @@
-import { darken, lighten, invert } from 'polished'
+import { darken, invert } from 'polished'
 import { objectMap } from '../helpers/util'
 
 const colors = {
-	blacker: '#000',
-	black: '#222',
+	black: '#000',
+	darker: '#222',
+	dark: '#555',
+	gray: '#676767',
+	light: '#888',
+	lighter: '#c7c7c7',
 	white: '#fff',
 
 	blue: '#01a6f6',
-	yellow: '#dba139'
+	yellow: '#dba139',
+
+	// Material design blue
+	mblue1: '#82B1FF',
+	mblue2: '#448AFF',
+	mblue4: '#2979FF',
+	mblue7: '#2962FF',
+
+	// Material design purple
+	purple: '#6200ee',
+	darkPurple: '#3700b3',
+	cyan: '#03dac6',
+	darkCyan: '#018786',
+	darkRed: '#b00020'
 }
 
-/* Light mode */
+const blueScheme = {
+
+	primaryColor: colors.mblue7,
+	primaryVariantColor: colors.mblue2,
+
+	secondaryColor: colors.cyan,
+	secondaryVariantColor: colors.darkCyan,
+
+	backgroundColor: colors.white,
+	surfaceColor: colors.white,
+	errorColor: colors.darkRed,
+
+	onPrimaryColor: colors.white,
+	onSecondaryColor: colors.black,
+	onBackgroundColor: colors.black,
+	onSurfaceColor: colors.black,
+	onErrorColor: colors.white
+
+}
+
+const purpleScheme = {
+
+	primaryColor: colors.purple,
+	primaryVariantColor: colors.darkPurple,
+
+	secondaryColor: colors.cyan,
+	secondaryVariantColor: colors.darkCyan,
+
+	backgroundColor: colors.white,
+	surfaceColor: colors.white,
+	errorColor: colors.darkRed,
+
+	onPrimaryColor: colors.white,
+	onSecondaryColor: colors.black,
+	onBackgroundColor: colors.black,
+	onSurfaceColor: colors.black,
+	onErrorColor: colors.white
+
+}
+
+const colorScheme = blueScheme
+
 const lightTheme = {
-	sidebarColor: colors.black,
-	sidebarBgColor: colors.white,
 
-	displayColor: '#999',
-	displayBgColor: '#ccc',
+	headerColor: colorScheme.onSurfaceColor,
+	headerBgColor: colorScheme.surfaceColor,
 
-	highlightColor: colors.blue,
-	highlightSecondaryColor: darken( 0.15, colors.blue ),
+	displayColor: colorScheme.onSurfaceColor,
+	displayBgColor: colorScheme.surfaceColor,
 
-	buttonColor: colors.black,
-	buttonBgColor: colors.white,
-	buttonActiveColor: colors.white,
-	buttonActiveBgColor: colors.blue,
+	infoColor: colorScheme.onSurfaceColor,
+	infoBgColor: colorScheme.surfaceColor,
 
-	buttonHoverColor: '#55F',
-	buttonHoverBgColor: '#FF0',
+	sidebarColor: colorScheme.onSurfaceColor,
+	sidebarBgColor: colorScheme.surfaceColor,
+
+	highlightColor: colorScheme.primaryColor,
+	highlightSecondaryColor: colorScheme.primaryVariantColor,
+
+	borderColor: colors.lighter,
+	borderFocusColor: '#569aff',
+	borderHoverColor: colors.light,
+	selectColor: colors.gray,
+
+	buttonColor: colorScheme.onSurfaceColor,
+	buttonBgColor: colorScheme.surfaceColor,
+
+	buttonActiveColor: colorScheme.onPrimaryColor,
+	buttonActiveBgColor: colorScheme.primaryColor,
 
 	buttonFocusColor: '#F50',
-	buttonFocusBgColor: '#0FF',
+
+	buttonHoverColor: colorScheme.onSecondaryColor,
+	buttonHoverBgColor: colorScheme.secondaryColor,
 
 	searchColor: 'rgba(246, 247, 249, 0.5)'
 }
+
+// /* Light mode */
+// const lightTheme = {
+// 	primaryColor: colors.blue,
+
+// 	headerColor: colors.darker,
+// 	headerBgColor: colors.white,
+
+// 	displayColor: '#999',
+// 	displayBgColor: '#ccc',
+
+// 	infoColor: colors.darker,
+// 	infoBgColor: colors.white,
+
+// 	sidebarColor: colors.darker,
+// 	sidebarBgColor: colors.white,
+
+// 	highlightColor: colors.blue,
+// 	highlightSecondaryColor: darken( 0.15, colors.blue ),
+
+// 	borderColor: colors.lighter,
+// 	borderFocusColor: '#569aff',
+// 	borderHoverColor: colors.light,
+// 	selectColor: colors.gray,
+
+// 	buttonColor: colors.darker,
+// 	buttonBgColor: colors.white,
+
+// 	buttonActiveColor: colors.white,
+// 	buttonActiveBgColor: colors.blue,
+
+// 	buttonHoverColor: 'red',
+// 	buttonHoverBgColor: 'blue',
+
+// 	buttonFocusColor: '#F50',
+// 	buttonFocusBgColor: 'teal',
+
+// 	searchColor: 'rgba(246, 247, 249, 0.5)'
+// }
 
 /* Dark mode */
 const darkTheme = {

@@ -1,16 +1,4 @@
-import open from 'open'
-import path from 'path'
 import config from '../config'
-import ipc from './safe-ipc'
-
-export const broadcast = str => {
-
-	ipc.send( 'to-main', {
-		command: 'log',
-		data: `${process.pid}: ${str}`
-	} )
-
-}
 
 // Current time in ms
 export const epoch = () => {
@@ -18,6 +6,24 @@ export const epoch = () => {
 	const d = new Date()
 
 	return d.getTime()
+
+}
+
+export const getElByKeyValue = ( set, key, value ) => {
+
+	for ( const item of set ) {
+
+		if ( String( item[key] ) === String( value ) ) {
+
+			console.log( item )
+
+			return item
+
+		}
+
+	}
+
+	return {}
 
 }
 
@@ -55,9 +61,6 @@ export const isDigit = str => {
 
 }
 
-// Send logs as messages to the main thread to show on the console
-export const log = console.log.bind( console )
-
 // Returns a new object with the values at each key mapped using mapFn(value)
 export const objectMap = ( object, mapFn ) => {
 
@@ -71,14 +74,7 @@ export const objectMap = ( object, mapFn ) => {
 
 }
 
-// Opens a file with the user default application
-export const openFile = filepath => {
-
-	open( path.join( 'file://', filepath ) )
-
-}
-
-export const pageVsGenreId = page => {
+export const isPageVsGenreId = page => {
 
 	switch ( page ) {
 
@@ -112,16 +108,3 @@ const replaceAll = ( str, find, replace ) => {
 
 }
 
-export const syncState = s => {
-
-	s = s || {}
-	ipc.send( 'for-worker', { command: 'sync', data: s } )
-
-}
-
-// Network status
-export const updateOnlineStatus = () => {
-
-	ipc.send( 'to-main', { command: 'online', data: navigator.onLine } )
-
-}

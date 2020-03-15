@@ -9,8 +9,9 @@ import Logo from './logo'
 
 const WrapperX = styled.div`
 	flex: 0 0 20%;
+	transition: color .6s ease-out, background-color .6s ease-out;
 	color: ${props => props.theme.sidebarColor};
-	background: ${props => props.theme.sidebarBgColor};
+	background-color: ${props => props.theme.sidebarBgColor};
 `
 
 const ListX = styled.ul`
@@ -26,10 +27,11 @@ const ItemX = styled.li`
 const LabelX = styled.p`
 	font-weight: 700;
 	width: 100%;
-	padding: 0 1rem;
+	padding: 0 2rem;
 `
 
 const BadgeX = styled.span`
+	transition: color .6s ease-out, background-color .6s ease-out;
 	background-color: ${props => props.theme.highlightColor};
 	color: ${props => props.theme.sidebarBgColor};
 
@@ -43,7 +45,7 @@ const BadgeX = styled.span`
 
 const Sidebar = props => {
 
-	const { data, handleChange, currentPage, movieCount } = props
+	const { data, handleChange, current, movieCount } = props
 
 	return (
 		<WrapperX>
@@ -54,7 +56,7 @@ const Sidebar = props => {
 				</ItemX>
 
 				<ItemX>
-					<Button active={currentPage === 'movies'} data-active={currentPage === 'movies'} handleChange={() => handleChange( 'movies' )}>{strings.sidebar.main}</Button>
+					<Button active={current === 'movies'} data-active={current === 'movies'} handleChange={() => handleChange( 'movies' )}>{strings.sidebar.main}</Button>
 				</ItemX>
 
 				<ItemX>
@@ -67,7 +69,7 @@ const Sidebar = props => {
 
 						return (
 							<ItemX key={genre._id}>
-								<Button active={currentPage === genre._id} data-id={genre._id} handleChange={e => handleChange( e.currentTarget.dataset.id )}>
+								<Button active={current === genre._id} data-id={genre._id} handleChange={e => handleChange( e.currentTarget.dataset.id )}>
 									{genre.name}
 									{/* <BadgeX>{genre.items.length}</BadgeX> */}
 								</Button>
@@ -86,9 +88,9 @@ const Sidebar = props => {
 }
 
 Sidebar.propTypes = {
+	current: PropTypes.string,
 	data: PropTypes.array,
 	handleChange: PropTypes.func,
-	currentPage: PropTypes.string,
 	movieCount: PropTypes.number
 }
 

@@ -12,7 +12,8 @@ export const HeaderX = styled.div`
 	display: flex;
 	flex-direction: row;
 	width: 100%;
-	background: gray;
+	color: ${props => props.theme.headerColor};
+	background: ${props => props.theme.headerBgColor};
 `
 
 export const MainX = styled.div`

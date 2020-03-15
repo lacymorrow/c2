@@ -11,7 +11,7 @@ import queue from 'queue'
 import config from '../config'
 import ipc from './safe-ipc'
 import strings from './strings'
-import { log, epoch } from './util'
+import { epoch } from './util'
 import {
 	indexGenre,
 	indexMovieGenre,
@@ -19,39 +19,12 @@ import {
 	getMovies,
 	getState,
 	setState,
-	syncState,
 	getMovieById,
 	updateMovie,
-	resetGenres,
 	refreshMovieCache
 } from './database'
 
 export const serviceLog = logger.create( { name: 'service' } )
-
-/* IPC Communication */
-export const setupIPC = () => {
-
-	// If message is received, pass it back to the renderer via the main thread
-	ipc.on( 'to-worker', ( event, arg ) => {
-
-		const { command, data } = arg
-		switch ( command ) {
-
-			case 'sync':
-				syncState( data )
-				break
-			case 'message':
-				log( data )
-				break
-			default:
-				log( `${strings.ipc.invalid}: ${arg}` )
-				break
-
-		}
-
-	} )
-
-}
 
 /* Trigger a UI reflow */
 const renderUpdate = ( command, data ) => {
@@ -122,9 +95,10 @@ const qUpdateLoadingBar = () => {
 
 }
 
+// TODO warn user of status
 q.on( 'start', () => {
 
-	log( strings.q.start )
+	logger.log( strings.q.start )
 	qUpdateLoadingBar()
 
 } )
@@ -136,16 +110,20 @@ q.on( 'success', () => {
 
 } )
 
-q.on( 'error', error => {
+q.on( 'error', ( error, job ) => {
 
-	log( `${strings.q.error}: ${error}` )
+	// TODO ERRORS
+
+	logger.log( `${strings.q.error}: ${error} ${job.toString()}` )
 	qUpdateLoadingBar()
 
 } )
 
 q.on( 'timeout', ( next, job ) => {
 
-	log( `${strings.q.timeout}: ${job}` )
+	// TODO ERRORS
+
+	logger.log( `${strings.q.timeout} ${job.toString()}` )
 	qUpdateLoadingBar()
 	next()
 
@@ -155,11 +133,13 @@ q.on( 'end', error => {
 
 	if ( error ) {
 
-		log( `${strings.q.error}: ${error}` )
+		// TODO ERRORS
+
+		logger.log( `${strings.q.error}: ${error}` )
 
 	}
 
-	log( strings.q.finish )
+	logger.log( strings.q.finish )
 
 	setState( { loading: 0 } )
 	if ( config.CACHE_TIMEOUT ) {
@@ -180,7 +160,7 @@ export const resetQueue = () => {
 
 export const initGenreCache = async () => {
 
-	resetGenres()
+	// ResetGenres()
 	try {
 
 		const response = await ky(
@@ -191,7 +171,7 @@ export const initGenreCache = async () => {
 		for ( const genre of res.genres ) {
 
 			indexGenre( genre.id, genre.name )
-			// Console.log(genre.id, genre.name)
+			// Logger.log( genre.id, genre.name )
 
 		}
 
@@ -221,7 +201,9 @@ export const fetchMeta = ( mid, name, year ) => {
 
 		} catch ( error ) {
 
-			return log( `${strings.error.omdb}: ${error}` )
+			// TODO ERRORS
+
+			return logger.log( `${strings.error.omdb}: ${error}` )
 
 		}
 
@@ -243,7 +225,9 @@ export const fetchMeta = ( mid, name, year ) => {
 
 		} catch ( error ) {
 
-			return log( `${strings.error.tmdb}: ${error}` )
+			// TODO ERRORS
+
+			return logger.log( `${strings.error.tmdb}: ${error}` )
 
 		}
 
@@ -268,7 +252,9 @@ export const fetchMeta = ( mid, name, year ) => {
 
 		} catch ( error ) {
 
-			return log( `${strings.error.trailer}: ${error}` )
+			// TODO ERRORS
+
+			return logger.log( `${strings.error.trailer}: ${error}` )
 
 		}
 

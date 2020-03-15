@@ -7,8 +7,18 @@ const WrapperX = styled.div`
 	grid-template-columns: repeat(auto-fill, 200px);
 	grid-gap: 2rem;
 
+
+	transition: color .6s ease-out, background-color .6s ease-out;
 	color: ${props => props.theme.displayColor};
 	background-color: ${props => props.theme.displayBgColor};
+`
+
+const MovieX = styled.div`
+	transition: color .6s ease-out, background-color .6s ease-out;
+	${props => props.active && `
+		background-color: ${props.theme.highlightColor};
+
+	`}
 `
 
 const PosterX = styled.div`
@@ -21,21 +31,14 @@ const MovieInfoX = styled.div``
 
 const MovieList = props => {
 
-	const { data, filter, handleChange } = props
+	const { current, data, handleChange } = props
 
 	return (
 		<WrapperX>
-			{data.map( ( movie, i ) => {
-
-				console.log( movie.genre_ids, filter )
-				if ( filter && movie.genre_ids && !movie.genre_ids.includes( parseInt( filter, 10 ) ) ) {
-
-					return null
-
-				}
+			{data.map( movie => {
 
 				return (
-					<div key={movie._id} data-id={i} onClick={e => handleChange( e.currentTarget.dataset.id )}>
+					<MovieX key={movie._id} active={current === movie._id} onClick={() => handleChange( movie._id )}>
 						<PosterX>
 							<img src={movie.poster} alt={`Poster for ${movie.title}`}/>
 						</PosterX>
@@ -43,7 +46,7 @@ const MovieList = props => {
 							<h3>{movie.title}</h3>
 							<h4>{movie.genre}</h4>
 						</MovieInfoX>
-					</div>
+					</MovieX>
 				)
 
 			} )}
@@ -53,8 +56,8 @@ const MovieList = props => {
 }
 
 MovieList.propTypes = {
+	current: PropTypes.string,
 	data: PropTypes.array,
-	filter: PropTypes.string,
 	handleChange: PropTypes.func
 }
 

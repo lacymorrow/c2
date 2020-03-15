@@ -4,16 +4,18 @@ import Head from 'next/head'
 import { ThemeProvider } from 'styled-components'
 
 import config from '../config'
+import strings from '../helpers/strings'
 
 import { GlobalStyle } from '../styled/global'
 import { dark, light } from '../styled/themes'
 import { ContainerX, HeaderX, MainX, DisplayX } from '../styled/home'
 
-import ipc from '../helpers/safe-ipc'
-import strings from '../helpers/strings'
-import { pageVsGenreId, syncState } from '../helpers/util'
+// Import { getMovieById } from '../helpers/database'
+import ipc, { syncState } from '../helpers/safe-ipc'
+import { getElByKeyValue, isPageVsGenreId } from '../helpers/util'
 
 import Directory from '../components/directory'
+import Sort from '../components/sort'
 import Messagebox from '../components/messagebox'
 import MovieInfo from '../components/movie-info'
 import MovieList from '../components/movie-list'
@@ -33,12 +35,14 @@ const Home = () => {
 	const [ genres, setGenres ] = useState( [] )
 
 	const [ currentMovie, setCurrentMovie ] = useState( {} )
+	const [ currentSort, setCurrentSort ] = useState( '' )
 	const [ currentPage, setCurrentPage ] = useState( config.DEFAULT_STATE.currentPage )
 	const [ currentTheme, setCurrentTheme ] = useState( light )
 
 	const [ state, setState ] = useState( config.DEFAULT_STATE )
-	const stateRef = useRef( state )
-	stateRef.current = state
+
+	// Const stateRef = useRef( state )
+	// stateRef.current = state
 
 	// State properties
 	const { dirpath, loading } = state
@@ -57,21 +61,21 @@ const Home = () => {
 	/* HANDLERS */
 	const onChangeDirectory = dirpath => {
 
-		// Todo
 		// Set new directory
-		console.log('SYNC', stateRef.current.dirpath, stateRef.current.currentDir)
-		console.log('SYNC2', state.dirpath, state.currentDir)
 		assignState( { dirpath } )
+		syncState( { dirpath } )
 
-		// if (stateRef.current.dirpath !== stateRef.current.currentDir) {
-		// 	syncState( stateRef.current ) // Send state back to worker
-		// }
+	}
+
+	const onChangeSort = sort => {
+
+		setCurrentSort( sort )
 
 	}
 
 	const onChangePage = page => {
 
-		if ( pageVsGenreId( page ) ) {
+		if ( isPageVsGenreId( page ) ) {
 
 			setCurrentPage( page )
 
@@ -104,7 +108,12 @@ const Home = () => {
 
 	} )
 
-	const onChangeCurrentMovie = index => setCurrentMovie( movies[index] )
+	const onChangeCurrentMovie = mid => {
+
+		const movie = getElByKeyValue( movies, '_id', mid )
+		setCurrentMovie( movie )
+
+	}
 
 	const onClickResetButton = () => {
 
@@ -113,12 +122,75 @@ const Home = () => {
 
 	}
 
+	const getOrganizedMovieList = () => {
+
+		// Filter
+		const paged = movies.filter( movie => {
+
+			switch ( currentPage ) {
+
+				case config.DEFAULT_STATE.currentPage:
+					// Main (all)
+					return true // No break needed
+
+				default:
+					// Filter genres
+					return movie.genre_ids && movie.genre_ids.includes( parseInt( currentPage, 10 ) ) // No break needed
+
+			}
+
+		} )
+
+		// Sort
+		switch ( currentSort ) {
+
+			case 'popularity':
+				paged.sort( ( x, y ) => x.popularity - y.popularity )
+				break
+			case 'ratings':
+				// IMDB Rating
+				paged.sort( ( x, y ) => x.imdbRating - y.imdbRating )
+				break
+			case 'release':
+				// Release date
+				paged.sort( ( x, y ) => y.releaseDate - x.releaseDate )
+				break
+			case 'runtime':
+				// Runtime
+				paged.sort( ( x, y ) => x.runtime - y.runtime )
+				break
+			case 'shuffled':
+				// Statements_1
+				break
+			case 'alphabetical':
+			default:
+				// Title
+				paged.sort( ( x, y ) => x.name.localeCompare( y.name ) )
+				break
+
+		}
+
+		// TODO sort
+
+		return paged
+
+	}
+
 	/* State Effect Functions */
 
-	// On Page Change
+	// On page change
 	useEffect( () => {
 
 	}, [ currentPage ] )
+
+	// On sort change
+	useEffect( () => {
+
+		if ( currentSort === 'shuffled' ) {
+			// TODO reset seed
+		}
+
+	}, [ currentSort ] )
 
 	// State change callback
 	useEffect( () => {
@@ -142,7 +214,8 @@ const Home = () => {
 						setMessage( data )
 						break
 					case 'genres':
-						setGenres( data )
+						// Sort alphabetically
+						setGenres( data.sort( ( x, y ) => x.name && x.name.localeCompare( y.name ) ) )
 						break
 					case 'movies':
 						setMovies( data )
@@ -194,17 +267,17 @@ const Home = () => {
 					/>
 
 					<Messagebox data={message}/>
+					Loading: {loading}
 
 					<ThemeToggle isActive={currentTheme === light} handleChange={onChangeTheme}/>
 				</HeaderX>
 
 				<MainX>
-					<Sidebar data={genres} handleChange={onChangePage} currentPage={currentPage} movieCount={movies.length}/>
+					<Sidebar current={currentPage} data={genres} handleChange={onChangePage} movieCount={movies.length}/>
 
 					<DisplayX>
-						{`COUNT: ${movies.length}`}						Loading: {loading}
-						<br/>
-						<MovieList data={movies} filter={!pageVsGenreId( currentPage ) && currentPage} handleChange={onChangeCurrentMovie}/>
+						<Sort current={currentSort} data={config.FILTERS} handleChange={onChangeSort}/>
+						<MovieList current={currentMovie._id} data={getOrganizedMovieList()} handleChange={onChangeCurrentMovie}/>
 					</DisplayX>
 
 					<MovieInfo data={currentMovie}/>

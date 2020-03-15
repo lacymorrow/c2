@@ -1,17 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import { FiExternalLink } from 'react-icons/fi'
 
 import strings from '../helpers/strings'
-import ipc from '../helpers/safe-ipc'
+import { openFile, openUrl } from '../helpers/safe-ipc'
 import Button from './button'
 
 const WrapperX = styled.div`
 	height: 100vh;
-	overflow-y: auto;
-	padding-bottom: 380px;
-
-
 	flex-grow: 0;
 	flex-shrink: 0;
 	flex-basis: 500px;
@@ -20,13 +17,18 @@ const WrapperX = styled.div`
 	flex-direction: column;
 	justify-content: space-between;
 
-	background: orange;
 	position: relative;
 	transition: flex-basis 3s ease;
 `
 
 const BackdropX = styled.div`
 	width: 100%;
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	z-index: -1;
+
 `
 
 const BackdropImgX = styled.img`
@@ -34,13 +36,33 @@ const BackdropImgX = styled.img`
 `
 
 const BackdropMirrorX = styled( BackdropImgX )`
-	transform: scaleY(-1);
+	margin-top: -3px;
 	filter: FlipV;
+	transform: scaleY(-1);
 `
 
-const TitleX = styled.h2``
+const ImdbLinkX = styled( Button )`
 
-const InfoX = styled.div``
+`
+
+const InfoWrapperX = styled.div`
+	// Scroll container
+	height: 100%;
+	overflow-y: auto;
+`
+
+const InfoX = styled.div`
+
+	transition: color .6s ease-out, background .6s ease-out;
+	color: ${props => props.theme.infoColor};
+	background: linear-gradient(to bottom, rgba(252, 252, 252, .8), rgba(252, 252, 252, .99), rgba(252, 252, 252, .99));
+	margin-top: 280px;
+	padding: 1em 1em 380px;
+`
+
+const TitleX = styled.h2`
+	margin-top: 0;
+`
 
 const RatingsX = styled.div``
 
@@ -74,9 +96,10 @@ const BulletsX = styled.div`
 		opacity: 0.9;
 	}
 `
+
 const BulletX = styled( Button )`
 	display: inline-block;
-	float: left;
+	// float: left;
 	margin: 4px 8px 4px 0;
 	border-radius: 50%;
 	width: 14px;
@@ -85,8 +108,10 @@ const BulletX = styled( Button )`
 	background-position: center center;
 	box-shadow: 1px 1px 5px #BBB;
 
+	// TODO
+
 	${props => props.active && `
-		background-color: #FFF;
+		background-color: ${props.theme.buttonActiveColor};
 	`}
 `
 
@@ -97,8 +122,23 @@ const MovieList = props => {
 	const [ currentRating, setCurrentRating ] = useState( 0 )
 	const [ currentTrailer, setCurrentTrailer ] = useState( 0 )
 
-	/* Trigger 'open' file command */
-	const openFile = filepath => ipc.send( 'to-main', { command: 'open', data: filepath } )
+	useEffect( () => {
+
+		let timer
+
+		if ( data.ratings ) {
+
+			timer = setInterval( () => {
+
+				setCurrentRating( ( currentRating + 1 ) % data.ratings.length )
+
+			}, 3000 )
+
+			return () => clearInterval( timer )
+
+		}
+
+	}, [ data, currentRating ] )
 
 	return (
 		<WrapperX>
@@ -109,31 +149,41 @@ const MovieList = props => {
 						<BackdropMirrorX src={data.backdrop} alt=""/>
 					</BackdropX>
 
-					<TitleX>{data.title} {data.year && `(${data.year})`}</TitleX>
+					<InfoWrapperX>
+						<InfoX>
+							<TitleX>{data.title} {data.year && `(${data.year})`}</TitleX>
 
-					<Button handleChange={() => openFile( data.filepath )}>Watch</Button>
+							<Button handleChange={() => openFile( data.filepath )}>Watch</Button>
 
-					<InfoX>
-						{data.genres && <CopyX>{data.genres}</CopyX>}
-						{data.runtime && (
-							<CopyX>
-								{data.runtime} minutes
-								{data.imdbId && (
-									<span> | <a id="imdb-link" rel="noopener noreferrer" target="_blank" href={`http://www.imdb.com/title/${data.imdbId}`}>{strings.movie.imdbLink}</a></span>
-								)}
-							</CopyX>
-						)}
-					</InfoX>
+							{data.Genre && <CopyX>{data.Genre}</CopyX>}
+							{data.runtime && (
+								<CopyX>
+									{data.runtime} minutes
+									{data.imdbId && (
+										<span> | <ImdbLinkX handleChange={() => openUrl( `http://www.imdb.com/title/${data.imdbId}` )}>{strings.movie.imdbLink} <FiExternalLink/></ImdbLinkX></span>
+									)}
+								</CopyX>
+							)}
 
-					<RatingsX/>
+							<RatingsX/>
 
-					<PlotX>{data.plot}</PlotX>
+							<PlotX>{data.plot}</PlotX>
+							<PlotX>{data.overview}</PlotX>
 
-					{data.Director && <CopyX>{strings.movie.director}: {data.Director}</CopyX> }
-					{data.Writer && <CopyX>{strings.movie.writer}: {data.Writer}</CopyX> }
-					{data.Actors && <CopyX>{strings.movie.actor}: {data.Actors}</CopyX> }
-					{data.Awards && <CopyX>{strings.movie.award}: {data.Awards}</CopyX> }
-					{data.trailers && <CopyX>{strings.movie.trailer}:</CopyX> }
+							{data.BoxOffice && <CopyX><b>BoxOffice:</b> {data.BoxOffice}</CopyX> }
+							{data.DVD && <CopyX><b>DVD release date:</b> {data.DVD}</CopyX> }
+							{data.Country && <CopyX><b>Country:</b> {data.Country}</CopyX> }
+							{data.Language && <CopyX><b>Language:</b> {data.Language}</CopyX> }
+							{data.Rated && <CopyX><b>Rated:</b> {data.Rated}</CopyX> }
+							{data.Production && <CopyX><b>Studio:</b> {data.Production}</CopyX> }
+
+							{data.Director && <CopyX><b>{strings.movie.director}:</b> {data.Director}</CopyX> }
+							{data.Writer && <CopyX><b>{strings.movie.writer}:</b> {data.Writer}</CopyX> }
+							{data.Actors && <CopyX><b>{strings.movie.actor}:</b> {data.Actors}</CopyX> }
+							{data.Awards && <CopyX><b>{strings.movie.award}:</b> {data.Awards}</CopyX> }
+							{data.trailers && <CopyX><b>{strings.movie.trailer}:</b></CopyX> }
+						</InfoX>
+					</InfoWrapperX>
 
 					{data.trailers && (
 						<TrailerX>

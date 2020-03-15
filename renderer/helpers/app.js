@@ -1,13 +1,15 @@
 'use strict'
 
+import { shell } from 'electron'
+import logger from 'electron-timber'
+import { is } from 'electron-util'
 import fs from 'fs'
 import path from 'path'
-
-import logger from 'electron-timber'
 import parseTorrentName from 'parse-torrent-name'
 
 import config from '../config'
 import strings from './strings'
+import ipc from './safe-ipc'
 import { defaultMovieMeta, movieTitlePattern } from './constants'
 import { getOSMediaPath, isDirectory } from './fs'
 import {
@@ -17,27 +19,62 @@ import {
 	isDigit,
 	prettyName
 } from './util'
-import { fetchMeta, initGenreCache, resetQueue, setupIPC } from './services'
+import { fetchMeta, initGenreCache, resetQueue } from './services'
 import {
 	initState,
 	getState,
 	setState,
+	syncState,
 	addMovie,
 	getCachedMovie,
 	getMoviesCache,
 	indexMovieGenre,
+	resetGenres,
 	resetMovies,
 	resetDB
 } from './database'
 
 export const start = () => {
 
-	setupIPC()
+	/* IPC Communication */
+	ipc.on( 'to-worker', ( event, arg ) => {
+
+		const { command, data } = arg
+		switch ( command ) {
+
+			case 'file':
+				openExternal( path.join( 'file://', data ) )
+				shell.beep()
+				break
+			case 'url':
+				openExternal( data )
+				shell.beep()
+				break
+			case 'sync':
+				syncState( data )
+				break
+			case 'message':
+				// If message is received, pass it back to the renderer via the main thread
+				logger.log( data )
+				break
+			default:
+				logger.log( `${strings.ipc.invalid}: ${data} ${arg}` )
+				break
+
+		}
+
+	} )
 
 	const state = getState()
-	initState() // TODO remove -- resets on every boot
-
 	let dirpath
+
+	if ( is.development ) {
+
+		// UNCOMMENT to reset the app on every boot
+		initState()
+		resetGenres()
+
+	}
 
 	if ( !config.CACHE_TIMEOUT &&
 			state.dirpath ) {
@@ -67,7 +104,6 @@ export const start = () => {
 
 		// First run
 		logger.log( strings.log.firstRun )
-		initState()
 		initGenreCache()
 
 		// Set path from os, fallback to config or root
@@ -204,6 +240,20 @@ const scanFile = filepath => {
 			fetchMeta( mid, name, year )
 
 		}
+
+	}
+
+}
+
+const openExternal = async resource => {
+
+	try {
+
+		await shell.openExternal( resource )
+
+	} catch ( error ) {
+
+		logger.error( { err: { message: error.message, stack: error.stack } } )
 
 	}
 

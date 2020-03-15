@@ -39,6 +39,14 @@ const config = {
 	SCAN_DEPTH: 1, // How many directory levels to recursively search. 0 is a flat directory search. Higher is further down the rabbit hole === more processing time
 	TIMEOUT: 5000, // Ms for queue to wait while processing each file before stopping.
 	IGNORE_PATTERN: [ 'sample', 'etrg' ], // A lowercase list of movie titles to ignore; ex: sample.avi
+	FILTERS: [
+		{ key: 'alphabetical', value: 'Alphabetical' },
+		{ key: 'popularity', value: 'Popularity' },
+		{ key: 'ratings', value: 'Ratings' },
+		{ key: 'release', value: 'Release Date' },
+		{ key: 'runtime', value: 'Runtime' },
+		{ key: 'shuffled', value: 'Shuffled' }
+	],
 	DEFAULT_STATE: {
 		cwd: process.env.PWD, // Electron.remote.app.getPath()
 		dirpath: '~/',

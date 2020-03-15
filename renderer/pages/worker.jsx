@@ -17,7 +17,7 @@ const Worker = () => {
 		updateOnlineStatus()
 
 		// Let the main thread know this thread is ready to process something
-		ipc.send( 'ready' )
+		// ipc.send( 'ready' )
 
 		app.start()
 

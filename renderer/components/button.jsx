@@ -13,33 +13,24 @@ const ButtonX = styled.button`
     overflow: visible;
     cursor: pointer;
 
+	transition:
+		color .6s ease-out,
+		background-color .6s ease-out,
+		outline .6s ease-out,
+		transform .6s ease-out;
     color: ${props => props.theme.buttonColor};
-    background: ${props => props.theme.buttonBgColor};
+    background-color: ${props => props.theme.buttonBgColor};
 
     /* inherit font & color from ancestor */
-    color: inherit;
     font: inherit;
 
     /* Normalize 'line-height'. Cannot be changed from 'normal' in Firefox 4+. */
     line-height: normal;
 
-    /* Corrects font smoothing for webkit */
-    -webkit-font-smoothing: inherit;
-    -moz-osx-font-smoothing: inherit;
-
-    /* Corrects inability to style clickable 'input' types in iOS */
-    -webkit-appearance: none;
-
-	/* Remove excess padding and border in Firefox 4+ */
-	&::-moz-focus-inner {
-	    border: 0;
-	    padding: 0;
-	}
-
 	/* A11y styles */
 	&:hover{
 	    color: ${props => props.theme.buttonHoverColor};
-	    background: ${props => props.theme.buttonHoverBgColor};
+	    background-color: ${props => props.theme.buttonHoverBgColor};
 	}
 
 	&:focus {

@@ -3,7 +3,7 @@
 import Store from 'electron-store'
 import config from '../config'
 import { refreshGenres, refreshMovies, refreshState } from './services'
-import { epoch } from './util'
+import { epoch, getElByKeyValue } from './util'
 
 const store = new Store( {
 	defaults: {
@@ -97,6 +97,11 @@ export const indexMovieGenre = ( gid, mid ) => {
 		items.push( mid )
 		updateGenre( gid, { items } )
 
+	} else {
+
+		console.log( { items: [ mid ] } )
+		addGenre( gid, { items: [ mid ] } )
+
 	}
 
 }
@@ -105,7 +110,7 @@ export const getGenres = () => store.get( 'genres' )
 
 const addGenre = ( gid, options ) => {
 
-	const genre = { ...options, ...{ id: gid, _id: gid.toString(), items: [] } }
+	const genre = { ...{ id: gid, _id: gid.toString(), items: [] }, ...options }
 	const genres = store.get( 'genres' )
 	genres.push( genre )
 	store.set( 'genres', genres )
@@ -135,7 +140,7 @@ const updateGenre = ( gid, options ) => {
 	const genres = store.get( 'genres' )
 	genres.forEach( ( genre, i ) => {
 
-		if ( genre._id === gid.toString() ) {
+		if ( String( genre._id ) === String( gid ) ) {
 
 			// Id is a number
 
@@ -177,17 +182,7 @@ export const getMovieById = mid => {
 
 	const movies = store.get( 'movies' )
 
-	for ( const movie of movies ) {
-
-		if ( movie._id === mid ) {
-
-			return movie
-
-		}
-
-	}
-
-	return false
+	return getElByKeyValue( movies, '_id', mid )
 
 }
 

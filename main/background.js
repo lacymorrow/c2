@@ -1,9 +1,7 @@
 import { app, ipcMain } from 'electron'
-// Import { is } from 'electron-util'
+import { is } from 'electron-util'
 import serve from 'electron-serve'
 import logger from 'electron-timber'
-import open from 'open'
-import path from 'path'
 
 import { createWindow } from './helpers'
 
@@ -18,7 +16,7 @@ import { createWindow } from './helpers'
 
 	} else {
 
-		logger.log( 'Development mode' )
+		logger.log( 'Development mode: ', is.development )
 		app.setPath( 'userData', `${app.getPath( 'userData' )} (development)` )
 
 	}
@@ -54,10 +52,6 @@ import { createWindow } from './helpers'
 				case 'log':
 					logger.log( `Log - ${data}` )
 					break
-				case 'open':
-					logger.log( `Open file - ${data}` )
-					open( path.join( 'file://', data ) )
-					break
 				default:
 					logger.log( `Command ${command}: ${data}` )
 
@@ -84,6 +78,8 @@ import { createWindow } from './helpers'
 		workerWindow.webContents.send( 'to-worker', arg )
 
 	} )
+
+	ipcMain.on( 'ready', () => logger.log( 'Worker ready' ) )
 
 	mainWindow.on( 'closed', () => {
 

@@ -17,5 +17,11 @@ export const GlobalStyle = createGlobalStyle`
 		height: 100vh;
 		margin: 0;
 		overflow: hidden;
+
+		font-size: 16px;
+		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue',
+			sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+		text-rendering: optimizeLegibility;
+		font-feature-settings: 'liga', 'clig', 'kern';
 	}
 `

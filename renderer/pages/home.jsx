@@ -183,7 +183,7 @@ const Home = () => {
 	// State change callback
 	useEffect( () => {
 
-		console.log(state.loading)
+		console.log( state.loading )
 
 	}, [ state ] )
 

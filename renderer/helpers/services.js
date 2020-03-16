@@ -91,7 +91,7 @@ const qUpdateLoadingBar = () => {
 
 	// Change loading bar when queue updates
 	const { queueTotal } = getState()
-	console.log( ( q.length / queueTotal ))
+	console.log( ( q.length / queueTotal ) )
 	setState( { loading: ( q.length / queueTotal ) || 0 } )
 
 }

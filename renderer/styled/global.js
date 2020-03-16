@@ -6,6 +6,7 @@ export const GlobalStyle = createGlobalStyle`
 	${normalize()}
 	* {
 		box-sizing: border-box;
+		transition-duration: .6s;
 	}
 
 	#__next {

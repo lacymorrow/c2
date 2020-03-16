@@ -7,7 +7,8 @@ import Button from './button'
 
 const ButtonX = styled( Button )`
 	// COLOR
-	transition: color .6s ease-out, background-color .6s ease-out, transform .6s ease-out;
+	transition-timing-function: ease-out;
+	transition-property: color, background-color, border-right, transform;
 	color: ${props => props.theme.buttonColor};
 	background-color: ${props => props.theme.buttonBgColor};
 

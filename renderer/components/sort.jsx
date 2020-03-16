@@ -2,11 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
-const WrapperX = styled.div``
+const WrapperX = styled.div`
+	display: inline-block;
+`
 
 // TODO Styles
 const SelectX = styled.select`
-	transition: color .6s ease-out, background-color .6s ease-out;
 	font-size: 10px;
 	appearance: none;
 	box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);

@@ -7,6 +7,7 @@ import Button from './button'
 
 const WrapperX = styled.div``
 
+// TODO
 const ResetButton = props => {
 
 	const { data, handleChange } = props

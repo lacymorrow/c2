@@ -29,6 +29,7 @@ import {
 	getCachedMovie,
 	getMoviesCache,
 	indexMovieGenre,
+	randomizeMovies,
 	resetGenres,
 	resetMovies,
 	resetDB
@@ -49,6 +50,9 @@ export const start = () => {
 			case 'url':
 				openExternal( data )
 				shell.beep()
+				break
+			case 'randomize':
+				randomizeMovies()
 				break
 			case 'sync':
 				syncState( data )
@@ -133,6 +137,8 @@ export const setPath = dirpath => {
 }
 
 const scanPath = () => {
+
+	// TODO - loading bar
 
 	const { dirpath } = getState()
 	if ( isDirectory( dirpath ) ) {

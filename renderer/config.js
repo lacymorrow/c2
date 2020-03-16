@@ -50,7 +50,8 @@ const config = {
 	DEFAULT_STATE: {
 		cwd: process.env.PWD, // Electron.remote.app.getPath()
 		dirpath: '~/',
-		loading: 100,
+		loading: 0,
+		working: false,
 		queueTotal: 0,
 		activeMovie: -1,
 		currentPage: 'movies'

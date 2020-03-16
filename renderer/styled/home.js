@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import Button from '../components/button'
 
 export const ContainerX = styled.div`
 	display: flex;
@@ -24,4 +25,8 @@ export const MainX = styled.div`
 
 export const DisplayX = styled.div`
 	flex: 1 1 80%;
+`
+
+export const ShuffleButtonX = styled( Button )`
+	display: inline-block;
 `

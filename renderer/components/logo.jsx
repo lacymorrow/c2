@@ -5,7 +5,8 @@ import styled from 'styled-components'
 import strings from '../helpers/strings'
 
 const TitleX = styled.h1`
-	transition: color .6s ease-out;
+	transition-timing-function: ease-out;
+	transition-property: color;
 	color: ${props => props.theme.titleColor};
 	text-align: center;
 `

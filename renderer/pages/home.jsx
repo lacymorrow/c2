@@ -1,17 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 
 import { ThemeProvider } from 'styled-components'
+import { FiShuffle } from 'react-icons/fi'
 
 import config from '../config'
 import strings from '../helpers/strings'
 
 import { GlobalStyle } from '../styled/global'
 import { dark, light } from '../styled/themes'
-import { ContainerX, HeaderX, MainX, DisplayX } from '../styled/home'
+import { ContainerX, HeaderX, MainX, DisplayX, ShuffleButtonX } from '../styled/home'
 
 // Import { getMovieById } from '../helpers/database'
-import ipc, { syncState } from '../helpers/safe-ipc'
+import ipc, { randomizeMovies, syncState } from '../helpers/safe-ipc'
 import { getElByKeyValue, isPageVsGenreId } from '../helpers/util'
 
 import Directory from '../components/directory'
@@ -19,6 +20,7 @@ import Sort from '../components/sort'
 import Messagebox from '../components/messagebox'
 import MovieInfo from '../components/movie-info'
 import MovieList from '../components/movie-list'
+import Progress from '../components/progress'
 import ResetButton from '../components/reset-button'
 import Sidebar from '../components/sidebar'
 import ThemeToggle from '../components/theme-toggle'
@@ -45,7 +47,7 @@ const Home = () => {
 	// stateRef.current = state
 
 	// State properties
-	const { dirpath, loading } = state
+	const { dirpath, loading, working } = state
 
 	// Merge state
 	const assignState = newState => {
@@ -122,6 +124,8 @@ const Home = () => {
 
 	}
 
+	const onClickShuffleButton = () => randomizeMovies()
+
 	const getOrganizedMovieList = () => {
 
 		// Filter
@@ -145,22 +149,22 @@ const Home = () => {
 		switch ( currentSort ) {
 
 			case 'popularity':
-				paged.sort( ( x, y ) => x.popularity - y.popularity )
+				paged.sort( ( x, y ) => y.popularity - x.popularity )
 				break
 			case 'ratings':
 				// IMDB Rating
-				paged.sort( ( x, y ) => x.imdbRating - y.imdbRating )
+				paged.sort( ( x, y ) => parseFloat( y.imdbRating ) - parseFloat( x.imdbRating ) )
 				break
 			case 'release':
 				// Release date
-				paged.sort( ( x, y ) => y.releaseDate - x.releaseDate )
+				paged.sort( ( x, y ) => parseInt( y.releaseDate, 10 ) - parseInt( x.releaseDate, 10 ) )
 				break
 			case 'runtime':
 				// Runtime
 				paged.sort( ( x, y ) => x.runtime - y.runtime )
 				break
 			case 'shuffled':
-				// Statements_1
+				paged.sort( ( x, y ) => x.seed - y.seed )
 				break
 			case 'alphabetical':
 			default:
@@ -170,30 +174,16 @@ const Home = () => {
 
 		}
 
-		// TODO sort
-
 		return paged
 
 	}
 
 	/* State Effect Functions */
 
-	// On page change
-	useEffect( () => {
-
-	}, [ currentPage ] )
-
-	// On sort change
-	useEffect( () => {
-
-		if ( currentSort === 'shuffled' ) {
-			// TODO reset seed
-		}
-
-	}, [ currentSort ] )
-
 	// State change callback
 	useEffect( () => {
+
+		console.log(state.loading)
 
 	}, [ state ] )
 
@@ -250,6 +240,8 @@ const Home = () => {
 
 	}, [] )
 
+	// Const organizedMovieList = getOrganizedMovieList(movies)
+
 	/* Template */
 
 	return (
@@ -258,7 +250,7 @@ const Home = () => {
 			<Head>
 				<title>Home - Nextron (ipc-communication)</title>
 			</Head>
-
+			<Progress data={loading}/>
 			<ContainerX>
 				<HeaderX>
 					<Directory
@@ -270,6 +262,8 @@ const Home = () => {
 					Loading: {loading}
 
 					<ThemeToggle isActive={currentTheme === light} handleChange={onChangeTheme}/>
+					<ResetButton handleChange={onClickResetButton}/>
+					{working && 'working'}
 				</HeaderX>
 
 				<MainX>
@@ -277,6 +271,10 @@ const Home = () => {
 
 					<DisplayX>
 						<Sort current={currentSort} data={config.FILTERS} handleChange={onChangeSort}/>
+						{currentSort === 'shuffled' && (
+							<ShuffleButtonX data="shuffle" handleChange={onClickShuffleButton}><FiShuffle/></ShuffleButtonX>
+						)}
+
 						<MovieList current={currentMovie._id} data={getOrganizedMovieList()} handleChange={onChangeCurrentMovie}/>
 					</DisplayX>
 
@@ -284,7 +282,6 @@ const Home = () => {
 
 				</MainX>
 				{/* <Refresh /> */}
-				<ResetButton handleChange={onClickResetButton}/>
 			</ContainerX>
 		</ThemeProvider>
 	)

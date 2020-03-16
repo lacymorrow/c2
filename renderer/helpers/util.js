@@ -27,6 +27,22 @@ export const getElByKeyValue = ( set, key, value ) => {
 
 }
 
+export const getRandomColor = () => {
+
+	// Pick a "red" from 0-255
+	const r = Math.floor( Math.random() * 256 )
+
+	// Pick a "green" from 0-255
+	const g = Math.floor( Math.random() * 256 )
+
+	// Pick a "blue" from 0-255
+	const b = Math.floor( Math.random() * 256 )
+
+	// HEX: return `#${(Math.random()*0xFFFFFF<<0).toString(16)}`;
+	return `rgb(${r}, ${g}, ${b})`
+
+}
+
 // Insecure string hashing function for UUIDs
 // credit: https://github.com/darkskyapp/string-hash
 export const hash = str => {

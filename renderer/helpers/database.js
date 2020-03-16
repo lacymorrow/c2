@@ -99,7 +99,6 @@ export const indexMovieGenre = ( gid, mid ) => {
 
 	} else {
 
-		console.log( { items: [ mid ] } )
 		addGenre( gid, { items: [ mid ] } )
 
 	}
@@ -239,12 +238,17 @@ export const updateMovieTrailer = ( mid, trailer ) => {
 
 export const randomizeMovies = () => {
 
+	setState( { working: true } )
+
 	const movies = store.get( 'movies' )
 	for ( const movie of movies ) {
 
 		updateMovie( movie._id, { seed: Math.random() } )
 
 	}
+
+	refreshMovies()
+	setState( { working: false } )
 
 }
 

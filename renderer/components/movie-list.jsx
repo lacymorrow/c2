@@ -7,17 +7,27 @@ const WrapperX = styled.div`
 	grid-template-columns: repeat(auto-fill, 200px);
 	grid-gap: 2rem;
 
-
-	transition: color .6s ease-out, background-color .6s ease-out;
+	transition-timing-function: ease-out;
+	transition-property: color, background-color;
 	color: ${props => props.theme.displayColor};
 	background-color: ${props => props.theme.displayBgColor};
 `
 
 const MovieX = styled.div`
-	transition: color .6s ease-out, background-color .6s ease-out;
-	${props => props.active && `
-		background-color: ${props.theme.highlightColor};
+	transition-timing-function: ease-out;
+	transition-property: color, background-color;
 
+	height: 100%
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+
+	border-radius: 6px;
+	padding: 1em .5em;
+
+
+	${props => props.active && `
+		background-color: ${props.theme.movieItemBgColor};
 	`}
 `
 
@@ -56,7 +66,7 @@ const MovieList = props => {
 }
 
 MovieList.propTypes = {
-	current: PropTypes.string,
+	current: PropTypes.number,
 	data: PropTypes.array,
 	handleChange: PropTypes.func
 }

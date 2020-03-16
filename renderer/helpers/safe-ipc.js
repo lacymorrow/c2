@@ -45,6 +45,8 @@ export const openFile = filepath => send( 'for-worker', { command: 'file', data:
 /* Open External URL */
 export const openUrl = url => send( 'for-worker', { command: 'url', data: url } )
 
+export const randomizeMovies = () => send( 'for-worker', { command: 'randomize' } )
+
 export const syncState = s => {
 
 	s = s || {}

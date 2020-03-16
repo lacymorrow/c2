@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 import strings from '../helpers/strings'
 
+// TODO styles
 const WrapperX = styled.div`
 	background-color: teal;
 `

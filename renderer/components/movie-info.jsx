@@ -52,8 +52,8 @@ const InfoWrapperX = styled.div`
 `
 
 const InfoX = styled.div`
-
-	transition: color .6s ease-out, background .6s ease-out;
+	transition-timing-function: ease-out;
+	transition-property: color, background;
 	color: ${props => props.theme.infoColor};
 	background: linear-gradient(to bottom, rgba(252, 252, 252, .8), rgba(252, 252, 252, .99), rgba(252, 252, 252, .99));
 	margin-top: 280px;
@@ -97,6 +97,7 @@ const BulletsX = styled.div`
 	}
 `
 
+// TODO bullet styles
 const BulletX = styled( Button )`
 	display: inline-block;
 	// float: left;
@@ -108,14 +109,14 @@ const BulletX = styled( Button )`
 	background-position: center center;
 	box-shadow: 1px 1px 5px #BBB;
 
-	// TODO
-
+	transition-timing-function: ease-out;
+	transition-property: background-color;
 	${props => props.active && `
 		background-color: ${props.theme.buttonActiveColor};
 	`}
 `
 
-const MovieList = props => {
+const MovieInfo = props => {
 
 	const { data } = props
 
@@ -206,12 +207,12 @@ const MovieList = props => {
 
 }
 
-MovieList.propTypes = {
+MovieInfo.propTypes = {
 	data: PropTypes.object
 }
 
-MovieList.defaultProps = {
+MovieInfo.defaultProps = {
 	data: {}
 }
 
-export default MovieList
+export default MovieInfo

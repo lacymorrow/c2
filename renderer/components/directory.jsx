@@ -2,11 +2,25 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
+import { FiSearch } from 'react-icons/fi'
+// Import { IoIosSearch } from 'react-icons/io'
+
 import strings from '../helpers/strings'
 
 const WrapperX = styled.div`
-	transition: background-color .6s ease-out;
+	transition-timing-function: ease-out;
+	transition-property: background-color;
 	background-color: ${props => props.theme.searchColor}
+
+	position: relative;
+`
+
+const IconX = styled.div`
+	display: inline-block;
+`
+
+const DirectoryInputX = styled.input`
+	padding: .5em .5em .5em 1em;
 `
 
 const Directory = props => {
@@ -16,8 +30,8 @@ const Directory = props => {
 	// TODO Glyphicons
 	return (
 		<WrapperX>
-			<span className="glyphicon glyphicon-search" aria-hidden="true"/>
-			<input
+			<IconX><FiSearch/></IconX>
+			<DirectoryInputX
 				type="text"
 				placeholder={strings.directory.placeholder}
 				value={data}

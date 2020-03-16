@@ -27,47 +27,47 @@ const colors = {
 	darkRed: '#b00020'
 }
 
-const blueScheme = {
+const colorSchemes = {
+	blue: {
 
-	primaryColor: colors.mblue7,
-	primaryVariantColor: colors.mblue2,
+		primaryColor: colors.mblue7,
+		primaryVariantColor: colors.mblue2,
 
-	secondaryColor: colors.cyan,
-	secondaryVariantColor: colors.darkCyan,
+		secondaryColor: colors.cyan,
+		secondaryVariantColor: colors.darkCyan,
 
-	backgroundColor: colors.white,
-	surfaceColor: colors.white,
-	errorColor: colors.darkRed,
+		backgroundColor: colors.white,
+		surfaceColor: colors.white,
+		errorColor: colors.darkRed,
 
-	onPrimaryColor: colors.white,
-	onSecondaryColor: colors.black,
-	onBackgroundColor: colors.black,
-	onSurfaceColor: colors.black,
-	onErrorColor: colors.white
+		onPrimaryColor: colors.white,
+		onSecondaryColor: colors.black,
+		onBackgroundColor: colors.black,
+		onSurfaceColor: colors.black,
+		onErrorColor: colors.white
+	},
+	purple: {
 
+		primaryColor: colors.purple,
+		primaryVariantColor: colors.darkPurple,
+
+		secondaryColor: colors.cyan,
+		secondaryVariantColor: colors.darkCyan,
+
+		backgroundColor: colors.white,
+		surfaceColor: colors.white,
+		errorColor: colors.darkRed,
+
+		onPrimaryColor: colors.white,
+		onSecondaryColor: colors.black,
+		onBackgroundColor: colors.black,
+		onSurfaceColor: colors.black,
+		onErrorColor: colors.white
+
+	}
 }
 
-const purpleScheme = {
-
-	primaryColor: colors.purple,
-	primaryVariantColor: colors.darkPurple,
-
-	secondaryColor: colors.cyan,
-	secondaryVariantColor: colors.darkCyan,
-
-	backgroundColor: colors.white,
-	surfaceColor: colors.white,
-	errorColor: colors.darkRed,
-
-	onPrimaryColor: colors.white,
-	onSecondaryColor: colors.black,
-	onBackgroundColor: colors.black,
-	onSurfaceColor: colors.black,
-	onErrorColor: colors.white
-
-}
-
-const colorScheme = blueScheme
+const colorScheme = colorSchemes.purple
 
 const lightTheme = {
 
@@ -75,13 +75,16 @@ const lightTheme = {
 	headerBgColor: colorScheme.surfaceColor,
 
 	displayColor: colorScheme.onSurfaceColor,
-	displayBgColor: colorScheme.surfaceColor,
+	displayBgColor: darken( 0.05, colorScheme.surfaceColor ),
+
+	movieItemColor: colorScheme.onPrimaryColor,
+	movieItemBgColor: colorScheme.primaryColor,
 
 	infoColor: colorScheme.onSurfaceColor,
-	infoBgColor: colorScheme.surfaceColor,
+	infoBgColor: darken( 0.1, colorScheme.surfaceColor ),
 
 	sidebarColor: colorScheme.onSurfaceColor,
-	sidebarBgColor: colorScheme.surfaceColor,
+	sidebarBgColor: darken( 0.15, colorScheme.surfaceColor ),
 
 	highlightColor: colorScheme.primaryColor,
 	highlightSecondaryColor: colorScheme.primaryVariantColor,
@@ -101,6 +104,8 @@ const lightTheme = {
 
 	buttonHoverColor: colorScheme.onSecondaryColor,
 	buttonHoverBgColor: colorScheme.secondaryColor,
+
+	progressColor: colorScheme.primaryColor,
 
 	searchColor: 'rgba(246, 247, 249, 0.5)'
 }

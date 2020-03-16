@@ -13,11 +13,9 @@ const ButtonX = styled.button`
     overflow: visible;
     cursor: pointer;
 
-	transition:
-		color .6s ease-out,
-		background-color .6s ease-out,
-		outline .6s ease-out,
-		transform .6s ease-out;
+	transition-timing-function: ease-out;
+	transition-property: color, background-color, outline, transform;
+
     color: ${props => props.theme.buttonColor};
     background-color: ${props => props.theme.buttonBgColor};
 

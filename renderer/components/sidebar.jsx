@@ -9,7 +9,8 @@ import Logo from './logo'
 
 const WrapperX = styled.div`
 	flex: 0 0 20%;
-	transition: color .6s ease-out, background-color .6s ease-out;
+	transition-timing-function: ease-out;
+	transition-property: color, background-color;
 	color: ${props => props.theme.sidebarColor};
 	background-color: ${props => props.theme.sidebarBgColor};
 `
@@ -31,7 +32,8 @@ const LabelX = styled.p`
 `
 
 const BadgeX = styled.span`
-	transition: color .6s ease-out, background-color .6s ease-out;
+	transition-timing-function: ease-out;
+	transition-property: color, background-color;
 	background-color: ${props => props.theme.highlightColor};
 	color: ${props => props.theme.sidebarBgColor};
 

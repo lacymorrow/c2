@@ -5,14 +5,15 @@ import styled from 'styled-components'
 import strings from '../helpers/strings'
 
 import Button from './sidebar-button'
-import Logo from './logo'
 
 const WrapperX = styled.div`
-	flex: 0 0 20%;
+	flex: 0 0 280px;
+	overflow: hidden;
 	transition-timing-function: ease-out;
 	transition-property: color, background-color;
 	color: ${props => props.theme.sidebarColor};
 	background-color: ${props => props.theme.sidebarBgColor};
+
 `
 
 const ListX = styled.ul`
@@ -51,7 +52,6 @@ const Sidebar = props => {
 
 	return (
 		<WrapperX>
-			<Logo/>
 			<ListX>
 				<ItemX>
 					<LabelX>{strings.sidebar.label} {movieCount && ( <BadgeX>{movieCount}</BadgeX> )}</LabelX>

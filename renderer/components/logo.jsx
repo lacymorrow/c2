@@ -5,10 +5,10 @@ import styled from 'styled-components'
 import strings from '../helpers/strings'
 
 const TitleX = styled.h1`
-	transition-timing-function: ease-out;
 	transition-property: color;
 	color: ${props => props.theme.titleColor};
 	text-align: center;
+	padding: 0 1rem;
 `
 
 const Logo = props => {

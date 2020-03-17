@@ -67,7 +67,7 @@ const colorSchemes = {
 	}
 }
 
-const colorScheme = colorSchemes.purple
+const colorScheme = colorSchemes.blue
 
 const lightTheme = {
 
@@ -75,16 +75,16 @@ const lightTheme = {
 	headerBgColor: colorScheme.surfaceColor,
 
 	displayColor: colorScheme.onSurfaceColor,
-	displayBgColor: darken( 0.05, colorScheme.surfaceColor ),
+	displayBgColor: darken( 0.03, colorScheme.surfaceColor ),
 
 	movieItemColor: colorScheme.onPrimaryColor,
 	movieItemBgColor: colorScheme.primaryColor,
 
 	infoColor: colorScheme.onSurfaceColor,
-	infoBgColor: darken( 0.1, colorScheme.surfaceColor ),
+	infoBgColor: darken( 0.01, colorScheme.surfaceColor ),
 
 	sidebarColor: colorScheme.onSurfaceColor,
-	sidebarBgColor: darken( 0.15, colorScheme.surfaceColor ),
+	sidebarBgColor: darken( 0.02, colorScheme.surfaceColor ),
 
 	highlightColor: colorScheme.primaryColor,
 	highlightSecondaryColor: colorScheme.primaryVariantColor,
@@ -107,7 +107,6 @@ const lightTheme = {
 
 	progressColor: colorScheme.primaryColor,
 
-	searchColor: 'rgba(246, 247, 249, 0.5)'
 }
 
 // /* Light mode */

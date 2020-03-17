@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { FiExternalLink } from 'react-icons/fi'
+import { rgba } from 'polished'
+import { FiExternalLink, FiTv } from 'react-icons/fi'
 
 import strings from '../helpers/strings'
 import { openFile, openUrl } from '../helpers/safe-ipc'
@@ -55,9 +56,9 @@ const InfoX = styled.div`
 	transition-timing-function: ease-out;
 	transition-property: color, background;
 	color: ${props => props.theme.infoColor};
-	background: linear-gradient(to bottom, rgba(252, 252, 252, .8), rgba(252, 252, 252, .99), rgba(252, 252, 252, .99));
+	background: linear-gradient(to bottom, ${props => rgba(props.theme.infoBgColor, .8)}, ${props => rgba(props.theme.infoBgColor, 1)}, ${props => rgba(props.theme.infoBgColor, 1)});
 	margin-top: 280px;
-	padding: 1em 1em 380px;
+	padding: 1rem 1rem 380px;
 `
 
 const TitleX = styled.h2`
@@ -88,7 +89,7 @@ const BulletsX = styled.div`
 	z-index: 3;
 	top: 0;
 	left: 0;
-	padding: 1em;
+	padding: 1rem;
 	opacity: 0.4;
 	transition: opacity .2s ease-in;
 
@@ -100,16 +101,13 @@ const BulletsX = styled.div`
 // TODO bullet styles
 const BulletX = styled( Button )`
 	display: inline-block;
-	// float: left;
 	margin: 4px 8px 4px 0;
 	border-radius: 50%;
-	width: 14px;
-	height: 14px;
-	background: blue;
-	background-position: center center;
+	width: 1em;
+	height: 1em;
+	background-color: blue;
 	box-shadow: 1px 1px 5px #BBB;
 
-	transition-timing-function: ease-out;
 	transition-property: background-color;
 	${props => props.active && `
 		background-color: ${props.theme.buttonActiveColor};
@@ -154,14 +152,14 @@ const MovieInfo = props => {
 						<InfoX>
 							<TitleX>{data.title} {data.year && `(${data.year})`}</TitleX>
 
-							<Button handleChange={() => openFile( data.filepath )}>Watch</Button>
+							<Button handleChange={() => openFile( data.filepath )}>Watch <FiTv size={24} /></Button>
 
 							{data.Genre && <CopyX>{data.Genre}</CopyX>}
 							{data.runtime && (
 								<CopyX>
 									{data.runtime} minutes
 									{data.imdbId && (
-										<span> | <ImdbLinkX handleChange={() => openUrl( `http://www.imdb.com/title/${data.imdbId}` )}>{strings.movie.imdbLink} <FiExternalLink/></ImdbLinkX></span>
+										<span> | <ImdbLinkX handleChange={() => openUrl( `http://www.imdb.com/title/${data.imdbId}` )}>{strings.movie.imdbLink} <FiExternalLink size={24}/></ImdbLinkX></span>
 									)}
 								</CopyX>
 							)}

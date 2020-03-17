@@ -5,12 +5,12 @@ import styled from 'styled-components'
 const WrapperX = styled.div`
 	display: grid;
 	grid-template-columns: repeat(auto-fill, 200px);
-	grid-gap: 2rem;
+	grid-gap: 1rem;
 
-	transition-timing-function: ease-out;
-	transition-property: color, background-color;
-	color: ${props => props.theme.displayColor};
-	background-color: ${props => props.theme.displayBgColor};
+	// Negative item padding-top
+	margin-top: -1rem;
+
+	padding: 0 1rem;
 `
 
 const MovieX = styled.div`
@@ -23,7 +23,7 @@ const MovieX = styled.div`
 	justify-content: space-between;
 
 	border-radius: 6px;
-	padding: 1em .5em;
+	padding: 1rem .5rem;
 
 
 	${props => props.active && `

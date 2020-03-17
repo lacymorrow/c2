@@ -106,8 +106,7 @@ const Progress = props => {
 
 		} else {
 
-			// Invert the percentage (queueStillWorking/QueueTotal)
-			NProgress.set( 1 - data )
+			NProgress.set( data )
 			NProgress.start()
 
 		}

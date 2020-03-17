@@ -90,9 +90,23 @@ const q = queue( {
 const qUpdateLoadingBar = () => {
 
 	// Change loading bar when queue updates
-	const { queueTotal } = getState()
-	console.log( ( q.length / queueTotal ) )
-	setState( { loading: ( q.length / queueTotal ) || 0 } )
+	let { queueTotal } = getState()
+
+	if ( queueTotal < q.length ) {
+
+		queueTotal = q.length
+
+	}
+
+	// Percent of objects still in queue (invert percentage)
+	let loading = 1 - ( q.length / queueTotal )
+	if ( isNaN( loading ) || loading === 0 ) {
+
+		loading = 0.01
+
+	}
+
+	setState( { loading, queueTotal } )
 
 }
 
@@ -187,9 +201,6 @@ export const initGenreCache = async () => {
 }
 
 export const fetchMeta = ( mid, name, year ) => {
-
-	const { queueTotal } = getState()
-	setState( { queueTotal: queueTotal + 3 } )
 
 	// Queue API calls
 	q.push( async () => {

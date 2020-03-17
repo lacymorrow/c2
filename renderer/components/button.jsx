@@ -5,6 +5,16 @@ import styled from 'styled-components'
 import strings from '../helpers/strings'
 
 const ButtonX = styled.button`
+	transition-property: color, background-color, outline, transform;
+	display: inline-flex;
+	${props => props.size && `
+		font-size: ${props.size}px;
+	`}
+
+	flex-direction: row;
+	jusify-content: space-between;
+	align-items: center;
+
 	/* Button reset: https://gist.github.com/MoOx/9137295 */
 	border: none;
     margin: 0;
@@ -13,14 +23,10 @@ const ButtonX = styled.button`
     overflow: visible;
     cursor: pointer;
 
-	transition-timing-function: ease-out;
-	transition-property: color, background-color, outline, transform;
-
-    color: ${props => props.theme.buttonColor};
-    background-color: ${props => props.theme.buttonBgColor};
-
     /* inherit font & color from ancestor */
     font: inherit;
+    color: inherit;
+    background-color: inherit;
 
     /* Normalize 'line-height'. Cannot be changed from 'normal' in Firefox 4+. */
     line-height: normal;

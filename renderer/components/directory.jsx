@@ -8,19 +8,28 @@ import { FiSearch } from 'react-icons/fi'
 import strings from '../helpers/strings'
 
 const WrapperX = styled.div`
-	transition-timing-function: ease-out;
-	transition-property: background-color;
-	background-color: ${props => props.theme.searchColor}
+	transition-property: color, background-color;
+	color: ${props => props.theme.headerColor};
+	background-color: ${props => props.theme.headerBgColor};
 
 	position: relative;
 `
 
 const IconX = styled.div`
-	display: inline-block;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: .5rem;
+
+	display: flex;
+	align-items: center;
+	flex-direction: row;
 `
 
 const DirectoryInputX = styled.input`
-	padding: .5em .5em .5em 1em;
+	color: ${props => props.theme.headerColor};
+	background-color: ${props => props.theme.headerBgColor};
+	padding: .5rem .5rem .5rem 2.5rem;
 `
 
 const Directory = props => {
@@ -30,7 +39,7 @@ const Directory = props => {
 	// TODO Glyphicons
 	return (
 		<WrapperX>
-			<IconX><FiSearch/></IconX>
+			<IconX><FiSearch size={24}/></IconX>
 			<DirectoryInputX
 				type="text"
 				placeholder={strings.directory.placeholder}

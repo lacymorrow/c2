@@ -2,30 +2,31 @@ import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 
 import { ThemeProvider } from 'styled-components'
-import { FiShuffle } from 'react-icons/fi'
+// import { FiShuffle as ShuffleIcon } from 'react-icons/fi'
+import { IoIosShuffle as ShuffleIcon } from 'react-icons/io'
 
 import config from '../config'
 import strings from '../helpers/strings'
 
 import { GlobalStyle } from '../styled/global'
 import { dark, light } from '../styled/themes'
-import { ContainerX, HeaderX, MainX, DisplayX, ShuffleButtonX } from '../styled/home'
+import { ContainerX, HeaderX, MainX, DisplayX, ShuffleButtonX, SortWrapperX, WrapperX } from '../styled/home'
 
-// Import { getMovieById } from '../helpers/database'
 import ipc, { randomizeMovies, syncState } from '../helpers/safe-ipc'
 import { getElByKeyValue, isPageVsGenreId } from '../helpers/util'
 
 import Directory from '../components/directory'
-import Sort from '../components/sort'
+import Logo from '../components/logo'
 import Messagebox from '../components/messagebox'
 import MovieInfo from '../components/movie-info'
 import MovieList from '../components/movie-list'
 import Progress from '../components/progress'
 import ResetButton from '../components/reset-button'
 import Sidebar from '../components/sidebar'
+import Sort from '../components/sort'
 import ThemeToggle from '../components/theme-toggle'
 
-// TODO addRecent, addWatched, randomizeMovies, reset, open
+// TODO addRecent, addWatched, reset
 
 const Home = () => {
 
@@ -183,8 +184,6 @@ const Home = () => {
 	// State change callback
 	useEffect( () => {
 
-		console.log( state.loading )
-
 	}, [ state ] )
 
 	// Setup and tear-down communication
@@ -252,36 +251,44 @@ const Home = () => {
 			</Head>
 			<Progress data={loading}/>
 			<ContainerX>
-				<HeaderX>
-					<Directory
-						data={dirpath}
-						handleChange={onChangeDirectory}
-					/>
+				<WrapperX>
+					<HeaderX>
 
-					<Messagebox data={message}/>
-					Loading: {loading}
+						<Logo/>
 
-					<ThemeToggle isActive={currentTheme === light} handleChange={onChangeTheme}/>
-					<ResetButton handleChange={onClickResetButton}/>
-					{working && 'working'}
-				</HeaderX>
+						<Directory
+							data={dirpath}
+							handleChange={onChangeDirectory}
+						/>
 
-				<MainX>
-					<Sidebar current={currentPage} data={genres} handleChange={onChangePage} movieCount={movies.length}/>
+						<Messagebox data={message}/>
 
-					<DisplayX>
-						<Sort current={currentSort} data={config.FILTERS} handleChange={onChangeSort}/>
-						{currentSort === 'shuffled' && (
-							<ShuffleButtonX data="shuffle" handleChange={onClickShuffleButton}><FiShuffle/></ShuffleButtonX>
-						)}
+						<ThemeToggle isActive={currentTheme === light} handleChange={onChangeTheme}/>
+						<ResetButton handleChange={onClickResetButton}/>
+						{working && 'working'}
+					</HeaderX>
 
-						<MovieList current={currentMovie._id} data={getOrganizedMovieList()} handleChange={onChangeCurrentMovie}/>
-					</DisplayX>
+					<MainX>
+						<Sidebar current={currentPage} data={genres} handleChange={onChangePage} movieCount={movies.length}/>
 
-					<MovieInfo data={currentMovie}/>
+						<DisplayX>
+							<SortWrapperX>
+								<Sort current={currentSort} data={config.FILTERS} handleChange={onChangeSort}/>
+								{currentSort === 'shuffled' && (
+									<ShuffleButtonX data="shuffle" handleChange={onClickShuffleButton}><ShuffleIcon size={32}/></ShuffleButtonX>
+								)}
+							</SortWrapperX>
 
-				</MainX>
-				{/* <Refresh /> */}
+							<MovieList current={currentMovie._id} data={getOrganizedMovieList()} handleChange={onChangeCurrentMovie}/>
+						</DisplayX>
+
+					</MainX>
+
+					{/* <Refresh /> */}
+				</WrapperX>
+
+				<MovieInfo data={currentMovie}/>
+
 			</ContainerX>
 		</ThemeProvider>
 	)

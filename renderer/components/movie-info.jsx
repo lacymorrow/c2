@@ -75,6 +75,8 @@ const TitleX = styled.h2`
 
 const RatingsX = styled.div``
 
+const Rating = styled.div``
+
 const CopyX = styled.p``
 
 const PlotX = styled.p``
@@ -106,13 +108,13 @@ const BulletsX = styled.div`
 `
 
 // TODO bullet styles
-const BulletX = styled( Button )`
+const BulletX = styled.div`
 	display: inline-block;
 	margin: 4px 8px 4px 0;
 	border-radius: 50%;
 	width: 1em;
 	height: 1em;
-	background-color: blue;
+	background-color: ${props => props.theme.buttonColor};
 	box-shadow: 1px 1px 5px #BBB;
 
 	transition-property: background-color;
@@ -157,6 +159,20 @@ const MovieInfo = props => {
 
 					<InfoWrapperX>
 						<InfoX height={height}>
+
+							<RatingsX>
+								{data.ratings && data.ratings.length > 0 && data.ratings.map( ( rating, i ) => (
+									<Rating active={currentRating === i}>
+										<h5>{rating.name} Rating</h5>
+										{[...Array(10)].map( ( _, j ) => {
+											console.log('asd')
+											return <BulletX active={Math.round(rating.score) > j} />
+										})}
+										<p>{rating.score} / 10</p>
+									</Rating>
+								) )}
+							</RatingsX>
+
 							<TitleX>{data.title} {data.year && `(${data.year})`}</TitleX>
 
 							{data.Genre && <CopyX>{data.Genre}</CopyX>}
@@ -194,10 +210,10 @@ const MovieInfo = props => {
 					{data.trailers && (
 						<TrailerX height={height}>
 							{data.trailers.length > 1 && (
-								<BulletsX>
+								<BulletsX >
 									{data.trailers.map( ( trailer, i ) => {
 
-										return <BulletX key={trailer} active={currentTrailer === i} data="" handleChange={() => setCurrentTrailer( i )}/>
+										return <BulletX as={Button} key={trailer} active={currentTrailer === i} handleChange={() => setCurrentTrailer( i )}/>
 
 									} )}
 								</BulletsX>

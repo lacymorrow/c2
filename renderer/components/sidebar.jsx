@@ -14,7 +14,7 @@ const WrapperX = styled.div`
 	justify-content: space-between;
 	align-items: stretch;
 
-	overflow: hidden;
+	overflow: auto;
 	transition-timing-function: ease-out;
 	transition-property: color, background-color;
 	color: ${props => props.theme.sidebarColor};
@@ -104,6 +104,7 @@ Sidebar.propTypes = {
 	current: PropTypes.string,
 	data: PropTypes.array,
 	handleChange: PropTypes.func,
+	handleRefresh: PropTypes.func,
 	movieCount: PropTypes.number
 }
 

@@ -4,32 +4,18 @@ import styled from 'styled-components'
 
 import strings from '../helpers/strings'
 
-const ButtonX = styled.button`
+import BaseButton from './base-button'
+
+const ButtonX = styled(BaseButton)`
 	transition-property: color, background-color, outline, transform;
 	display: inline-flex;
-	${props => props.size && `
-		font-size: ${props.size}px;
-	`}
-
 	flex-direction: row;
 	jusify-content: space-between;
 	align-items: center;
 
-	/* Button reset: https://gist.github.com/MoOx/9137295 */
-	border: none;
-    margin: 0;
-    padding: 0;
-    width: auto;
-    overflow: visible;
-    cursor: pointer;
-
-    /* inherit font & color from ancestor */
-    font: inherit;
-    color: inherit;
-    background-color: inherit;
-
-    /* Normalize 'line-height'. Cannot be changed from 'normal' in Firefox 4+. */
-    line-height: normal;
+	${props => props.size && `
+		font-size: ${props.size}px;
+	`}
 
 	/* A11y styles */
 	&:hover{

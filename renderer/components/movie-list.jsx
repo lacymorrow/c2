@@ -27,17 +27,32 @@ const MovieX = styled.div`
 
 
 	${props => props.active && `
+		color: ${props.theme.movieItemColor};
 		background-color: ${props.theme.movieItemBgColor};
 	`}
 `
 
 const PosterX = styled.div`
+	// Crop posters to same height
+
+	height: 275px;
+	overflow: hidden;
+
 	img {
 		width: 100%;
 	}
 `
 
-const MovieInfoX = styled.div``
+const MovieInfoX = styled.div`
+	h3 {
+		margin-bottom: 0;
+	}
+	p {
+		font-size: 12px;
+	}
+
+
+`
 
 const MovieList = props => {
 
@@ -54,7 +69,8 @@ const MovieList = props => {
 						</PosterX>
 						<MovieInfoX>
 							<h3>{movie.title}</h3>
-							<h4>{movie.genre}</h4>
+							<p>{movie.Genre}</p>
+							<p>{movie.runtime} min</p>
 						</MovieInfoX>
 					</MovieX>
 				)

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 
 import { ThemeProvider } from 'styled-components'
-// import { FiShuffle as ShuffleIcon } from 'react-icons/fi'
 import { IoIosShuffle as ShuffleIcon } from 'react-icons/io'
 
 import config from '../config'
@@ -15,13 +14,13 @@ import { ContainerX, HeaderX, MainX, DisplayX, ShuffleButtonX, SortWrapperX, Wra
 import ipc, { randomizeMovies, syncState } from '../helpers/safe-ipc'
 import { getElByKeyValue, isPageVsGenreId } from '../helpers/util'
 
+import Button from '../components/button'
 import Directory from '../components/directory'
 import Logo from '../components/logo'
 import Messagebox from '../components/messagebox'
 import MovieInfo from '../components/movie-info'
 import MovieList from '../components/movie-list'
 import Progress from '../components/progress'
-import ResetButton from '../components/reset-button'
 import Sidebar from '../components/sidebar'
 import Sort from '../components/sort'
 import ThemeToggle from '../components/theme-toggle'
@@ -243,6 +242,8 @@ const Home = () => {
 
 	/* Template */
 
+	const backdropHeight = 280;
+
 	return (
 		<ThemeProvider theme={currentTheme}>
 			<GlobalStyle/>
@@ -264,12 +265,12 @@ const Home = () => {
 						<Messagebox data={message}/>
 
 						<ThemeToggle isActive={currentTheme === light} handleChange={onChangeTheme}/>
-						<ResetButton handleChange={onClickResetButton}/>
+
 						{working && 'working'}
 					</HeaderX>
 
 					<MainX>
-						<Sidebar current={currentPage} data={genres} handleChange={onChangePage} movieCount={movies.length}/>
+						<Sidebar current={currentPage} data={genres} handleChange={onChangePage} handleRefresh={onClickResetButton} movieCount={movies.length} />
 
 						<DisplayX>
 							<SortWrapperX>
@@ -279,7 +280,7 @@ const Home = () => {
 								)}
 							</SortWrapperX>
 
-							<MovieList current={currentMovie._id} data={getOrganizedMovieList()} handleChange={onChangeCurrentMovie}/>
+							<MovieList current={currentMovie._id} data={getOrganizedMovieList()} handleChange={onChangeCurrentMovie} height={backdropHeight}/>
 						</DisplayX>
 
 					</MainX>

@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import { FiRotateCw as RefreshIcon } from 'react-icons/fi'
 
 import strings from '../helpers/strings'
 
@@ -8,13 +9,19 @@ import Button from './sidebar-button'
 
 const WrapperX = styled.div`
 	flex: 0 0 280px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: stretch;
+
 	overflow: hidden;
 	transition-timing-function: ease-out;
 	transition-property: color, background-color;
 	color: ${props => props.theme.sidebarColor};
 	background-color: ${props => props.theme.sidebarBgColor};
-
 `
+
+const BottomWrapperX = styled.div``
 
 const ListX = styled.ul`
 	list-style: none;
@@ -22,9 +29,7 @@ const ListX = styled.ul`
 	margin: 0;
 `
 
-const ItemX = styled.li`
-
-`
+const ItemX = styled.li``
 
 const LabelX = styled.p`
 	font-weight: 700;
@@ -48,7 +53,7 @@ const BadgeX = styled.span`
 
 const Sidebar = props => {
 
-	const { data, handleChange, current, movieCount } = props
+	const { data, handleChange, handleRefresh, current, movieCount } = props
 
 	return (
 		<WrapperX>
@@ -84,6 +89,12 @@ const Sidebar = props => {
 
 				} )}
 			</ListX>
+
+			<BottomWrapperX>
+				<Button handleChange={handleRefresh}>
+					<RefreshIcon size={32}/>
+				</Button>
+			</BottomWrapperX>
 		</WrapperX>
 	)
 

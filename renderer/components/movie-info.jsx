@@ -29,7 +29,15 @@ const BackdropX = styled.div`
 	right: 0;
 	left: 0;
 	z-index: -1;
-
+	&::before {
+		content: '';
+		position: absolute;
+		top: ${props => props.height}px;
+		height: ${props => props.height}px;
+		right: 0;
+		left: 0;
+		background: linear-gradient(to bottom, ${props => rgba(props.theme.infoBgColor, 0)}, ${props => rgba(props.theme.infoBgColor, 1)});
+	}
 `
 
 const BackdropImgX = styled.img`
@@ -56,9 +64,9 @@ const InfoX = styled.div`
 	transition-timing-function: ease-out;
 	transition-property: color, background;
 	color: ${props => props.theme.infoColor};
-	background: linear-gradient(to bottom, ${props => rgba(props.theme.infoBgColor, .8)}, ${props => rgba(props.theme.infoBgColor, 1)}, ${props => rgba(props.theme.infoBgColor, 1)});
-	margin-top: 280px;
-	padding: 1rem 1rem 380px;
+	background: linear-gradient(to bottom, ${props => rgba(props.theme.infoBgColor, .8)} 0%, ${props => rgba(props.theme.infoBgColor, 1)} 20%)});
+	margin-top: ${props => props.height}px;
+	padding: 1rem 1rem ${props => props.height}px;
 `
 
 const TitleX = styled.h2`
@@ -76,7 +84,7 @@ const TrailerX = styled.div`
 	z-index: 2;
 	bottom: 0;
 	width: 500px;
-	height: 280px;
+	height: ${props => props.height}px;
 
 	iframe {
 		margin-bottom: -4px;
@@ -85,7 +93,6 @@ const TrailerX = styled.div`
 
 const BulletsX = styled.div`
 	position: absolute;
-	// cursor: pointer;
 	z-index: 3;
 	top: 0;
 	left: 0;
@@ -116,7 +123,7 @@ const BulletX = styled( Button )`
 
 const MovieInfo = props => {
 
-	const { data } = props
+	const { data, height } = props
 
 	const [ currentRating, setCurrentRating ] = useState( 0 )
 	const [ currentTrailer, setCurrentTrailer ] = useState( 0 )
@@ -143,16 +150,14 @@ const MovieInfo = props => {
 		<WrapperX>
 			{data.title && (
 				<>
-					<BackdropX>
+					<BackdropX height={height}>
 						<BackdropImgX src={data.backdrop} alt={`Backdrop for ${data.title}`}/>
 						<BackdropMirrorX src={data.backdrop} alt=""/>
 					</BackdropX>
 
 					<InfoWrapperX>
-						<InfoX>
+						<InfoX height={height}>
 							<TitleX>{data.title} {data.year && `(${data.year})`}</TitleX>
-
-							<Button handleChange={() => openFile( data.filepath )}>Watch <FiTv size={24} /></Button>
 
 							{data.Genre && <CopyX>{data.Genre}</CopyX>}
 							{data.runtime && (
@@ -163,6 +168,8 @@ const MovieInfo = props => {
 									)}
 								</CopyX>
 							)}
+
+							<Button handleChange={() => openFile( data.filepath )}>Watch <FiTv size={24} /></Button>
 
 							<RatingsX/>
 
@@ -185,7 +192,7 @@ const MovieInfo = props => {
 					</InfoWrapperX>
 
 					{data.trailers && (
-						<TrailerX>
+						<TrailerX height={height}>
 							{data.trailers.length > 1 && (
 								<BulletsX>
 									{data.trailers.map( ( trailer, i ) => {
@@ -206,11 +213,13 @@ const MovieInfo = props => {
 }
 
 MovieInfo.propTypes = {
-	data: PropTypes.object
+	data: PropTypes.object,
+	height: PropTypes.number
 }
 
 MovieInfo.defaultProps = {
-	data: {}
+	data: {},
+	height: 280
 }
 
 export default MovieInfo

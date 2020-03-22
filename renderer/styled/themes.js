@@ -70,6 +70,10 @@ const colorSchemes = {
 const colorScheme = colorSchemes.blue
 
 const lightTheme = {
+	primaryColor: colorScheme.primaryColor,
+	onPrimaryColor: colorScheme.onPrimaryColor,
+	secondaryColor: colorScheme.secondaryColor,
+	onSecondaryColor: colorScheme.onSecondaryColor,
 
 	headerColor: colorScheme.onSurfaceColor,
 	headerBgColor: colorScheme.surfaceColor,

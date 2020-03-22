@@ -6,9 +6,16 @@ export const GlobalStyle = createGlobalStyle`
 	${normalize()}
 	* {
 		box-sizing: border-box;
+
 		transition-duration: .3s;
 		transition-delay: 0s;
 		transition-timing-function: ease-out;
+
+		&::selection {
+			color: ${props => props.theme.onSecondaryColor};
+			background: ${props => props.theme.secondaryColor};
+			// text-shadow: 2px 2px 2px ${props => props.theme.primaryColor};
+		}
 	}
 
 	#__next {

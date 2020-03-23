@@ -92,7 +92,7 @@ const Sidebar = props => {
 
 			<BottomWrapperX>
 				<Button handleChange={handleRefresh}>
-					<RefreshIcon size={32}/>
+					<RefreshIcon size={16}/>
 				</Button>
 			</BottomWrapperX>
 		</WrapperX>

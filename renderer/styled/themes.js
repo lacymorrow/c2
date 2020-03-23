@@ -109,7 +109,7 @@ const lightTheme = {
 	buttonHoverColor: colorScheme.onSecondaryColor,
 	buttonHoverBgColor: colorScheme.secondaryColor,
 
-	progressColor: colorScheme.primaryColor,
+	progressColor: colorScheme.primaryColor
 
 }
 

@@ -9,12 +9,19 @@ import strings from '../helpers/strings'
 
 import { GlobalStyle } from '../styled/global'
 import { dark, light } from '../styled/themes'
-import { ContainerX, HeaderX, MainX, DisplayX, ShuffleButtonX, SortWrapperX, WrapperX } from '../styled/home'
+import {
+	ContainerX,
+	HeaderX,
+	MainX,
+	DisplayX,
+	ShuffleButtonX,
+	SortWrapperX,
+	WrapperX
+} from '../styled/components'
 
 import ipc, { randomizeMovies, syncState } from '../helpers/safe-ipc'
 import { getElByKeyValue, isPageVsGenreId } from '../helpers/util'
 
-import Button from '../components/button'
 import Directory from '../components/directory'
 import Logo from '../components/logo'
 import Messagebox from '../components/messagebox'
@@ -242,7 +249,7 @@ const Home = () => {
 
 	/* Template */
 
-	const backdropHeight = 280;
+	const backdropHeight = 280
 
 	return (
 		<ThemeProvider theme={currentTheme}>
@@ -270,7 +277,7 @@ const Home = () => {
 					</HeaderX>
 
 					<MainX>
-						<Sidebar current={currentPage} data={genres} handleChange={onChangePage} handleRefresh={onClickResetButton} movieCount={movies.length} />
+						<Sidebar current={currentPage} data={genres} handleChange={onChangePage} handleRefresh={onClickResetButton} movieCount={movies.length}/>
 
 						<DisplayX>
 							<SortWrapperX>

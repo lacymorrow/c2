@@ -6,10 +6,11 @@ import { FiExternalLink, FiTv } from 'react-icons/fi'
 
 import strings from '../helpers/strings'
 import { openFile, openUrl } from '../helpers/safe-ipc'
+import { BulletX } from '../styled/components'
 import Button from './button'
+import Ratings from './ratings'
 
 const WrapperX = styled.div`
-	height: 100vh;
 	flex-grow: 0;
 	flex-shrink: 0;
 	flex-basis: 500px;
@@ -36,7 +37,7 @@ const BackdropX = styled.div`
 		height: ${props => props.height}px;
 		right: 0;
 		left: 0;
-		background: linear-gradient(to bottom, ${props => rgba(props.theme.infoBgColor, 0)}, ${props => rgba(props.theme.infoBgColor, 1)});
+		background: linear-gradient(to bottom, ${props => rgba( props.theme.infoBgColor, 0 )}, ${props => rgba( props.theme.infoBgColor, 1 )});
 	}
 `
 
@@ -64,7 +65,7 @@ const InfoX = styled.div`
 	transition-timing-function: ease-out;
 	transition-property: color, background;
 	color: ${props => props.theme.infoColor};
-	background: linear-gradient(to bottom, ${props => rgba(props.theme.infoBgColor, .8)} 0%, ${props => rgba(props.theme.infoBgColor, 1)} 20%)});
+	background: linear-gradient(to bottom, ${props => rgba( props.theme.infoBgColor, 0.8 )} 0%, ${props => rgba( props.theme.infoBgColor, 1 )} 20%)});
 	margin-top: ${props => props.height}px;
 	padding: 1rem 1rem ${props => props.height}px;
 `
@@ -73,13 +74,40 @@ const TitleX = styled.h2`
 	margin-top: 0;
 `
 
-const RatingsX = styled.div``
-
-const Rating = styled.div``
-
 const CopyX = styled.p``
 
 const PlotX = styled.p``
+
+const TrailerCopyX = styled(CopyX)`
+	text-align: center;
+	text-transform: uppercase;
+	// line-height: 0.5;
+
+	span {
+		position: relative;
+
+		&:before {
+			right: 100%;
+			margin-right: 15px;
+		}
+
+		&:after {
+			left: 100%;
+			margin-left: 15px;
+		}
+
+		&:before,
+		&:after {
+			content: "";
+			position: absolute;
+			height: 5px;
+			border-bottom: 1px solid black;
+			border-top: 1px solid black;
+			top: 0;
+			width: 150px;
+		}
+	}
+`
 
 const TrailerX = styled.div`
 	position: fixed;
@@ -105,22 +133,6 @@ const BulletsX = styled.div`
 	&:hover {
 		opacity: 0.9;
 	}
-`
-
-// TODO bullet styles
-const BulletX = styled.div`
-	display: inline-block;
-	margin: 4px 8px 4px 0;
-	border-radius: 50%;
-	width: 1em;
-	height: 1em;
-	background-color: ${props => props.theme.buttonColor};
-	box-shadow: 1px 1px 5px #BBB;
-
-	transition-property: background-color;
-	${props => props.active && `
-		background-color: ${props.theme.buttonActiveColor};
-	`}
 `
 
 const MovieInfo = props => {
@@ -160,18 +172,7 @@ const MovieInfo = props => {
 					<InfoWrapperX>
 						<InfoX height={height}>
 
-							<RatingsX>
-								{data.ratings && data.ratings.length > 0 && data.ratings.map( ( rating, i ) => (
-									<Rating active={currentRating === i}>
-										<h5>{rating.name} Rating</h5>
-										{[...Array(10)].map( ( _, j ) => {
-											console.log('asd')
-											return <BulletX active={Math.round(rating.score) > j} />
-										})}
-										<p>{rating.score} / 10</p>
-									</Rating>
-								) )}
-							</RatingsX>
+							<Ratings current={currentRating} data={data.ratings}/>
 
 							<TitleX>{data.title} {data.year && `(${data.year})`}</TitleX>
 
@@ -185,9 +186,7 @@ const MovieInfo = props => {
 								</CopyX>
 							)}
 
-							<Button handleChange={() => openFile( data.filepath )}>Watch <FiTv size={24} /></Button>
-
-							<RatingsX/>
+							<Button handleChange={() => openFile( data.filepath )}>Watch <FiTv size={24}/></Button>
 
 							<PlotX>{data.plot}</PlotX>
 							<PlotX>{data.overview}</PlotX>
@@ -203,17 +202,17 @@ const MovieInfo = props => {
 							{data.Writer && <CopyX><b>{strings.movie.writer}:</b> {data.Writer}</CopyX> }
 							{data.Actors && <CopyX><b>{strings.movie.actor}:</b> {data.Actors}</CopyX> }
 							{data.Awards && <CopyX><b>{strings.movie.award}:</b> {data.Awards}</CopyX> }
-							{data.trailers && <CopyX><b>{strings.movie.trailer}:</b></CopyX> }
+							{data.trailers && <TrailerCopyX><span>{strings.movie.trailer}</span></TrailerCopyX> }
 						</InfoX>
 					</InfoWrapperX>
 
 					{data.trailers && (
 						<TrailerX height={height}>
 							{data.trailers.length > 1 && (
-								<BulletsX >
+								<BulletsX>
 									{data.trailers.map( ( trailer, i ) => {
 
-										return <BulletX as={Button} key={trailer} active={currentTrailer === i} handleChange={() => setCurrentTrailer( i )}/>
+										return <BulletX key={trailer} as={Button} active={currentTrailer === i} handleChange={() => setCurrentTrailer( i )}/>
 
 									} )}
 								</BulletsX>

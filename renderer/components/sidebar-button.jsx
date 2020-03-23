@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
-import strings from '../helpers/strings'
 import Button from './button'
 
 const ButtonX = styled( Button )`

@@ -6,7 +6,7 @@ import strings from '../helpers/strings'
 
 import BaseButton from './base-button'
 
-const ButtonX = styled(BaseButton)`
+const ButtonX = styled( BaseButton )`
 	transition-property: color, background-color, outline, transform;
 	display: inline-flex;
 	flex-direction: row;

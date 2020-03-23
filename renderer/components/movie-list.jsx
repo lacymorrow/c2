@@ -17,7 +17,7 @@ const GridX = styled.div`
 	padding: 0 1rem;
 `
 
-const MovieX = styled(BaseButton)`
+const MovieX = styled( BaseButton )`
 	transition-timing-function: ease-out;
 	transition-property: color, background-color;
 
@@ -71,12 +71,12 @@ const MovieList = props => {
 					return (
 						<MovieX key={movie._id} active={current === movie._id} handleChange={() => handleChange( movie._id )}>
 							<PosterX>
-								<img src={movie.poster} alt={`Poster for ${movie.title}`}/>
+								<img src={movie.poster || '/static/default.png'} alt={`Poster for ${movie.title}`}/>
 							</PosterX>
 							<MovieInfoX>
 								<h3>{movie.title}</h3>
 								<p>{movie.Genre}</p>
-								<p>{movie.runtime} min</p>
+								<p>{movie.runtime && `${movie.runtime} min`}</p>
 							</MovieInfoX>
 						</MovieX>
 					)

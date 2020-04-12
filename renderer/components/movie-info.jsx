@@ -78,7 +78,7 @@ const CopyX = styled.p``
 
 const PlotX = styled.p``
 
-const TrailerCopyX = styled(CopyX)`
+const TrailerCopyX = styled( CopyX )`
 	text-align: center;
 	text-transform: uppercase;
 	// line-height: 0.5;

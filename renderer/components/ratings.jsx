@@ -2,33 +2,43 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
+import config from '../config'
 import { BulletX } from '../styled/components'
 
 const RatingsX = styled.div`
-
+	position: relative;
+	height: 150px;
 `
 
 const RatingX = styled.div`
 	@keyframes fadeInOut {
 	  from {
 	    opacity: 0;
-	    transform: translate3d(0, 100%, 0);
+	    transform: translate3d(0, 50%, 0);
 	  }
 
-	  // 50% {
-	  //   transform: rotate(-10deg);
-	  // }
+  	  10% {
+  	    opacity: 1;
+      	transform: translate3d(0, 0, 0);
+  	  }
 
-	  to {
+
+	  90% {
 	    opacity: 1;
     	transform: translate3d(0, 0, 0);
 	  }
+
+	  to {
+	  	opacity: 0;
+	  	transform: translate3d(0, -50%, 0);
+	  }
 	}
 
-	animation-duration: 1s;
+	animation-duration: ${parseInt(config.RATING_DELAY/1000)}s;
 	animation-fill-mode: both;
 
 	opacity: 0;
+	position: absolute;
 	${props => props.active && `
 		animation-name: fadeInOut;
 	`}

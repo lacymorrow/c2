@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { rgba } from 'polished'
 import { FiExternalLink, FiTv } from 'react-icons/fi'
 
+import config from '../config'
 import strings from '../helpers/strings'
 import { openFile, openUrl } from '../helpers/safe-ipc'
 import { BulletX } from '../styled/components'
@@ -146,13 +147,13 @@ const MovieInfo = props => {
 
 		let timer
 
-		if ( data.ratings ) {
+		if ( data.ratings && data.ratings.length > 1 ) {
 
 			timer = setInterval( () => {
 
 				setCurrentRating( ( currentRating + 1 ) % data.ratings.length )
 
-			}, 3000 )
+			}, config.RATING_DELAY )
 
 			return () => clearInterval( timer )
 

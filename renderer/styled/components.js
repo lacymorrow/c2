@@ -68,11 +68,11 @@ export const BulletX = styled.div`
 	border-radius: 50%;
 	width: 1em;
 	height: 1em;
-	background-color: ${props => props.theme.buttonColor};
+	background-color: ${props => props.theme.onPrimaryColor};
 	box-shadow: 1px 1px 5px #BBB;
 
 	transition-property: background-color;
 	${props => props.active && `
-		background-color: ${props.theme.buttonActiveColor};
+		background-color: ${props.theme.primaryColor};
 	`}
 `

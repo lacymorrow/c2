@@ -49,15 +49,19 @@ const Ratings = props => {
 	const { current, data } = props
 
 	return (
-		<RatingsX>
-			{data.length > 0 && data.map( ( rating, i ) => (
-				<RatingX key={rating.name} active={current === i}>
-					<h5>{rating.name} Rating</h5>
-					{[ ...new Array( 10 ) ].map( ( _, j ) => <BulletX key={`${rating.name}${j.toString()}`} active={Math.round( rating.score ) > j}/> )}
-					<p>{rating.score} / 10</p>
-				</RatingX>
-			) )}
-		</RatingsX>
+		<>
+			{data.length > 0 && (
+				<RatingsX>
+					{data.map( ( rating, i ) => (
+						<RatingX key={rating.name} active={current === i} total={data.length} index={i}>
+							<h5>{rating.name} Rating</h5>
+							{[ ...new Array( 10 ) ].map( ( _, j ) => <BulletX key={`${rating.name}${j.toString()}`} active={Math.round( rating.score ) > j}/> )}
+							<p>{rating.score} / 10</p>
+						</RatingX>
+					) )}
+				</RatingsX>
+			) }
+		</>
 	)
 
 }

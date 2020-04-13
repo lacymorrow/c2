@@ -1,8 +1,9 @@
-import { app, ipcMain } from 'electron'
+import { app, dialog, ipcMain } from 'electron'
 import { is } from 'electron-util'
 import serve from 'electron-serve'
 import logger from 'electron-timber'
 
+import config from '../renderer/config'
 import { createWindow } from './helpers'
 
 // We want await, so we wrap in an async
@@ -77,6 +78,24 @@ import { createWindow } from './helpers'
 
 		workerWindow.webContents.send( 'to-worker', arg )
 
+	} )
+
+	ipcMain.on( 'open-file-dialog', () => {
+		dialog.showOpenDialog({
+		    filters: [
+		        { name: 'Movies', extensions: config.VALID_FILETYPES },
+		        { name: 'All Files', extensions: ['*'] }
+		    ],
+		    title: 'Scan Movies',
+		    message: 'Choose movie folder to scan:',
+		    properties: ['openDirectory', 'openFile', 'multiSelections']
+		}, function(files) {
+		    // if (files) {
+		    //     desktop.send('selected-file', files)
+		    // } else {
+		    //     desktop.send('selected-file', false)
+		    // }
+		})
 	} )
 
 	ipcMain.on( 'ready', () => logger.log( 'Worker ready' ) )

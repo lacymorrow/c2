@@ -14,7 +14,7 @@ const GridX = styled.div`
 	grid-template-columns: repeat(auto-fill, 200px);
 	grid-gap: 1rem;
 
-	padding: 0 1rem;
+	padding: 15px 1rem;
 `
 
 const MovieX = styled( BaseButton )`
@@ -50,7 +50,13 @@ const PosterX = styled.div`
 
 const MovieInfoX = styled.div`
 	h3 {
+	    display: -webkit-box;
+	    overflow: hidden;
+		-webkit-line-clamp: 3;
+	    -webkit-box-orient: vertical;
+
 		margin-bottom: 0;
+
 	}
 	p {
 		font-size: 12px;

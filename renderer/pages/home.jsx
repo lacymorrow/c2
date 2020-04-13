@@ -23,6 +23,7 @@ import ipc, { randomizeMovies, syncState } from '../helpers/safe-ipc'
 import { getElByKeyValue, isPageVsGenreId } from '../helpers/util'
 
 import Directory from '../components/directory'
+import FileInput from '../components/file-input'
 import Logo from '../components/logo'
 import Messagebox from '../components/messagebox'
 import MovieInfo from '../components/movie-info'
@@ -68,7 +69,7 @@ const Home = () => {
 	}
 
 	/* HANDLERS */
-	const onChangeDirectory = dirpath => {
+	const onChangePath = dirpath => {
 
 		// Set new directory
 		assignState( { dirpath } )
@@ -133,6 +134,10 @@ const Home = () => {
 
 	const onClickShuffleButton = () => randomizeMovies()
 
+	/* Render methods */
+	const isMoviePanelOpen = () => Object.prototype.hasOwnProperty.call(currentMovie, "title")
+
+	// TODO HELP: Is this how to do work on data before passing it to a component to render?
 	const getOrganizedMovieList = () => {
 
 		// Filter
@@ -259,15 +264,17 @@ const Home = () => {
 			</Head>
 			<Progress data={loading}/>
 			<ContainerX>
-				<WrapperX>
+				<WrapperX isVisible={isMoviePanelOpen()}>
 					<HeaderX>
 
 						<Logo/>
 
 						<Directory
 							data={dirpath}
-							handleChange={onChangeDirectory}
+							handleChange={onChangePath}
 						/>
+
+						<FileInput />
 
 						<Messagebox data={message}/>
 
@@ -295,7 +302,7 @@ const Home = () => {
 					{/* <Refresh /> */}
 				</WrapperX>
 
-				<MovieInfo data={currentMovie}/>
+				<MovieInfo data={currentMovie} isVisible={isMoviePanelOpen()}/>
 
 			</ContainerX>
 		</ThemeProvider>

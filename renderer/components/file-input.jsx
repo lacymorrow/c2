@@ -1,11 +1,11 @@
-import React, {useRef} from 'react'
-import PropTypes from 'prop-types'
+import React from 'react'
 import styled from 'styled-components'
 
-import { FiSearch } from 'react-icons/fi'
-// Import { IoIosSearch } from 'react-icons/io'
+import { IoIosFolderOpen } from 'react-icons/io'
 
+import ipc from '../helpers/safe-ipc'
 import strings from '../helpers/strings'
+import Button from './button'
 
 const WrapperX = styled.div`
 	transition-property: color, background-color;
@@ -15,30 +15,30 @@ const WrapperX = styled.div`
 	position: relative;
 `
 
+const IconX = styled.div`
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: .5rem;
 
-const Directory = props => {
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+`
 
-	const { data, handleChange } = props
+const FileInput = () => {
 
-	const fileInput = useRef()
+	const handleChooseDirectory = () => ipc.send( 'open-file-dialog' )
 
-	// TODO Glyphicons
 	return (
 		<WrapperX>
-			<input type="file" ref={fileInput} />
-			<IconX><FiSearch size={24}/></IconX>
+			<Button handleChange={handleChooseDirectory}>
+				{strings.directory.button}
+				<IconX><IoIosFolderOpen size={24}/></IconX>
+			</Button>
 		</WrapperX>
 	)
 
 }
 
-Directory.propTypes = {
-	data: PropTypes.string,
-	handleChange: PropTypes.func
-}
-
-Directory.defaultProps = {
-	data: strings.directory.init
-}
-
-export default Directory
+export default FileInput

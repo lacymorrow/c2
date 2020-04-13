@@ -39,7 +39,8 @@ export default {
 	},
 	directory: {
 		init: '',
-		placeholder: 'Directory of movie files...'
+		button: 'Choose Directory',
+		placeholder: 'Directory of movie files...',
 	},
 	messagebox: {
 		init: 'Loading...'

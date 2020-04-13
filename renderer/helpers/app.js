@@ -1,6 +1,6 @@
 'use strict'
 
-import { shell } from 'electron'
+import electron, { dialog, shell } from 'electron'
 import logger from 'electron-timber'
 import { is } from 'electron-util'
 import fs from 'fs'

@@ -3,19 +3,25 @@ import Button from '../components/button'
 
 export const ContainerX = styled.div`
 	display: flex;
+	position: relative;
 	flex-direction: row;
 	height: 100%;
 	align-items: stretch;
-
 `
 
 export const WrapperX = styled.div`
-	flex: 1 0 300px;
+	flex-grow: 0;
+	flex-shrink: 1;
+	flex-basis: 100%;
+	${props => props.isVisible && `
+		flex-basis: calc(100% - 500px);
+	`}
 
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: stretch;
+	transition: flex-basis .3s ease .1s;
 `
 
 export const HeaderX = styled.div`
@@ -34,6 +40,7 @@ export const MainX = styled.div`
 	display: flex;
 	flex-direction: row;
 	overflow: hidden;
+
 `
 
 export const DisplayX = styled.div`

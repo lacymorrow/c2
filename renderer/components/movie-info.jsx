@@ -12,20 +12,39 @@ import Button from './button'
 import Ratings from './ratings'
 
 const WrapperX = styled.div`
-	flex-grow: 0;
-	flex-shrink: 0;
-	flex-basis: 500px;
+	// flex-basis: 0px;
+	// flex-grow: 0;
+	// flex-shrink: 1;
+	// overflow: hidden;
 
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
+	// display: flex;
+	// flex-direction: column;
+	// justify-content: space-between;
+	box-shadow: 0 5px 10px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);
 
-	position: relative;
-	transition: flex-basis 3s ease;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	transition: transform .5s ease-out;
+	transform: translateX(500px);
+	background: ${props => props.theme.infoBgColor};
+
+	${props => props.isVisible && `
+		// flex-basis: 500px;
+		transform: translateX(0px);
+
+	`}
+`
+
+const PanelX = styled.div`
+	width: 500px;
+	height: 100%;
+    overflow-y: auto;
 `
 
 const BackdropX = styled.div`
-	width: 100%;
+	width: 500px;
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -104,7 +123,7 @@ const TrailerCopyX = styled( CopyX )`
 			height: 5px;
 			border-bottom: 1px solid black;
 			border-top: 1px solid black;
-			top: 0;
+			top: 5px;
 			width: 150px;
 		}
 	}
@@ -112,7 +131,7 @@ const TrailerCopyX = styled( CopyX )`
 
 const TrailerX = styled.div`
 	position: fixed;
-	z-index: 2;
+	z-index: 30;
 	bottom: 0;
 	width: 500px;
 	height: ${props => props.height}px;
@@ -138,7 +157,7 @@ const BulletsX = styled.div`
 
 const MovieInfo = props => {
 
-	const { data, height } = props
+	const { data, height, isVisible } = props
 
 	const [ currentRating, setCurrentRating ] = useState( 0 )
 	const [ currentTrailer, setCurrentTrailer ] = useState( 0 )
@@ -162,9 +181,9 @@ const MovieInfo = props => {
 	}, [ data, currentRating ] )
 
 	return (
-		<WrapperX>
+		<WrapperX isVisible={isVisible}>
 			{data.title && (
-				<>
+				<PanelX>
 					<BackdropX height={height}>
 						<BackdropImgX src={data.backdrop} alt={`Backdrop for ${data.title}`}/>
 						<BackdropMirrorX src={data.backdrop} alt=""/>
@@ -192,7 +211,7 @@ const MovieInfo = props => {
 							<PlotX>{data.plot}</PlotX>
 							<PlotX>{data.overview}</PlotX>
 
-							{data.BoxOffice && <CopyX><b>BoxOffice:</b> {data.BoxOffice}</CopyX> }
+							{data.BoxOffice && <CopyX><b>Box Office:</b> {data.BoxOffice}</CopyX> }
 							{data.DVD && <CopyX><b>DVD release date:</b> {data.DVD}</CopyX> }
 							{data.Country && <CopyX><b>Country:</b> {data.Country}</CopyX> }
 							{data.Language && <CopyX><b>Language:</b> {data.Language}</CopyX> }
@@ -221,7 +240,7 @@ const MovieInfo = props => {
 							<iframe allowFullScreen width="500" height="281" frameBorder="0" src={`https://www.youtube-nocookie.com/embed/${data.trailers[currentTrailer]}?rel=0&showinfo=0`}/>
 						</TrailerX>
 					)}
-				</>
+				</PanelX>
 			)}
 		</WrapperX>
 	)
@@ -230,7 +249,8 @@ const MovieInfo = props => {
 
 MovieInfo.propTypes = {
 	data: PropTypes.object,
-	height: PropTypes.number
+	height: PropTypes.number,
+	isVisible: PropTypes.bool
 }
 
 MovieInfo.defaultProps = {

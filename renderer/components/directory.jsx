@@ -26,7 +26,7 @@ const IconX = styled.div`
 	flex-direction: row;
 `
 
-const DirectoryInputX = styled.input`
+const PathX = styled.input`
 	color: ${props => props.theme.headerColor};
 	background-color: ${props => props.theme.headerBgColor};
 	padding: .5rem .5rem .5rem 2.5rem;
@@ -36,11 +36,10 @@ const Directory = props => {
 
 	const { data, handleChange } = props
 
-	// TODO Glyphicons
 	return (
 		<WrapperX>
 			<IconX><FiSearch size={24}/></IconX>
-			<DirectoryInputX
+			<PathX
 				type="text"
 				placeholder={strings.directory.placeholder}
 				value={data}

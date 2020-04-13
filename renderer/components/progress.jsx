@@ -104,6 +104,10 @@ const Progress = props => {
 
 			NProgress.done()
 
+		} else if ( data <= 0.01 ) {
+
+			NProgress.set( data )
+
 		} else {
 
 			NProgress.set( data )

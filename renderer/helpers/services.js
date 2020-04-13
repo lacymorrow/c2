@@ -114,7 +114,7 @@ const qUpdateLoadingBar = () => {
 q.on( 'start', () => {
 
 	logger.log( strings.q.start )
-	qUpdateLoadingBar()
+	// qUpdateLoadingBar()
 
 } )
 

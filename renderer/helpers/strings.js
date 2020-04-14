@@ -14,7 +14,9 @@ export default {
 		writer: 'Writers',
 
 		imdbLink: 'IMDB',
-		trailer: 'Preview'
+		trailer: 'Preview',
+
+		noMovies: 'No movies found, select a directory above.'
 	},
 
 	// Main process
@@ -40,7 +42,7 @@ export default {
 	directory: {
 		init: '',
 		button: 'Choose Directory',
-		placeholder: 'Directory of movie files...',
+		placeholder: 'Directory of movie files...'
 	},
 	messagebox: {
 		init: 'Loading...'
@@ -59,10 +61,11 @@ export default {
 	warn: {
 		cacheInvalid: 'No valid cache found. Starting fresh.',
 		cacheValid: 'Loading from cache...',
-		file: 'File not valid:',
+		file: 'File not valid',
 		filecache: 'Loading cached movie'
 	},
 	error: {
+		chooseDir: 'There was a problem while choosing a directory, please try again.',
 		ipc: 'Invalid ipc message received',
 		scanDir: 'Error scanning directory',
 		scanPath: 'Error: Path is not a directory.',

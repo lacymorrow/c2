@@ -8,61 +8,71 @@ import { BulletX } from '../styled/components'
 const RatingsX = styled.div`
 	position: relative;
 	height: 150px;
+	${props => {
+
+		const fraction = parseInt( 100 / props.total, 10 )
+
+		return `
+		@keyframes fadeInOut {
+			0% {
+			    opacity: 0;
+			    transform: translateY(25%);
+			}
+			5% {
+			    opacity: 1;
+			    transform: translateY(0%);
+			}
+			${fraction}% {
+			    opacity: 1;
+			    transform: translateY(0%);
+			}
+			${fraction + 5}% {
+			    opacity: 0;
+			    transform: translateY(-25%);
+			}
+			100% {
+			    opacity: 0;
+			    transform: translateY(-25%);
+			}
+		}
+		`
+
+	}}
 `
 
 const RatingX = styled.div`
-	@keyframes fadeInOut {
-	  from {
-	    opacity: 0;
-	    transform: translate3d(0, 50%, 0);
-	  }
-
-  	  10% {
-  	    opacity: 1;
-      	transform: translate3d(0, 0, 0);
-  	  }
-
-
-	  90% {
-	    opacity: 1;
-    	transform: translate3d(0, 0, 0);
-	  }
-
-	  to {
-	  	opacity: 0;
-	  	transform: translate3d(0, -50%, 0);
-	  }
-	}
-
-	animation-duration: ${parseInt(config.RATING_DELAY/1000)}s;
-	animation-fill-mode: both;
-
-	opacity: 0;
 	position: absolute;
-	${props => props.active && `
-		animation-name: fadeInOut;
-	`}
+	opacity: 0;
+	animation-fill-mode: both;
+	animation-iteration-count: infinite;
+	animation-duration: ${parseInt( config.RATING_DELAY / 1000, 10 )}s;
+	animation-delay: ${props => ( props.index * parseInt( config.RATING_DELAY / 1000, 10	 ) / props.total )}s;
+	animation-name: fadeInOut;
+
 `
 
+// TODO: Fix animation
 const Ratings = props => {
 
 	const { current, data } = props
 
-	return (
-		<>
-			{data.length > 0 && (
-				<RatingsX>
-					{data.map( ( rating, i ) => (
-						<RatingX key={rating.name} active={current === i} total={data.length} index={i}>
-							<h5>{rating.name} Rating</h5>
-							{[ ...new Array( 10 ) ].map( ( _, j ) => <BulletX key={`${rating.name}${j.toString()}`} active={Math.round( rating.score ) > j}/> )}
-							<p>{rating.score} / 10</p>
-						</RatingX>
-					) )}
-				</RatingsX>
-			) }
-		</>
-	)
+	if ( data.length > 0 ) {
+
+		return (
+			<RatingsX total={data.length}>
+				{data.map( ( rating, i ) => (
+					<RatingX key={rating.name} active={current === i} index={i} total={data.length}>
+						<h5>{rating.name} Rating</h5>
+						{[ ...new Array( 10 ) ].map( ( _, j ) => <BulletX key={`${rating.name}${j.toString()}`} active={Math.round( rating.score ) > j}/> )}
+						<p>{rating.score} / 10</p>
+					</RatingX>
+				) )}
+			</RatingsX>
+		)
+
+	}
+
+	return null
 
 }
 

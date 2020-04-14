@@ -6,7 +6,18 @@ import strings from '../helpers/strings'
 
 // TODO styles
 const WrapperX = styled.div`
-	background-color: teal;
+	background-color: ${props => props.theme.primaryColor};
+	color: ${props => props.theme.onPrimaryColor};
+	position: absolute;
+	bottom: 0;
+	max-width: 300px;
+	font-size: 9px;
+	border-top-right-radius: 5px;
+	box-shadow: 0 5px 10px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);
+
+	p {
+		padding: 0 .25rem;
+	}
 `
 const Messagebox = props => {
 

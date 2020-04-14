@@ -33,6 +33,13 @@ export const HeaderX = styled.div`
 	justify-content: space-between;
 	color: ${props => props.theme.headerColor};
 	background: ${props => props.theme.headerBgColor};
+
+	&>* {
+		margin-right: 1rem;
+	}
+	&>*:first-child {
+		margin-right: 0;
+	}
 `
 
 export const MainX = styled.div`

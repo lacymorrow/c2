@@ -1,6 +1,6 @@
 'use strict'
 
-import electron, { dialog, shell } from 'electron'
+import { shell } from 'electron'
 import logger from 'electron-timber'
 import { is } from 'electron-util'
 import fs from 'fs'
@@ -43,6 +43,26 @@ export const start = () => {
 		const { command, data } = arg
 		switch ( command ) {
 
+			case 'choose-directory':
+				if ( data === false ) {
+
+					console.log( strings.error.chooseDirs )
+
+				} else {
+
+					const { canceled, filePaths } = data
+					if ( canceled || filePaths.length === 0 ) {
+						// Dialog was canceled
+					} else {
+
+						const dirpath = filePaths[0]
+						setPath( dirpath )
+
+					}
+
+				}
+
+				break
 			case 'file':
 				openExternal( path.join( 'file://', data ) )
 				shell.beep()
@@ -138,13 +158,18 @@ export const setPath = dirpath => {
 
 const scanPath = () => {
 
+	// TODO - this is broken and doesn't reset the renderer quick enough
 	// TODO - loading bar
 
 	const { dirpath } = getState()
 	if ( isDirectory( dirpath ) ) {
 
-		setState( { dirpath, currentDir: dirpath, queueTotal: 0 } ) // TODO scanPath called to update dirpath, break out
+		resetQueue()
+		resetGenres()
 		resetMovies()
+		setState( { dirpath, currentDir: dirpath, queueTotal: 0 } )
+
+
 		scanDir( dirpath, 0 )
 
 	} else {

@@ -80,22 +80,37 @@ import { createWindow } from './helpers'
 
 	} )
 
-	ipcMain.on( 'open-file-dialog', () => {
-		dialog.showOpenDialog({
-		    filters: [
-		        { name: 'Movies', extensions: config.VALID_FILETYPES },
-		        { name: 'All Files', extensions: ['*'] }
-		    ],
-		    title: 'Scan Movies',
-		    message: 'Choose movie folder to scan:',
-		    properties: ['openDirectory', 'openFile', 'multiSelections']
-		}, function(files) {
-		    // if (files) {
-		    //     desktop.send('selected-file', files)
-		    // } else {
-		    //     desktop.send('selected-file', false)
-		    // }
-		})
+	ipcMain.on( 'open-file-dialog', async () => {
+
+		try {
+
+			const event = await dialog.showOpenDialog( {
+				filters: [
+					{ name: 'Movies', extensions: config.VALID_FILETYPES },
+					{ name: 'All Files', extensions: [ '*' ] }
+				],
+				title: 'Scan Movies',
+				message: 'Choose movie directory:',
+				properties: [ 'openDirectory', 'openFile' /* , 'multiSelections' */]
+			} )
+
+			if ( event ) {
+
+				workerWindow.webContents.send( 'to-worker', { command: 'choose-directory', data: event } )
+
+			} else {
+
+				throw new Error( 'Error: No directory response from dialog' )
+
+			}
+
+		} catch ( error ) {
+
+			logger.log( error )
+			workerWindow.webContents.send( 'to-worker', { command: 'choose-directory', data: false } )
+
+		}
+
 	} )
 
 	ipcMain.on( 'ready', () => logger.log( 'Worker ready' ) )

@@ -11,7 +11,10 @@ import { BulletX } from '../styled/components'
 import Button from './button'
 import Ratings from './ratings'
 
+// TODO: default backdrop loading/not-found image
+
 const WrapperX = styled.div`
+	/* old way of animating flex-basis */
 	// flex-basis: 0px;
 	// flex-grow: 0;
 	// flex-shrink: 1;
@@ -33,7 +36,6 @@ const WrapperX = styled.div`
 	${props => props.isVisible && `
 		// flex-basis: 500px;
 		transform: translateX(0px);
-
 	`}
 `
 
@@ -101,7 +103,6 @@ const PlotX = styled.p``
 const TrailerCopyX = styled( CopyX )`
 	text-align: center;
 	text-transform: uppercase;
-	// line-height: 0.5;
 
 	span {
 		position: relative;
@@ -147,11 +148,11 @@ const BulletsX = styled.div`
 	top: 0;
 	left: 0;
 	padding: 1rem;
-	opacity: 0.4;
+	opacity: 0.5;
 	transition: opacity .2s ease-in;
 
 	&:hover {
-		opacity: 0.9;
+		opacity: 0.95;
 	}
 `
 
@@ -232,7 +233,7 @@ const MovieInfo = props => {
 								<BulletsX>
 									{data.trailers.map( ( trailer, i ) => {
 
-										return <BulletX key={trailer} as={Button} active={currentTrailer === i} handleChange={() => setCurrentTrailer( i )}/>
+										return <BulletX key={trailer} as={Button} active={currentTrailer === i} data={''} handleChange={() => setCurrentTrailer( i )} />
 
 									} )}
 								</BulletsX>

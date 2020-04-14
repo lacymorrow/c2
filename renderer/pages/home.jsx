@@ -40,7 +40,6 @@ const Home = () => {
 	// TODO - set initial state from electron store vals
 
 	// State defaults
-	const [ message, setMessage ] = useState( strings.messagebox.init )
 	const [ movies, setMovies ] = useState( [] )
 	const [ genres, setGenres ] = useState( [] )
 
@@ -51,11 +50,8 @@ const Home = () => {
 
 	const [ state, setState ] = useState( config.DEFAULT_STATE )
 
-	// Const stateRef = useRef( state )
-	// stateRef.current = state
-
 	// State properties
-	const { dirpath, loading, working } = state
+	const { dirpath, isShuffling, loading, message } = state
 
 	// Merge state
 	const assignState = newState => {
@@ -135,7 +131,7 @@ const Home = () => {
 	const onClickShuffleButton = () => randomizeMovies()
 
 	/* Render methods */
-	const isMoviePanelOpen = () => Object.prototype.hasOwnProperty.call(currentMovie, "title")
+	const isMoviePanelOpen = () => Object.prototype.hasOwnProperty.call( currentMovie, 'title' )
 
 	// TODO HELP: Is this how to do work on data before passing it to a component to render?
 	const getOrganizedMovieList = () => {
@@ -274,13 +270,10 @@ const Home = () => {
 							handleChange={onChangePath}
 						/>
 
-						<FileInput />
-
-						<Messagebox data={message}/>
+						<FileInput/>
 
 						<ThemeToggle isActive={currentTheme === light} handleChange={onChangeTheme}/>
 
-						{working && 'working'}
 					</HeaderX>
 
 					<MainX>
@@ -292,6 +285,7 @@ const Home = () => {
 								{currentSort === 'shuffled' && (
 									<ShuffleButtonX data="shuffle" handleChange={onClickShuffleButton}><ShuffleIcon size={32}/></ShuffleButtonX>
 								)}
+								{isShuffling && 'isShuffling'}
 							</SortWrapperX>
 
 							<MovieList current={currentMovie._id} data={getOrganizedMovieList()} handleChange={onChangeCurrentMovie} height={backdropHeight}/>
@@ -299,10 +293,11 @@ const Home = () => {
 
 					</MainX>
 
-					{/* <Refresh /> */}
 				</WrapperX>
 
 				<MovieInfo data={currentMovie} isVisible={isMoviePanelOpen()}/>
+
+				<Messagebox active={message !== ''} data={message}/>
 
 			</ContainerX>
 		</ThemeProvider>

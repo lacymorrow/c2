@@ -2,7 +2,7 @@
 
 import Store from 'electron-store'
 import config from '../config'
-import { refreshGenres, refreshMovies, refreshState } from './services'
+import { _refreshGenres, _refreshMovies, refreshGenres, refreshMovies, refreshState } from './services'
 import { epoch, getElByKeyValue } from './util'
 
 const store = new Store( {
@@ -145,18 +145,26 @@ const updateGenre = ( gid, options ) => {
 
 			genre = { ...genre, ...options }
 			genres[i] = genre
-			store.set( 'genres', genres )
 
 		}
 
 	} )
+
+	store.set( 'genres', genres )
 	refreshGenres()
 
 }
 
 export const resetGenres = () => {
 
-	store.set( 'genres', [] )
+	const genres = store.get( 'genres' )
+	genres.forEach( ( genre, i ) => {
+		genre.items = []
+		genres[i] = genre
+	} )
+
+	store.set( 'genres', genres )
+	_refreshGenres()
 
 }
 
@@ -238,7 +246,7 @@ export const updateMovieTrailer = ( mid, trailer ) => {
 
 export const randomizeMovies = () => {
 
-	setState( { working: true } )
+	setState( { isShuffling: true } )
 
 	const movies = store.get( 'movies' )
 	for ( const movie of movies ) {
@@ -248,13 +256,14 @@ export const randomizeMovies = () => {
 	}
 
 	refreshMovies()
-	setState( { working: false } )
+	setState( { isShuffling: false } )
 
 }
 
 export const resetMovies = () => {
 
-	return store.set( 'movies', [] )
+	store.set( 'movies', [] )
+	_refreshMovies()
 
 }
 

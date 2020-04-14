@@ -8,11 +8,20 @@ import strings from '../helpers/strings'
 import Button from './button'
 
 const WrapperX = styled.div`
+	flex: 1 1 180px;
+	height: 40px;
 	transition-property: color, background-color;
-	color: ${props => props.theme.headerColor};
-	background-color: ${props => props.theme.headerBgColor};
+	color: ${props => props.theme.buttonColor};
+	background-color: ${props => props.theme.buttonBgColor};
 
 	position: relative;
+`
+
+const ButtonX = styled(Button)`
+	padding: .5rem .5rem .5rem 2.5rem;
+	height: 100%;
+	color: ${props => props.theme.onPrimaryColor};
+	background-color: ${props => props.theme.primaryColor};
 `
 
 const IconX = styled.div`
@@ -32,10 +41,10 @@ const FileInput = () => {
 
 	return (
 		<WrapperX>
-			<Button handleChange={handleChooseDirectory}>
+			<ButtonX handleChange={handleChooseDirectory}>
 				{strings.directory.button}
 				<IconX><IoIosFolderOpen size={24}/></IconX>
-			</Button>
+			</ButtonX>
 		</WrapperX>
 	)
 

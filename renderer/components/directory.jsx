@@ -8,6 +8,7 @@ import { FiSearch } from 'react-icons/fi'
 import strings from '../helpers/strings'
 
 const WrapperX = styled.div`
+	flex: 1 1 350px;
 	transition-property: color, background-color;
 	color: ${props => props.theme.headerColor};
 	background-color: ${props => props.theme.headerBgColor};
@@ -26,10 +27,13 @@ const IconX = styled.div`
 	flex-direction: row;
 `
 
-const PathX = styled.input`
+const InputPathX = styled.input`
+	width: 100%;
+	height: 40px;
 	color: ${props => props.theme.headerColor};
 	background-color: ${props => props.theme.headerBgColor};
 	padding: .5rem .5rem .5rem 2.5rem;
+
 `
 
 const Directory = props => {
@@ -39,11 +43,12 @@ const Directory = props => {
 	return (
 		<WrapperX>
 			<IconX><FiSearch size={24}/></IconX>
-			<PathX
+			<InputPathX
 				type="text"
 				placeholder={strings.directory.placeholder}
 				value={data}
 				onChange={e => handleChange( e.currentTarget.value )}
+
 			/>
 		</WrapperX>
 	)

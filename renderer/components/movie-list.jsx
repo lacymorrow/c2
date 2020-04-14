@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
+import strings from '../helpers/strings'
 import BaseButton from './base-button'
 
 const WrapperX = styled.div`
@@ -72,7 +73,11 @@ const MovieList = props => {
 	return (
 		<WrapperX>
 			<GridX>
-				{data.map( movie => {
+				{data.length === 0 && (
+					<h3>{strings.movie.noMovies}</h3>
+				)}
+
+				{data.length > 0 && data.map( movie => {
 
 					return (
 						<MovieX key={movie._id} active={current === movie._id} handleChange={() => handleChange( movie._id )}>

@@ -43,7 +43,7 @@ const renderUpdate = ( command, data ) => {
 }
 
 // Debounced reflow triggers
-const _refreshGenres = () => {
+export const _refreshGenres = () => {
 
 	const genres = getGenres()
 	renderUpdate( 'genres', genres )
@@ -56,7 +56,7 @@ export const refreshGenres = debounce( _refreshGenres, config.REFLOW_DELAY, {
 	trailing: true
 } )
 
-const _refreshMovies = () => {
+export const _refreshMovies = () => {
 
 	const movies = getMovies()
 	renderUpdate( 'movies', movies )
@@ -113,8 +113,8 @@ const qUpdateLoadingBar = () => {
 // TODO warn user of status
 q.on( 'start', () => {
 
-	logger.log( strings.q.start )
-	// qUpdateLoadingBar()
+	// logger.log( strings.q.start )
+	// QUpdateLoadingBar()
 
 } )
 
@@ -125,20 +125,20 @@ q.on( 'success', () => {
 
 } )
 
-q.on( 'error', ( error, job ) => {
+q.on( 'error', ( error, _ ) => {
 
 	// TODO ERRORS
 
-	logger.log( `${strings.q.error}: ${error} ${job.toString()}` )
+	logger.log( `${strings.q.error}: ${error}: ${_.id}` )
 	qUpdateLoadingBar()
 
 } )
 
-q.on( 'timeout', ( next, job ) => {
+q.on( 'timeout', ( next, _ ) => {
 
 	// TODO ERRORS
 
-	logger.log( `${strings.q.timeout} ${job.toString()}` )
+	logger.log( `${strings.q.timeout}: ${_.id}` )
 	qUpdateLoadingBar()
 	next()
 
@@ -200,30 +200,31 @@ export const initGenreCache = async () => {
 
 }
 
+// Queue API calls
 export const fetchMeta = ( mid, name, year ) => {
 
-	// Queue API calls
-	q.push( async () => {
+	const jobOMDB = async () => {
 
-		try {
+		// try {
 
 			const response = await fetchOMDB( name )
 
 			return reconcileMovieMeta( mid, response )
 
-		} catch ( error ) {
+		// } catch ( error ) {
 
-			// TODO ERRORS
+		// 	// TODO ERRORS
 
-			return logger.log( `${strings.error.omdb}: ${error}` )
+		// 	return logger.log( `${strings.error.omdb}: ${error}` )
 
-		}
+		// }
 
-	} )
+	}
 
-	q.push( async () => {
+	const jobTMDB = async () => {
 
-		try {
+		//TODO Uncomment
+		// try {
 
 			const response = await fetchTMDB( name, year )
 			// Add movie genres
@@ -235,17 +236,17 @@ export const fetchMeta = ( mid, name, year ) => {
 
 			return reconcileMovieMeta( mid, response )
 
-		} catch ( error ) {
+		// } catch ( error ) {
 
-			// TODO ERRORS
+		// 	// TODO ERRORS
 
-			return logger.log( `${strings.error.tmdb}: ${error}` )
+		// 	return logger.log( `${strings.error.tmdb}: ${error}` )
 
-		}
+		// }
 
-	} )
+	}
 
-	q.push( async () => {
+	const jobTrailer = async () => {
 
 		try {
 
@@ -264,13 +265,19 @@ export const fetchMeta = ( mid, name, year ) => {
 
 		} catch ( error ) {
 
-			// TODO ERRORS
-
 			return logger.log( `${strings.error.trailer}: ${error}` )
 
 		}
 
-	} )
+	}
+
+	jobOMDB.id = `OMDB: ${name}`
+	jobTMDB.id = `TMDB: ${name}`
+	jobTrailer.id = `Trailer: ${name}`
+
+	q.push( jobOMDB )
+	q.push( jobTMDB )
+	q.push( jobTrailer )
 
 }
 

@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import strings from '../helpers/strings'
 
 const TitleX = styled.h1`
+	flex: 0 0 280px;
 	transition-property: color;
 	color: ${props => props.theme.titleColor};
 	text-align: center;

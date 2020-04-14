@@ -59,7 +59,7 @@ const Sidebar = props => {
 		<WrapperX>
 			<ListX>
 				<ItemX>
-					<LabelX>{strings.sidebar.label} {movieCount && ( <BadgeX>{movieCount}</BadgeX> )}</LabelX>
+					<LabelX>{strings.sidebar.label} {movieCount > 1 && ( <BadgeX>{movieCount}</BadgeX> )}</LabelX>
 				</ItemX>
 
 				<ItemX>

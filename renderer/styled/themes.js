@@ -1,6 +1,13 @@
 import { darken, invert } from 'polished'
 import { objectMap } from '../helpers/util'
 
+/*
+	This is (obviously) the app color scheme.
+	I'm so deaf to color palletes that I haven't actually picked one.
+	This mess will be here until I have someone tell me it looks good,
+	then we can clean it up.
+*/
+
 const colors = {
 	black: '#000',
 	darker: '#222',

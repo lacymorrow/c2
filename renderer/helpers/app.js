@@ -276,7 +276,9 @@ const scanFile = filepath => {
 		}
 
 	} else {
+
 		setState( { message: `Skipping file ${filepath}` } )
+
 	}
 
 }

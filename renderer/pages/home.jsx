@@ -208,9 +208,6 @@ const Home = () => {
 				const { command, data } = arg
 				switch ( command ) {
 
-					case 'message':
-						setMessage( data )
-						break
 					case 'genres':
 						// Sort alphabetically
 						setGenres( data.sort( ( x, y ) => x.name && x.name.localeCompare( y.name ) ) )
@@ -226,10 +223,6 @@ const Home = () => {
 						break
 
 				}
-
-			} else {
-
-				setMessage( arg )
 
 			}
 
@@ -289,7 +282,7 @@ const Home = () => {
 									{currentSort === 'shuffled' && (
 										<ShuffleButtonX data="shuffle" handleChange={onClickShuffleButton}><ShuffleIcon size={32}/></ShuffleButtonX>
 									)}
-									<Loader isActive={isShuffling} />
+									<Loader isActive={isShuffling}/>
 								</SortWrapperX>
 
 								<MovieList current={currentMovie._id} data={organizedMovieList} handleChange={onChangeCurrentMovie} height={backdropHeight}/>

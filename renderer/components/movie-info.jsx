@@ -74,10 +74,6 @@ const BackdropMirrorX = styled( BackdropImgX )`
 	transform: scaleY(-1);
 `
 
-const ImdbLinkX = styled( Button )`
-
-`
-
 const InfoWrapperX = styled.div`
 	// Scroll container
 	height: 100%;

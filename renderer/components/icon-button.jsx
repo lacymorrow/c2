@@ -36,7 +36,7 @@ const IconX = styled.div`
 
 const FileInput = props => {
 
-	const {data, children, handleChange, icon} = props
+	const { data, children, handleChange, icon } = props
 
 	return (
 		<WrapperX>

@@ -125,18 +125,18 @@ q.on( 'success', () => {
 
 } )
 
-q.on( 'error', ( error, _ ) => {
+q.on( 'error', ( error, job ) => {
 
-	setState({message: `${strings.q.error}: ${error}: ${_.id}`})
-	logger.log( `${strings.q.error}: ${error}: ${_.id}` )
+	setState( { message: `${strings.q.error}: ${error}: ${job.id}` } )
+	logger.log( `${strings.q.error}: ${error}: ${job.id}` )
 	qUpdateLoadingBar()
 
 } )
 
-q.on( 'timeout', ( next, _ ) => {
+q.on( 'timeout', ( next, job ) => {
 
-	setState({message: `${strings.q.timeout}: ${_.id}`})
-	logger.log( `${strings.q.timeout}: ${_.id}` )
+	setState( { message: `${strings.q.timeout}: ${job.id}` } )
+	logger.log( `${strings.q.timeout}: ${job.id}` )
 	qUpdateLoadingBar()
 	next()
 
@@ -146,7 +146,7 @@ q.on( 'end', error => {
 
 	if ( error ) {
 
-		setState({message: `${strings.q.error}: ${error}: ${_.id}`})
+		setState( { message: `${strings.q.error}: ${error}` } )
 		logger.log( `${strings.q.error}: ${error}` )
 
 	}

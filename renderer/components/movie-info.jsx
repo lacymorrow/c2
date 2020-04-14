@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { rgba } from 'polished'
-import { FiExternalLink, FiTv } from 'react-icons/fi'
+import { FiExternalLink as ImdbIcon, FiTv as WatchIcon } from 'react-icons/fi'
 
 import config from '../config'
 import strings from '../helpers/strings'
 import { openFile, openUrl } from '../helpers/safe-ipc'
 import { BulletX } from '../styled/components'
 import Button from './button'
+import IconButton from './icon-button'
 import Ratings from './ratings'
 
 // TODO: default backdrop loading/not-found image
@@ -198,16 +199,9 @@ const MovieInfo = props => {
 							<TitleX>{data.title} {data.year && `(${data.year})`}</TitleX>
 
 							{data.Genre && <CopyX>{data.Genre}</CopyX>}
-							{data.runtime && (
-								<CopyX>
-									{data.runtime} minutes
-									{data.imdbId && (
-										<span> | <ImdbLinkX handleChange={() => openUrl( `http://www.imdb.com/title/${data.imdbId}` )}>{strings.movie.imdbLink} <FiExternalLink size={24}/></ImdbLinkX></span>
-									)}
-								</CopyX>
-							)}
-
-							<Button handleChange={() => openFile( data.filepath )}>Watch <FiTv size={24}/></Button>
+							{data.runtime && <CopyX>{data.runtime} minutes</CopyX>}
+							{data.imdbId && <IconButton icon={<ImdbIcon size={24}/>} handleChange={() => openUrl( `http://www.imdb.com/title/${data.imdbId}` )}>{strings.movie.imdbLink}</IconButton>}
+							<IconButton icon={<WatchIcon size={24}/>} handleChange={() => openFile( data.filepath )}>Watch</IconButton>
 
 							<PlotX>{data.plot}</PlotX>
 							<PlotX>{data.overview}</PlotX>

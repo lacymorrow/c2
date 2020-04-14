@@ -1,12 +1,12 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
-import { IoIosFolderOpen } from 'react-icons/io'
-
-import strings from '../helpers/strings'
 import Button from './button'
 
 const WrapperX = styled.div`
+	display: inline-block;
+	margin-right: 1rem;
 	flex: 1 1 180px;
 	height: 40px;
 	transition-property: color, background-color;
@@ -34,7 +34,7 @@ const IconX = styled.div`
 	flex-direction: row;
 `
 
-const FileInput = () => {
+const FileInput = props => {
 
 	const {data, children, handleChange, icon} = props
 

@@ -6,6 +6,7 @@ import { FiRotateCw as RefreshIcon } from 'react-icons/fi'
 import strings from '../helpers/strings'
 
 import Button from './sidebar-button'
+import IconButton from './icon-button'
 
 const WrapperX = styled.div`
 	flex: 0 0 280px;
@@ -92,11 +93,11 @@ const Sidebar = props => {
 				} )}
 			</ListX>
 
-			<BottomWrapperX>
-				<Button handleChange={handleRefresh}>
-					<RefreshIcon size={16}/>
-				</Button>
-			</BottomWrapperX>
+			{/*<BottomWrapperX>
+				<IconButton icon={<RefreshIcon size={16}/> } handleChange={handleRefresh}>
+					Reset
+				</IconButton>
+			</BottomWrapperX>*/}
 		</WrapperX>
 	)
 

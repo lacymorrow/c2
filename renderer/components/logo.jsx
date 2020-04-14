@@ -8,7 +8,7 @@ const TitleX = styled.h1`
 	flex: 0 0 280px;
 	transition-property: color;
 	color: ${props => props.theme.titleColor};
-	text-align: center;
+	// text-align: center;
 	padding: 0 1rem;
 `
 

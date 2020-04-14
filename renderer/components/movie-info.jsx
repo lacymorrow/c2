@@ -233,7 +233,7 @@ const MovieInfo = props => {
 								<BulletsX>
 									{data.trailers.map( ( trailer, i ) => {
 
-										return <BulletX key={trailer} as={Button} active={currentTrailer === i} data={''} handleChange={() => setCurrentTrailer( i )} />
+										return <BulletX key={trailer} as={Button} active={currentTrailer === i} data="" handleChange={() => setCurrentTrailer( i )}/>
 
 									} )}
 								</BulletsX>

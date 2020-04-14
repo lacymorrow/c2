@@ -19,6 +19,8 @@ const WrapperX = styled.div`
 	transition-property: color, background-color;
 	color: ${props => props.theme.sidebarColor};
 	background-color: ${props => props.theme.sidebarBgColor};
+	padding-bottom: 100px;
+	box-shadow: 0 5px 10px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);
 `
 
 const BottomWrapperX = styled.div``

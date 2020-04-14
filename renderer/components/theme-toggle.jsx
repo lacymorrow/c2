@@ -4,7 +4,6 @@ import styled from 'styled-components'
 
 // Todo
 const WrapperX = styled.div`
-	// margin-right: 1rem;
 	display: flex;
 	align-items: center;
 

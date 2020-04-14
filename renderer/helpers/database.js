@@ -159,8 +159,10 @@ export const resetGenres = () => {
 
 	const genres = store.get( 'genres' )
 	genres.forEach( ( genre, i ) => {
+
 		genre.items = []
 		genres[i] = genre
+
 	} )
 
 	store.set( 'genres', genres )
@@ -174,6 +176,7 @@ export const addMovie = movie => {
 	const movies = store.get( 'movies' )
 	movies.push( movie )
 	store.set( 'movies', movies )
+	refreshMovies()
 
 	return movie._id
 

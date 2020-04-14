@@ -104,7 +104,7 @@ export const start = () => {
 			state.dirpath ) {
 
 		// Cinematic has been run before and cache has not expired
-
+		setState( { message: strings.messagebox.loadFromCache } )
 		logger.log( strings.warn.cache_valid )
 
 		// Reload movies DB
@@ -148,7 +148,8 @@ export const setPath = dirpath => {
 	// Save dirpath
 	setState( {
 		dir: dirpath,
-		dirpath // Migrating to use this variable
+		dirpath, // Migrating to use this variable
+		message: `${strings.messagebox.setPath} ${dirpath}`
 	} )
 
 	// Scan files
@@ -169,7 +170,6 @@ const scanPath = () => {
 		resetMovies()
 		setState( { dirpath, currentDir: dirpath, queueTotal: 0 } )
 
-
 		scanDir( dirpath, 0 )
 
 	} else {
@@ -186,6 +186,7 @@ const scanDir = ( dirpath, recurseDepth ) => {
 	try {
 
 		const files = fs.readdirSync( dirpath )
+		setState( { message: `${strings.messagebox.scanDir} ${dirpath}` } )
 		files.forEach( file => {
 
 			const ext = path.extname( file )
@@ -236,6 +237,8 @@ const scanFile = filepath => {
 	if ( name !== ext && !ignorePattern( name ) ) {
 
 		const movc = getCachedMovie( filepath )
+
+		setState( { message: `${strings.messagebox.scanFile} ${filepath}` } )
 		if (
 			movc &&
 			config.CACHE_TIMEOUT &&
@@ -272,11 +275,15 @@ const scanFile = filepath => {
 
 		}
 
+	} else {
+		setState( { message: `Skipping file ${filepath}` } )
 	}
 
 }
 
 const openExternal = async resource => {
+
+	setState( { message: `${strings.messagebox.openExternal} ${resource}` } )
 
 	try {
 
@@ -284,6 +291,7 @@ const openExternal = async resource => {
 
 	} catch ( error ) {
 
+		setState( { message: `${strings.messagebox.openExternalError} ${resource}: ${error.message}` } )
 		logger.error( { err: { message: error.message, stack: error.stack } } )
 
 	}
@@ -341,6 +349,7 @@ const parseFilename = filename => {
 export const reset = () => {
 
 	// Reset and init state
+	setState( { message: strings.log.reset } )
 	logger.log( strings.log.reset )
 	resetDB()
 	resetQueue()

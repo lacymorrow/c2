@@ -106,14 +106,14 @@ const qUpdateLoadingBar = () => {
 
 	}
 
-	setState( { loading, queueTotal } )
+	setState( { loading, queueTotal, message: `${strings.messagebox.queue} ${queueTotal - q.length} / ${queueTotal}` } )
 
 }
 
 // TODO warn user of status
 q.on( 'start', () => {
 
-	// logger.log( strings.q.start )
+	// Logger.log( strings.q.start )
 	// QUpdateLoadingBar()
 
 } )
@@ -127,8 +127,7 @@ q.on( 'success', () => {
 
 q.on( 'error', ( error, _ ) => {
 
-	// TODO ERRORS
-
+	setState({message: `${strings.q.error}: ${error}: ${_.id}`})
 	logger.log( `${strings.q.error}: ${error}: ${_.id}` )
 	qUpdateLoadingBar()
 
@@ -136,8 +135,7 @@ q.on( 'error', ( error, _ ) => {
 
 q.on( 'timeout', ( next, _ ) => {
 
-	// TODO ERRORS
-
+	setState({message: `${strings.q.timeout}: ${_.id}`})
 	logger.log( `${strings.q.timeout}: ${_.id}` )
 	qUpdateLoadingBar()
 	next()
@@ -148,15 +146,14 @@ q.on( 'end', error => {
 
 	if ( error ) {
 
-		// TODO ERRORS
-
+		setState({message: `${strings.q.error}: ${error}: ${_.id}`})
 		logger.log( `${strings.q.error}: ${error}` )
 
 	}
 
 	logger.log( strings.q.finish )
 
-	setState( { loading: 0 } )
+	setState( { loading: 0, message: '' } )
 	if ( config.CACHE_TIMEOUT ) {
 
 		refreshMovieCache()
@@ -190,10 +187,11 @@ export const initGenreCache = async () => {
 
 		}
 
-		setState( { cachedGenresTime: epoch() } )
+		setState( { cachedGenresTime: epoch(), message: strings.messagebox.genreCache } )
 
 	} catch ( error ) {
 
+		setState( { message: strings.messagebox.genreCacheError } )
 		throw new Error( `initGenreCache/ ${strings.error.genres}: ${error}` )
 
 	}
@@ -205,11 +203,11 @@ export const fetchMeta = ( mid, name, year ) => {
 
 	const jobOMDB = async () => {
 
-		// try {
+		// Try {
 
-			const response = await fetchOMDB( name )
+		const response = await fetchOMDB( name )
 
-			return reconcileMovieMeta( mid, response )
+		return reconcileMovieMeta( mid, response )
 
 		// } catch ( error ) {
 
@@ -223,18 +221,18 @@ export const fetchMeta = ( mid, name, year ) => {
 
 	const jobTMDB = async () => {
 
-		//TODO Uncomment
+		// TODO Uncomment
 		// try {
 
-			const response = await fetchTMDB( name, year )
-			// Add movie genres
-			for ( const gid of response.genre_ids ) {
+		const response = await fetchTMDB( name, year )
+		// Add movie genres
+		for ( const gid of response.genre_ids ) {
 
-				indexMovieGenre( gid, mid )
+			indexMovieGenre( gid, mid )
 
-			}
+		}
 
-			return reconcileMovieMeta( mid, response )
+		return reconcileMovieMeta( mid, response )
 
 		// } catch ( error ) {
 
@@ -332,7 +330,7 @@ const fetchOMDB = name => {
 					res.ratings.push( {
 						name: 'IMDB',
 						score: parseFloat( res.imdbRating ),
-						count: countToArray( res.imdbRating )
+						count: arrayOfNElements( res.imdbRating )
 					} )
 
 				}
@@ -342,7 +340,7 @@ const fetchOMDB = name => {
 					res.ratings.push( {
 						name: 'Metascore',
 						score: res.Metascore / 10,
-						count: countToArray( res.Metascore / 10 )
+						count: arrayOfNElements( res.Metascore / 10 )
 					} )
 
 				}
@@ -376,7 +374,7 @@ const fetchTMDB = async ( name, year ) => {
 		response.ratings.push( {
 			name: 'TMDB',
 			score: parseFloat( response.vote_average ),
-			count: countToArray( response.vote_average )
+			count: arrayOfNElements( response.vote_average )
 		} )
 
 	}
@@ -413,7 +411,7 @@ const fetchTrailer = ( name, year ) => {
 
 }
 
-const countToArray = num => {
+const arrayOfNElements = num => {
 
 	// Create an array of empty elements with length n
 	return new Array( Math.round( num ) ).map( () => {

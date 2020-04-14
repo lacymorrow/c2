@@ -17,7 +17,7 @@ const WrapperX = styled.div`
 	position: relative;
 `
 
-const ButtonX = styled(Button)`
+const ButtonX = styled( Button )`
 	padding: .5rem .5rem .5rem 2.5rem;
 	height: 100%;
 	color: ${props => props.theme.onPrimaryColor};
@@ -42,8 +42,8 @@ const FileInput = () => {
 	return (
 		<WrapperX>
 			<ButtonX handleChange={handleChooseDirectory}>
-				{strings.directory.button}
 				<IconX><IoIosFolderOpen size={24}/></IconX>
+				{strings.directory.button}
 			</ButtonX>
 		</WrapperX>
 	)

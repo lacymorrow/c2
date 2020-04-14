@@ -45,7 +45,16 @@ export default {
 		placeholder: 'Directory of movie files...'
 	},
 	messagebox: {
-		init: 'Loading...'
+		init: 'Initializing...',
+		loadFromCache: 'Reloading previous cache',
+		setPath: 'Starting scan of',
+		scanDir: 'Scanning directory',
+		scanFile: 'Adding file',
+		openExternal: 'Opening',
+		openExternalError: 'Error trying to open',
+		queue: 'Gathering meta',
+		genreCache: 'Caching genre list',
+		genreCacheError: 'Error retrieving genre list'
 	},
 	resetBtn: {
 		click: 'Resetting state...',

@@ -63,6 +63,12 @@ export const DisplayX = styled.div`
     background-color: ${props => props.theme.displayBgColor};
 `
 
+export const NoMoviesTextX = styled.h4`
+	margin: 0 auto;
+	padding: 5rem 2rem;
+	font-size: 1.6rem;
+`
+
 export const ShuffleButtonX = styled( Button )`
 	display: flex;
 `

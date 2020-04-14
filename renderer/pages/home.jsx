@@ -14,6 +14,7 @@ import {
 	HeaderX,
 	MainX,
 	DisplayX,
+	NoMoviesTextX,
 	ShuffleButtonX,
 	SortWrapperX,
 	WrapperX
@@ -24,6 +25,7 @@ import { getElByKeyValue, isPageVsGenreId } from '../helpers/util'
 
 import Directory from '../components/directory'
 import FileInput from '../components/file-input'
+import Loader from '../components/loader'
 import Logo from '../components/logo'
 import Messagebox from '../components/messagebox'
 import MovieInfo from '../components/movie-info'
@@ -246,11 +248,12 @@ const Home = () => {
 
 	}, [] )
 
-	// Const organizedMovieList = getOrganizedMovieList(movies)
-
 	/* Template */
 
 	const backdropHeight = 280
+
+	const organizedMovieList = getOrganizedMovieList()
+	const hasMovies = organizedMovieList.length !== 0
 
 	return (
 		<ThemeProvider theme={currentTheme}>
@@ -279,17 +282,21 @@ const Home = () => {
 					<MainX>
 						<Sidebar current={currentPage} data={genres} handleChange={onChangePage} handleRefresh={onClickResetButton} movieCount={movies.length}/>
 
-						<DisplayX>
-							<SortWrapperX>
-								<Sort current={currentSort} data={config.FILTERS} handleChange={onChangeSort}/>
-								{currentSort === 'shuffled' && (
-									<ShuffleButtonX data="shuffle" handleChange={onClickShuffleButton}><ShuffleIcon size={32}/></ShuffleButtonX>
-								)}
-								{isShuffling && 'isShuffling'}
-							</SortWrapperX>
+						{( hasMovies && (
+							<DisplayX>
+								<SortWrapperX>
+									<Sort current={currentSort} data={config.FILTERS} handleChange={onChangeSort}/>
+									{currentSort === 'shuffled' && (
+										<ShuffleButtonX data="shuffle" handleChange={onClickShuffleButton}><ShuffleIcon size={32}/></ShuffleButtonX>
+									)}
+									<Loader isActive={isShuffling} />
+								</SortWrapperX>
 
-							<MovieList current={currentMovie._id} data={getOrganizedMovieList()} handleChange={onChangeCurrentMovie} height={backdropHeight}/>
-						</DisplayX>
+								<MovieList current={currentMovie._id} data={organizedMovieList} handleChange={onChangeCurrentMovie} height={backdropHeight}/>
+							</DisplayX>
+						) ) || (
+							<NoMoviesTextX>{strings.movie.noMovies}</NoMoviesTextX>
+						)}
 
 					</MainX>
 
@@ -297,7 +304,7 @@ const Home = () => {
 
 				<MovieInfo data={currentMovie} isVisible={isMoviePanelOpen()}/>
 
-				<Messagebox active={message !== ''} data={message}/>
+				{message && <Messagebox data={message}/>}
 
 			</ContainerX>
 		</ThemeProvider>

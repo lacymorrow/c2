@@ -19,7 +19,7 @@
 	},
 	"main": "app/background.js",
 	"scripts": {
-		"build": "nextron build",
+		"build": "nextron build --all",
 		"dev": "nextron",
 		"lint": "xo --fix",
 		"test": "npm run lint && ava -v",

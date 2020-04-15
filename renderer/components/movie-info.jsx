@@ -190,29 +190,23 @@ const MovieInfo = props => {
 					<InfoWrapperX>
 						<InfoX height={height}>
 
-							<Ratings current={currentRating} data={data.ratings}/>
-
 							<TitleX>{data.title} {data.year && `(${data.year})`}</TitleX>
 
 							{data.Genre && <CopyX>{data.Genre}</CopyX>}
 							{data.runtime && <CopyX>{data.runtime} minutes</CopyX>}
-							{data.imdbId && <IconButton icon={<ImdbIcon size={24}/>} handleChange={() => openUrl( `http://www.imdb.com/title/${data.imdbId}` )}>{strings.movie.imdbLink}</IconButton>}
 							<IconButton icon={<WatchIcon size={24}/>} handleChange={() => openFile( data.filepath )}>Watch</IconButton>
+							{data.imdbId && <IconButton icon={<ImdbIcon size={24}/>} handleChange={() => openUrl( `http://www.imdb.com/title/${data.imdbId}` )}>{strings.movie.imdbLink}</IconButton>}
+
+							<Ratings current={currentRating} data={data.ratings}/>
+
 
 							<PlotX>{data.plot}</PlotX>
-							<PlotX>{data.overview}</PlotX>
 
-							{data.BoxOffice && <CopyX><b>Box Office:</b> {data.BoxOffice}</CopyX> }
-							{data.DVD && <CopyX><b>DVD release date:</b> {data.DVD}</CopyX> }
-							{data.Country && <CopyX><b>Country:</b> {data.Country}</CopyX> }
 							{data.Language && <CopyX><b>Language:</b> {data.Language}</CopyX> }
 							{data.Rated && <CopyX><b>Rated:</b> {data.Rated}</CopyX> }
-							{data.Production && <CopyX><b>Studio:</b> {data.Production}</CopyX> }
 
 							{data.Director && <CopyX><b>{strings.movie.director}:</b> {data.Director}</CopyX> }
-							{data.Writer && <CopyX><b>{strings.movie.writer}:</b> {data.Writer}</CopyX> }
 							{data.Actors && <CopyX><b>{strings.movie.actor}:</b> {data.Actors}</CopyX> }
-							{data.Awards && <CopyX><b>{strings.movie.award}:</b> {data.Awards}</CopyX> }
 							{data.trailers && <TrailerCopyX><span>{strings.movie.trailer}</span></TrailerCopyX> }
 						</InfoX>
 					</InfoWrapperX>

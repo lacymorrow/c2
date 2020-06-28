@@ -93,11 +93,11 @@ const Sidebar = props => {
 				} )}
 			</ListX>
 
-			{/*<BottomWrapperX>
+			{/* <BottomWrapperX>
 				<IconButton icon={<RefreshIcon size={16}/> } handleChange={handleRefresh}>
 					Reset
 				</IconButton>
-			</BottomWrapperX>*/}
+			</BottomWrapperX> */}
 		</WrapperX>
 	)
 

@@ -15,7 +15,7 @@
 		"url": "https://github.com/lacymorrow/cinematic/issues"
 	},
 	"engines": {
-		"node": ">=10 <14"
+		"node": ">10 <=14"
 	},
 	"main": "app/background.js",
 	"scripts": {

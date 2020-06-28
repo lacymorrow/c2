@@ -199,7 +199,6 @@ const MovieInfo = props => {
 
 							<Ratings current={currentRating} data={data.ratings}/>
 
-
 							<PlotX>{data.plot}</PlotX>
 
 							{data.Language && <CopyX><b>Language:</b> {data.Language}</CopyX> }

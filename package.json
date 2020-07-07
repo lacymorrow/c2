@@ -82,7 +82,7 @@
 	"devDependencies": {
 		"ava": "^3.3.0",
 		"babel-plugin-styled-components": "^1.10.7",
-		"electron": "^7.1.1",
+		"electron": "^7.2.4",
 		"electron-builder": "^22.1.0",
 		"electron-serve": "^0.4.0",
 		"electron-store": "^5.1.0",
